@@ -1,0 +1,808 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 53;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		254DF563FA41078A7BA93D9A /* Pods_MagnetHockey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699E07A5DAC78BD0C09C86DF /* Pods_MagnetHockey.framework */; };
+		C30208C32539F1B7004B9258 /* InfoScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30208C22539F1B7004B9258 /* InfoScene.swift */; };
+		C311E8DA2458CDF100D0CEC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C311E7F62458CDB500D0CEC6 /* Assets.xcassets */; };
+		C311E8E52458CDF100D0CEC6 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8012458CDB700D0CEC6 /* GameScene.swift */; };
+		C311E9262458CDF100D0CEC6 /* BottomPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8422458CDC400D0CEC6 /* BottomPlayer.swift */; };
+		C311E9282458CDF100D0CEC6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C311E8442458CDC500D0CEC6 /* LaunchScreen.xib */; };
+		C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */; };
+		C311E96F2458CDF100D0CEC6 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E88B2458CDE100D0CEC6 /* GameViewController.swift */; };
+		C311E9752458CDF100D0CEC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8912458CDE200D0CEC6 /* AppDelegate.swift */; };
+		C334C9CB26DC6EF50088D46B /* ballHitMagnet.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */; };
+		C334C9D526DC6F140088D46B /* ChangeRounds.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CC26DC6F130088D46B /* ChangeRounds.mp3 */; };
+		C334C9D626DC6F140088D46B /* ballHitsWall.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CD26DC6F130088D46B /* ballHitsWall.mp3 */; };
+		C334C9D726DC6F140088D46B /* Goal3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CE26DC6F130088D46B /* Goal3.mp3 */; };
+		C334C9D826DC6F140088D46B /* ballHitsWall2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CF26DC6F130088D46B /* ballHitsWall2.mp3 */; };
+		C334C9D926DC6F140088D46B /* Magnet Click.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9D026DC6F130088D46B /* Magnet Click.mp3 */; };
+		C334C9DA26DC6F140088D46B /* magnetHitsWallFinal.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9D126DC6F140088D46B /* magnetHitsWallFinal.mp3 */; };
+		C334C9DB26DC6F140088D46B /* MenuSong2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9D226DC6F140088D46B /* MenuSong2.mp3 */; };
+		C334C9DC26DC6F140088D46B /* MagnetInGoal.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9D326DC6F140088D46B /* MagnetInGoal.mp3 */; };
+		C334C9DD26DC6F140088D46B /* MenuSong3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9D426DC6F140088D46B /* MenuSong3.mp3 */; };
+		C33AD54F245A3A780015F392 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C33AD54E245A3A780015F392 /* StoreKit.framework */; };
+		C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33AD558245B2A310015F392 /* IAPProducts.swift */; };
+		C33AD55B245B2B850015F392 /* IAPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33AD55A245B2B850015F392 /* IAPService.swift */; };
+		C33AD581245CCBEC0015F392 /* ReviewService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33AD580245CCBEC0015F392 /* ReviewService.swift */; };
+		C358B5A32480401B002C6B2D /* NorthPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C358B5A22480401B002C6B2D /* NorthPlayer.swift */; };
+		C365D3C625ABA81700FD37C4 /* BackgroundMusic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D3C525ABA81700FD37C4 /* BackgroundMusic.swift */; };
+		C365D43A25B22B2B00FD37C4 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D43925B22B2B00FD37C4 /* Settings.swift */; };
+		C365D44225B22B4E00FD37C4 /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D44125B22B4E00FD37C4 /* StartScene.swift */; };
+		C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D44925B22B6C00FD37C4 /* StoreScene.swift */; };
+		C3E2C3B525AB604300CD2CC0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3E2C3B425AB604300CD2CC0 /* Main.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C311E7CF2458CD6F00D0CEC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C311E7AC2458CD6A00D0CEC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C311E7B32458CD6A00D0CEC6;
+			remoteInfo = MagnetHockey;
+		};
+		C311E7DA2458CD6F00D0CEC6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C311E7AC2458CD6A00D0CEC6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C311E7B32458CD6A00D0CEC6;
+			remoteInfo = MagnetHockey;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		27D9D5E257ACBE49E1F7C47A /* Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig"; path = "Target Support Files/Pods-MagnetHockey-MagnetHockeyUITests/Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		451BDE27D8AD9386C537DBF3 /* Pods-MagnetHockey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockey.debug.xcconfig"; path = "Target Support Files/Pods-MagnetHockey/Pods-MagnetHockey.debug.xcconfig"; sourceTree = "<group>"; };
+		538884DEF6D8D7F3C5350910 /* Pods-MagnetHockey.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockey.release.xcconfig"; path = "Target Support Files/Pods-MagnetHockey/Pods-MagnetHockey.release.xcconfig"; sourceTree = "<group>"; };
+		699E07A5DAC78BD0C09C86DF /* Pods_MagnetHockey.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MagnetHockey.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E1D03DC376010B274FA956E /* Pods-MagnetHockeyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockeyTests.debug.xcconfig"; path = "Target Support Files/Pods-MagnetHockeyTests/Pods-MagnetHockeyTests.debug.xcconfig"; sourceTree = "<group>"; };
+		BE9C33ABC0F21E53F9593FE8 /* Pods-MagnetHockey-MagnetHockeyUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockey-MagnetHockeyUITests.release.xcconfig"; path = "Target Support Files/Pods-MagnetHockey-MagnetHockeyUITests/Pods-MagnetHockey-MagnetHockeyUITests.release.xcconfig"; sourceTree = "<group>"; };
+		C30208C22539F1B7004B9258 /* InfoScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoScene.swift; sourceTree = "<group>"; };
+		C311E7B42458CD6A00D0CEC6 /* Magnet Hockey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Magnet Hockey.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C311E7C92458CD6F00D0CEC6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C311E7CE2458CD6F00D0CEC6 /* MagnetHockeyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagnetHockeyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C311E7D92458CD6F00D0CEC6 /* MagnetHockeyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagnetHockeyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C311E7F62458CDB500D0CEC6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C311E8012458CDB700D0CEC6 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		C311E8422458CDC400D0CEC6 /* BottomPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomPlayer.swift; sourceTree = "<group>"; };
+		C311E8442458CDC500D0CEC6 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
+		C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
+		C311E88B2458CDE100D0CEC6 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		C311E8912458CDE200D0CEC6 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ballHitMagnet.mp3; sourceTree = "<group>"; };
+		C334C9CC26DC6F130088D46B /* ChangeRounds.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ChangeRounds.mp3; sourceTree = "<group>"; };
+		C334C9CD26DC6F130088D46B /* ballHitsWall.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ballHitsWall.mp3; sourceTree = "<group>"; };
+		C334C9CE26DC6F130088D46B /* Goal3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Goal3.mp3; sourceTree = "<group>"; };
+		C334C9CF26DC6F130088D46B /* ballHitsWall2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ballHitsWall2.mp3; sourceTree = "<group>"; };
+		C334C9D026DC6F130088D46B /* Magnet Click.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Magnet Click.mp3"; sourceTree = "<group>"; };
+		C334C9D126DC6F140088D46B /* magnetHitsWallFinal.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = magnetHitsWallFinal.mp3; sourceTree = "<group>"; };
+		C334C9D226DC6F140088D46B /* MenuSong2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = MenuSong2.mp3; sourceTree = "<group>"; };
+		C334C9D326DC6F140088D46B /* MagnetInGoal.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = MagnetInGoal.mp3; sourceTree = "<group>"; };
+		C334C9D426DC6F140088D46B /* MenuSong3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = MenuSong3.mp3; sourceTree = "<group>"; };
+		C33AD54E245A3A780015F392 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		C33AD558245B2A310015F392 /* IAPProducts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPProducts.swift; sourceTree = "<group>"; };
+		C33AD55A245B2B850015F392 /* IAPService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IAPService.swift; sourceTree = "<group>"; };
+		C33AD580245CCBEC0015F392 /* ReviewService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewService.swift; sourceTree = "<group>"; };
+		C33AD583245DD8BF0015F392 /* MagnetHockey-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MagnetHockey-Bridging-Header.h"; sourceTree = "<group>"; };
+		C358B5A22480401B002C6B2D /* NorthPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NorthPlayer.swift; sourceTree = "<group>"; };
+		C365D3C525ABA81700FD37C4 /* BackgroundMusic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMusic.swift; sourceTree = "<group>"; };
+		C365D43925B22B2B00FD37C4 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		C365D44125B22B4E00FD37C4 /* StartScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
+		C365D44925B22B6C00FD37C4 /* StoreScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreScene.swift; sourceTree = "<group>"; };
+		C3E2C3B425AB604300CD2CC0 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		EDBB9D8084BC352C6FFBD103 /* Pods-MagnetHockeyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockeyTests.release.xcconfig"; path = "Target Support Files/Pods-MagnetHockeyTests/Pods-MagnetHockeyTests.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C311E7B12458CD6A00D0CEC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				254DF563FA41078A7BA93D9A /* Pods_MagnetHockey.framework in Frameworks */,
+				C33AD54F245A3A780015F392 /* StoreKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C311E7CB2458CD6F00D0CEC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C311E7D62458CD6F00D0CEC6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		63A4D39516F20083451E8D24 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				451BDE27D8AD9386C537DBF3 /* Pods-MagnetHockey.debug.xcconfig */,
+				538884DEF6D8D7F3C5350910 /* Pods-MagnetHockey.release.xcconfig */,
+				27D9D5E257ACBE49E1F7C47A /* Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig */,
+				BE9C33ABC0F21E53F9593FE8 /* Pods-MagnetHockey-MagnetHockeyUITests.release.xcconfig */,
+				8E1D03DC376010B274FA956E /* Pods-MagnetHockeyTests.debug.xcconfig */,
+				EDBB9D8084BC352C6FFBD103 /* Pods-MagnetHockeyTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		6DAF47D1AF28F2C5DCDC68D7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C33AD54E245A3A780015F392 /* StoreKit.framework */,
+				699E07A5DAC78BD0C09C86DF /* Pods_MagnetHockey.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C311E7AB2458CD6A00D0CEC6 = {
+			isa = PBXGroup;
+			children = (
+				C311E7B62458CD6A00D0CEC6 /* MagnetHockey */,
+				C311E7B52458CD6A00D0CEC6 /* Products */,
+				63A4D39516F20083451E8D24 /* Pods */,
+				6DAF47D1AF28F2C5DCDC68D7 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		C311E7B52458CD6A00D0CEC6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C311E7B42458CD6A00D0CEC6 /* Magnet Hockey.app */,
+				C311E7CE2458CD6F00D0CEC6 /* MagnetHockeyTests.xctest */,
+				C311E7D92458CD6F00D0CEC6 /* MagnetHockeyUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C311E7B62458CD6A00D0CEC6 /* MagnetHockey */ = {
+			isa = PBXGroup;
+			children = (
+				C3E2C3B425AB604300CD2CC0 /* Main.storyboard */,
+				C311E7C92458CD6F00D0CEC6 /* Info.plist */,
+				C33AD583245DD8BF0015F392 /* MagnetHockey-Bridging-Header.h */,
+				C311E8912458CDE200D0CEC6 /* AppDelegate.swift */,
+				C311E88B2458CDE100D0CEC6 /* GameViewController.swift */,
+				C311E8442458CDC500D0CEC6 /* LaunchScreen.xib */,
+				C365D43925B22B2B00FD37C4 /* Settings.swift */,
+				C365D44125B22B4E00FD37C4 /* StartScene.swift */,
+				C365D44925B22B6C00FD37C4 /* StoreScene.swift */,
+				C30208C22539F1B7004B9258 /* InfoScene.swift */,
+				C33AD55A245B2B850015F392 /* IAPService.swift */,
+				C33AD558245B2A310015F392 /* IAPProducts.swift */,
+				C33AD580245CCBEC0015F392 /* ReviewService.swift */,
+				C311E8012458CDB700D0CEC6 /* GameScene.swift */,
+				C358B5A22480401B002C6B2D /* NorthPlayer.swift */,
+				C311E8422458CDC400D0CEC6 /* BottomPlayer.swift */,
+				C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */,
+				C365D3C525ABA81700FD37C4 /* BackgroundMusic.swift */,
+				C334C9DE26DC6F3C0088D46B /* Sound Effects */,
+				C311E7F62458CDB500D0CEC6 /* Assets.xcassets */,
+			);
+			path = MagnetHockey;
+			sourceTree = "<group>";
+		};
+		C334C9DE26DC6F3C0088D46B /* Sound Effects */ = {
+			isa = PBXGroup;
+			children = (
+				C334C9CD26DC6F130088D46B /* ballHitsWall.mp3 */,
+				C334C9CF26DC6F130088D46B /* ballHitsWall2.mp3 */,
+				C334C9CC26DC6F130088D46B /* ChangeRounds.mp3 */,
+				C334C9CE26DC6F130088D46B /* Goal3.mp3 */,
+				C334C9D026DC6F130088D46B /* Magnet Click.mp3 */,
+				C334C9D126DC6F140088D46B /* magnetHitsWallFinal.mp3 */,
+				C334C9D326DC6F140088D46B /* MagnetInGoal.mp3 */,
+				C334C9D226DC6F140088D46B /* MenuSong2.mp3 */,
+				C334C9D426DC6F140088D46B /* MenuSong3.mp3 */,
+				C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */,
+			);
+			path = "Sound Effects";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		C311E7B32458CD6A00D0CEC6 /* MagnetHockey */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C311E7E22458CD6F00D0CEC6 /* Build configuration list for PBXNativeTarget "MagnetHockey" */;
+			buildPhases = (
+				CC9C358AE73BB6CBA8DAC148 /* [CP] Check Pods Manifest.lock */,
+				C311E7B02458CD6A00D0CEC6 /* Sources */,
+				C311E7B12458CD6A00D0CEC6 /* Frameworks */,
+				C311E7B22458CD6A00D0CEC6 /* Resources */,
+				0E3EF5A41F9D8559269555EE /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MagnetHockey;
+			productName = MagnetHockey;
+			productReference = C311E7B42458CD6A00D0CEC6 /* Magnet Hockey.app */;
+			productType = "com.apple.product-type.application";
+		};
+		C311E7CD2458CD6F00D0CEC6 /* MagnetHockeyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C311E7E52458CD6F00D0CEC6 /* Build configuration list for PBXNativeTarget "MagnetHockeyTests" */;
+			buildPhases = (
+				7B9FD1D3B1EF8542982BF08E /* [CP] Check Pods Manifest.lock */,
+				C311E7CA2458CD6F00D0CEC6 /* Sources */,
+				C311E7CB2458CD6F00D0CEC6 /* Frameworks */,
+				C311E7CC2458CD6F00D0CEC6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C311E7D02458CD6F00D0CEC6 /* PBXTargetDependency */,
+			);
+			name = MagnetHockeyTests;
+			productName = MagnetHockeyTests;
+			productReference = C311E7CE2458CD6F00D0CEC6 /* MagnetHockeyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		C311E7D82458CD6F00D0CEC6 /* MagnetHockeyUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C311E7E82458CD6F00D0CEC6 /* Build configuration list for PBXNativeTarget "MagnetHockeyUITests" */;
+			buildPhases = (
+				113FC2D858AC059F57A8611D /* [CP] Check Pods Manifest.lock */,
+				C311E7D52458CD6F00D0CEC6 /* Sources */,
+				C311E7D62458CD6F00D0CEC6 /* Frameworks */,
+				C311E7D72458CD6F00D0CEC6 /* Resources */,
+				E80BF77DF00B198A3CB7488C /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C311E7DB2458CD6F00D0CEC6 /* PBXTargetDependency */,
+			);
+			name = MagnetHockeyUITests;
+			productName = MagnetHockeyUITests;
+			productReference = C311E7D92458CD6F00D0CEC6 /* MagnetHockeyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		C311E7AC2458CD6A00D0CEC6 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1140;
+				LastUpgradeCheck = 1300;
+				ORGANIZATIONNAME = "Wysong, Trevor";
+				TargetAttributes = {
+					C311E7B32458CD6A00D0CEC6 = {
+						CreatedOnToolsVersion = 11.4.1;
+						LastSwiftMigration = 1140;
+					};
+					C311E7CD2458CD6F00D0CEC6 = {
+						CreatedOnToolsVersion = 11.4.1;
+						TestTargetID = C311E7B32458CD6A00D0CEC6;
+					};
+					C311E7D82458CD6F00D0CEC6 = {
+						CreatedOnToolsVersion = 11.4.1;
+						TestTargetID = C311E7B32458CD6A00D0CEC6;
+					};
+				};
+			};
+			buildConfigurationList = C311E7AF2458CD6A00D0CEC6 /* Build configuration list for PBXProject "MagnetHockey" */;
+			compatibilityVersion = "Xcode 11.4";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = C311E7AB2458CD6A00D0CEC6;
+			productRefGroup = C311E7B52458CD6A00D0CEC6 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				C311E7B32458CD6A00D0CEC6 /* MagnetHockey */,
+				C311E7CD2458CD6F00D0CEC6 /* MagnetHockeyTests */,
+				C311E7D82458CD6F00D0CEC6 /* MagnetHockeyUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C311E7B22458CD6A00D0CEC6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C334C9D926DC6F140088D46B /* Magnet Click.mp3 in Resources */,
+				C334C9DB26DC6F140088D46B /* MenuSong2.mp3 in Resources */,
+				C334C9D826DC6F140088D46B /* ballHitsWall2.mp3 in Resources */,
+				C311E8DA2458CDF100D0CEC6 /* Assets.xcassets in Resources */,
+				C334C9DA26DC6F140088D46B /* magnetHitsWallFinal.mp3 in Resources */,
+				C311E9282458CDF100D0CEC6 /* LaunchScreen.xib in Resources */,
+				C334C9CB26DC6EF50088D46B /* ballHitMagnet.mp3 in Resources */,
+				C334C9D626DC6F140088D46B /* ballHitsWall.mp3 in Resources */,
+				C334C9DC26DC6F140088D46B /* MagnetInGoal.mp3 in Resources */,
+				C334C9D526DC6F140088D46B /* ChangeRounds.mp3 in Resources */,
+				C334C9D726DC6F140088D46B /* Goal3.mp3 in Resources */,
+				C334C9DD26DC6F140088D46B /* MenuSong3.mp3 in Resources */,
+				C3E2C3B525AB604300CD2CC0 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C311E7CC2458CD6F00D0CEC6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C311E7D72458CD6F00D0CEC6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0E3EF5A41F9D8559269555EE /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MagnetHockey/Pods-MagnetHockey-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MagnetHockey/Pods-MagnetHockey-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MagnetHockey/Pods-MagnetHockey-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		113FC2D858AC059F57A8611D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MagnetHockey-MagnetHockeyUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7B9FD1D3B1EF8542982BF08E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MagnetHockeyTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CC9C358AE73BB6CBA8DAC148 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MagnetHockey-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E80BF77DF00B198A3CB7488C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MagnetHockey-MagnetHockeyUITests/Pods-MagnetHockey-MagnetHockeyUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MagnetHockey-MagnetHockeyUITests/Pods-MagnetHockey-MagnetHockeyUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MagnetHockey-MagnetHockeyUITests/Pods-MagnetHockey-MagnetHockeyUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C311E7B02458CD6A00D0CEC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C358B5A32480401B002C6B2D /* NorthPlayer.swift in Sources */,
+				C311E9752458CDF100D0CEC6 /* AppDelegate.swift in Sources */,
+				C311E96F2458CDF100D0CEC6 /* GameViewController.swift in Sources */,
+				C33AD55B245B2B850015F392 /* IAPService.swift in Sources */,
+				C30208C32539F1B7004B9258 /* InfoScene.swift in Sources */,
+				C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */,
+				C311E8E52458CDF100D0CEC6 /* GameScene.swift in Sources */,
+				C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */,
+				C365D43A25B22B2B00FD37C4 /* Settings.swift in Sources */,
+				C311E9262458CDF100D0CEC6 /* BottomPlayer.swift in Sources */,
+				C33AD581245CCBEC0015F392 /* ReviewService.swift in Sources */,
+				C365D3C625ABA81700FD37C4 /* BackgroundMusic.swift in Sources */,
+				C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */,
+				C365D44225B22B4E00FD37C4 /* StartScene.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C311E7CA2458CD6F00D0CEC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C311E7D52458CD6F00D0CEC6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C311E7D02458CD6F00D0CEC6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C311E7B32458CD6A00D0CEC6 /* MagnetHockey */;
+			targetProxy = C311E7CF2458CD6F00D0CEC6 /* PBXContainerItemProxy */;
+		};
+		C311E7DB2458CD6F00D0CEC6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C311E7B32458CD6A00D0CEC6 /* MagnetHockey */;
+			targetProxy = C311E7DA2458CD6F00D0CEC6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		C311E7E02458CD6F00D0CEC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C311E7E12458CD6F00D0CEC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		C311E7E32458CD6F00D0CEC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 451BDE27D8AD9386C537DBF3 /* Pods-MagnetHockey.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.12;
+				DEVELOPMENT_TEAM = R5WK65WM35;
+				INFOPLIST_FILE = MagnetHockey/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TrevorWysong.MagnetHockeyGame;
+				PRODUCT_NAME = "Magnet Hockey";
+				SWIFT_OBJC_BRIDGING_HEADER = "MagnetHockey/MagnetHockey-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C311E7E42458CD6F00D0CEC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 538884DEF6D8D7F3C5350910 /* Pods-MagnetHockey.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1.12;
+				DEVELOPMENT_TEAM = R5WK65WM35;
+				INFOPLIST_FILE = MagnetHockey/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.TrevorWysong.MagnetHockeyGame;
+				PRODUCT_NAME = "Magnet Hockey";
+				SWIFT_OBJC_BRIDGING_HEADER = "MagnetHockey/MagnetHockey-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		C311E7E62458CD6F00D0CEC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8E1D03DC376010B274FA956E /* Pods-MagnetHockeyTests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R5WK65WM35;
+				INFOPLIST_FILE = MagnetHockeyTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Trevor-Wysong.MagnetHockeyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MagnetHockey.app/MagnetHockey";
+			};
+			name = Debug;
+		};
+		C311E7E72458CD6F00D0CEC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EDBB9D8084BC352C6FFBD103 /* Pods-MagnetHockeyTests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R5WK65WM35;
+				INFOPLIST_FILE = MagnetHockeyTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Trevor-Wysong.MagnetHockeyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MagnetHockey.app/MagnetHockey";
+			};
+			name = Release;
+		};
+		C311E7E92458CD6F00D0CEC6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 27D9D5E257ACBE49E1F7C47A /* Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R5WK65WM35;
+				INFOPLIST_FILE = MagnetHockeyUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Trevor-Wysong.MagnetHockeyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MagnetHockey;
+			};
+			name = Debug;
+		};
+		C311E7EA2458CD6F00D0CEC6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BE9C33ABC0F21E53F9593FE8 /* Pods-MagnetHockey-MagnetHockeyUITests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = R5WK65WM35;
+				INFOPLIST_FILE = MagnetHockeyUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "Trevor-Wysong.MagnetHockeyUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = MagnetHockey;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		C311E7AF2458CD6A00D0CEC6 /* Build configuration list for PBXProject "MagnetHockey" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C311E7E02458CD6F00D0CEC6 /* Debug */,
+				C311E7E12458CD6F00D0CEC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C311E7E22458CD6F00D0CEC6 /* Build configuration list for PBXNativeTarget "MagnetHockey" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C311E7E32458CD6F00D0CEC6 /* Debug */,
+				C311E7E42458CD6F00D0CEC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C311E7E52458CD6F00D0CEC6 /* Build configuration list for PBXNativeTarget "MagnetHockeyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C311E7E62458CD6F00D0CEC6 /* Debug */,
+				C311E7E72458CD6F00D0CEC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C311E7E82458CD6F00D0CEC6 /* Build configuration list for PBXNativeTarget "MagnetHockeyUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C311E7E92458CD6F00D0CEC6 /* Debug */,
+				C311E7EA2458CD6F00D0CEC6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = C311E7AC2458CD6A00D0CEC6 /* Project object */;
+}
