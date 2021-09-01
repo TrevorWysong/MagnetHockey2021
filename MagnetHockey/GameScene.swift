@@ -2014,7 +2014,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
 
             if nodesArray.contains(pauseButton)
             {
-                pauseButton.colorBlendFactor = 0.5
+                pauseButton.colorBlendFactor = 0
                 touchedPauseButton = true
             }
         }
@@ -2031,18 +2031,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             if nodesArray.contains(pauseButton) && touchedPauseButton == true
             {
                 touchedPauseButton = false
-                pauseButton.colorBlendFactor = 0
+                pauseButton.colorBlendFactor = 0.40
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
             }
-            else if nodesArray.contains(pauseButton) && touchedPauseButton == true
+            else if touchedPauseButton == true
             {
                 touchedPauseButton = false
-                pauseButton.colorBlendFactor = 0.5
-                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
-                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
-                else{run(buttonSound)}
+                pauseButton.colorBlendFactor = 0.40
             }
         }
     }
