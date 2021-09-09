@@ -88,7 +88,7 @@ class InfoScene: SKScene
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?
         let bannerViewSettingsScene = self.view?.viewWithTag(103) as! GADBannerView?
         
-        if UserDefaults.standard.bool(forKey: "Purchase") != true
+        if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             bannerViewStartScene?.isHidden = true
             bannerViewGameOverScene?.isHidden = true

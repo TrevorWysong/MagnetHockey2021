@@ -190,7 +190,7 @@ class StoreScene: SKScene
         purchaseBlackBallLabel.position = CGPoint(x: purchaseBlackBallButton.position.x, y: purchaseBlackBallButton.position.y + (frame.height * 0.14))
         purchaseBlackBallLabel.zPosition = 1
         purchaseBlackBallLabel.text = "Ball Color Pack"
-        if UserDefaults.standard.bool(forKey: "PurchaseBlackBall") == true
+        if KeychainWrapper.standard.bool(forKey: "PurchaseBlackBall") == true
         {
             purchaseBlackBallLabel.text = "Purchased!"
         }
@@ -226,7 +226,7 @@ class StoreScene: SKScene
         removeAdsLabel.position = CGPoint(x: removeAdsButton.position.x, y: removeAdsButton.position.y + (frame.height * 0.14))
         removeAdsLabel.zPosition = 1
         removeAdsLabel.text = "Remove Ads"
-        if UserDefaults.standard.bool(forKey: "Purchase") == true
+        if KeychainWrapper.standard.bool(forKey: "Purchase") == true
         {
             removeAdsLabel.text = "Purchased!"
         }
@@ -355,7 +355,8 @@ class StoreScene: SKScene
                 purchaseBallPackBackgroundButton.colorBlendFactor = 0
                 ballPackLabelButton.colorBlendFactor = 0
                 touchedBuyColorPack = false
-                if UserDefaults.standard.bool(forKey: "PurchaseBlackBall") == true
+
+                if KeychainWrapper.standard.bool(forKey: "PurchaseBlackBall") == true
                 {
                     self.view?.window?.rootViewController?.present(alertController7, animated: true, completion: nil)
                     purchaseBlackBallLabel.text = "Purchased!"
@@ -373,7 +374,8 @@ class StoreScene: SKScene
                 purchaseNoAdsBackgroundButton.colorBlendFactor = 0
                 noAdsLabelButton.colorBlendFactor = 0
                 touchedBuyNoAds = false
-                if UserDefaults.standard.bool(forKey: "Purchase") == true
+
+                if KeychainWrapper.standard.bool(forKey: "Purchase") == true
                 {
                     self.view?.window?.rootViewController?.present(alertController6, animated: true, completion: nil)
                     removeAdsLabel.text = "Purchased!"
@@ -390,7 +392,8 @@ class StoreScene: SKScene
                 else{run(buttonSound)}
                 restorePurchasesButton.colorBlendFactor = 0
                 touchedRestore = false
-                if UserDefaults.standard.bool(forKey: "Purchase") == true && UserDefaults.standard.bool(forKey: "PurchaseBlackBall") == true
+
+                if KeychainWrapper.standard.bool(forKey: "Purchase") == true && KeychainWrapper.standard.bool(forKey: "PurchaseBlackBall") == true
                 {
                     purchaseBlackBallLabel.text = "Purchased!"
                     removeAdsLabel.text = "Purchased!"
@@ -399,6 +402,7 @@ class StoreScene: SKScene
                 else
                 {
                     IAPService.shared.restorePurchases()
+                    print("here")
                 }
             }
             else

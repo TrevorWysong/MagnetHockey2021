@@ -76,7 +76,7 @@ class Settings: SKScene
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?
         let bannerViewSettingsScene = self.view?.viewWithTag(103) as! GADBannerView?
         
-        if UserDefaults.standard.bool(forKey: "Purchase") != true
+        if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             bannerViewStartScene?.isHidden = true
             bannerViewGameOverScene?.isHidden = true
@@ -246,12 +246,12 @@ class Settings: SKScene
         ballColorButtonLabel.verticalAlignmentMode = .center
         ballColorButtonLabel.position = CGPoint(x: ballColorButton.position.x, y: ballColorButton.position.y)
         ballColorButtonLabel.zPosition = 1
-        if UserDefaults.standard.string(forKey: "BallColor") == "Yellow Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Black Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Blue Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Red Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Orange Ball" ||
-            UserDefaults.standard.string(forKey: "BallColor") == "Pink Ball" ||
-            UserDefaults.standard.string(forKey: "BallColor") == "Purple Ball" ||
-            UserDefaults.standard.string(forKey: "BallColor") == "Green Ball"
+        if KeychainWrapper.standard.string(forKey: "BallColor") == "Yellow Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Black Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Blue Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Red Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Orange Ball" ||
+            KeychainWrapper.standard.string(forKey: "BallColor") == "Pink Ball" ||
+            KeychainWrapper.standard.string(forKey: "BallColor") == "Purple Ball" ||
+            KeychainWrapper.standard.string(forKey: "BallColor") == "Green Ball"
         {
-            ballColorButtonLabel.text = UserDefaults.standard.string(forKey: "BallColor")
+            ballColorButtonLabel.text = KeychainWrapper.standard.string(forKey: "BallColor")
         }
         else
         {
@@ -360,7 +360,7 @@ class Settings: SKScene
     
     func ballColorButtonPressed()
     {
-        if UserDefaults.standard.bool(forKey: "PurchaseBlackBall") == true
+        if KeychainWrapper.standard.bool(forKey: "PurchaseBlackBall") == true
         {
             if ballColorButtonLabel.text == "Yellow Ball"
             {
@@ -457,9 +457,7 @@ class Settings: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 
-                let save2 = UserDefaults.standard
-                save2.set(ballColorButtonLabel.text, forKey: "BallColor")
-                save2.synchronize()
+                let _: Bool = KeychainWrapper.standard.set(ballColorButtonLabel.text!, forKey: "BallColor")
                 
                 backToMenuButton.colorBlendFactor = 0
                 touchedMenu = false
@@ -502,7 +500,6 @@ class Settings: SKScene
                 let save = UserDefaults.standard
                 save.set("Off", forKey: "Sound")
                 SKTAudio.sharedInstance().pauseBackgroundMusic()
-
                 save.synchronize()
                 touchedSoundOff = false
                 soundButton.colorBlendFactor = 0

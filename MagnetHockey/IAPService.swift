@@ -64,36 +64,23 @@ extension IAPService: SKPaymentTransactionObserver
             case .purchasing: break
             case .purchased: if (transaction.payment.productIdentifier == "com.TrevorWysong.MagnetHockeyGame.PurchaseBlackBall") && (transaction.transactionState.status() == "purchased")
             {
-                let save = UserDefaults.standard
-                save.set(true, forKey: "PurchaseBlackBall")
-                save.synchronize()
+                let _: Bool = KeychainWrapper.standard.set(true, forKey: "PurchaseBlackBall")
             }
-            if (transaction.payment.productIdentifier == "com.TrevorWysong.MagnetHockeyGame.RemoveAds")
+            if (transaction.payment.productIdentifier == "com.TrevorWysong.MagnetHockeyGame.RemoveAds")  && (transaction.transactionState.status() == "purchased")
             {
-                let save = UserDefaults.standard
-                save.set(true, forKey: "Purchase")
-                save.synchronize()
+                let _: Bool = KeychainWrapper.standard.set(true, forKey: "Purchase")
             }
             case .restored: if (transaction.payment.productIdentifier == "com.TrevorWysong.MagnetHockeyGame.PurchaseBlackBall")
             {
-                let save = UserDefaults.standard
-                save.set(true, forKey: "PurchaseBlackBall")
-                save.synchronize()
+                let _: Bool = KeychainWrapper.standard.set(true, forKey: "PurchaseBlackBall")
                 
-                let save2 = UserDefaults.standard
-                save2.set(true, forKey: "RestoredColorPack")
-                save2.synchronize()
-                
+                let _: Bool = KeychainWrapper.standard.set(true, forKey: "RestoredColorPack")
             }
             if (transaction.payment.productIdentifier == "com.TrevorWysong.MagnetHockeyGame.RemoveAds")
             {
-                let save = UserDefaults.standard
-                save.set(true, forKey: "Purchase")
-                save.synchronize()
+                let _: Bool = KeychainWrapper.standard.set(true, forKey: "Purchase")
                 
-                let save2 = UserDefaults.standard
-                save2.set(true, forKey: "RestoredRemoveAds")
-                save2.synchronize()
+                let _: Bool = KeychainWrapper.standard.set(true, forKey: "RestoredRemoveAds")
             }
             default: queue.finishTransaction(transaction)
             }
@@ -106,11 +93,12 @@ extension SKPaymentTransactionState
     func status() -> String
     {
         switch self {
-        case .deferred: return "deferred"
-        case .failed: return "failed"
         case .purchased: return "purchased"
         case .purchasing: return "purchasing"
         case .restored: return "restored"
+        case .deferred: return "deferred"
+        case .failed: return "failed"
+        default: return "default"
         }
     }
 }

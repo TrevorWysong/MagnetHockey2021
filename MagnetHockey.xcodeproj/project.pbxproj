@@ -35,6 +35,8 @@
 		C365D43A25B22B2B00FD37C4 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D43925B22B2B00FD37C4 /* Settings.swift */; };
 		C365D44225B22B4E00FD37C4 /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D44125B22B4E00FD37C4 /* StartScene.swift */; };
 		C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D44925B22B6C00FD37C4 /* StoreScene.swift */; };
+		C3683A5E26EA9ECE00852BAB /* KeychainItemAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3683A5C26EA9ECE00852BAB /* KeychainItemAccessibility.swift */; };
+		C3683A5F26EA9ECE00852BAB /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */; };
 		C3E2C3B525AB604300CD2CC0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3E2C3B425AB604300CD2CC0 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -94,6 +96,8 @@
 		C365D43925B22B2B00FD37C4 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		C365D44125B22B4E00FD37C4 /* StartScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
 		C365D44925B22B6C00FD37C4 /* StoreScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreScene.swift; sourceTree = "<group>"; };
+		C3683A5C26EA9ECE00852BAB /* KeychainItemAccessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainItemAccessibility.swift; path = "../../SwiftKeychainWrapper-develop/SwiftKeychainWrapper/KeychainItemAccessibility.swift"; sourceTree = "<group>"; };
+		C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainWrapper.swift; path = "../../SwiftKeychainWrapper-develop/SwiftKeychainWrapper/KeychainWrapper.swift"; sourceTree = "<group>"; };
 		C3E2C3B425AB604300CD2CC0 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		EDBB9D8084BC352C6FFBD103 /* Pods-MagnetHockeyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockeyTests.release.xcconfig"; path = "Target Support Files/Pods-MagnetHockeyTests/Pods-MagnetHockeyTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -174,6 +178,8 @@
 				C311E7C92458CD6F00D0CEC6 /* Info.plist */,
 				C33AD583245DD8BF0015F392 /* MagnetHockey-Bridging-Header.h */,
 				C311E8912458CDE200D0CEC6 /* AppDelegate.swift */,
+				C3683A5C26EA9ECE00852BAB /* KeychainItemAccessibility.swift */,
+				C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */,
 				C311E88B2458CDE100D0CEC6 /* GameViewController.swift */,
 				C311E8442458CDC500D0CEC6 /* LaunchScreen.xib */,
 				C365D43925B22B2B00FD37C4 /* Settings.swift */,
@@ -469,10 +475,12 @@
 				C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */,
 				C311E8E52458CDF100D0CEC6 /* GameScene.swift in Sources */,
 				C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */,
+				C3683A5F26EA9ECE00852BAB /* KeychainWrapper.swift in Sources */,
 				C365D43A25B22B2B00FD37C4 /* Settings.swift in Sources */,
 				C311E9262458CDF100D0CEC6 /* BottomPlayer.swift in Sources */,
 				C33AD581245CCBEC0015F392 /* ReviewService.swift in Sources */,
 				C365D3C625ABA81700FD37C4 /* BackgroundMusic.swift in Sources */,
+				C3683A5E26EA9ECE00852BAB /* KeychainItemAccessibility.swift in Sources */,
 				C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */,
 				C365D44225B22B4E00FD37C4 /* StartScene.swift in Sources */,
 			);
@@ -633,7 +641,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.12;
+				CURRENT_PROJECT_VERSION = 1.6;
 				DEVELOPMENT_TEAM = R5WK65WM35;
 				INFOPLIST_FILE = MagnetHockey/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -641,7 +649,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.TrevorWysong.MagnetHockeyGame;
 				PRODUCT_NAME = "Magnet Hockey";
 				SWIFT_OBJC_BRIDGING_HEADER = "MagnetHockey/MagnetHockey-Bridging-Header.h";
@@ -658,7 +666,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.12;
+				CURRENT_PROJECT_VERSION = 1.6;
 				DEVELOPMENT_TEAM = R5WK65WM35;
 				INFOPLIST_FILE = MagnetHockey/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -666,7 +674,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.TrevorWysong.MagnetHockeyGame;
 				PRODUCT_NAME = "Magnet Hockey";
 				SWIFT_OBJC_BRIDGING_HEADER = "MagnetHockey/MagnetHockey-Bridging-Header.h";

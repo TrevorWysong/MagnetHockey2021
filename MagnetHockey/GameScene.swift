@@ -819,21 +819,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             UserDefaults.standard.synchronize()
         }
         
-        if UserDefaults.standard.string(forKey: "BallColor") == "Yellow Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Black Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Blue Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Red Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Orange Ball" ||
-            UserDefaults.standard.string(forKey: "BallColor") == "Pink Ball" ||
-            UserDefaults.standard.string(forKey: "BallColor") == "Purple Ball" ||
-            UserDefaults.standard.string(forKey: "BallColor") == "Green Ball"
+//        if UserDefaults.standard.string(forKey: "BallColor") == "Yellow Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Black Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Blue Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Red Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Orange Ball" ||
+//            UserDefaults.standard.string(forKey: "BallColor") == "Pink Ball" ||
+//            UserDefaults.standard.string(forKey: "BallColor") == "Purple Ball" ||
+//            UserDefaults.standard.string(forKey: "BallColor") == "Green Ball"
+            
+        if KeychainWrapper.standard.string(forKey: "BallColor") == "Yellow Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Black Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Blue Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Red Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Orange Ball" ||
+            KeychainWrapper.standard.string(forKey: "BallColor") == "Pink Ball" ||
+            KeychainWrapper.standard.string(forKey: "BallColor") == "Purple Ball" ||
+            KeychainWrapper.standard.string(forKey: "BallColor") == "Green Ball"
         {
-            ballColorGame = UserDefaults.standard.string(forKey: "BallColor")!
+            ballColorGame = KeychainWrapper.standard.string(forKey: "BallColor")!
         }
         else
         {
             ballColorGame = "Yellow Ball"
-            UserDefaults.standard.set("Yellow", forKey: "BallColor")
-            UserDefaults.standard.synchronize()
+            KeychainWrapper.standard.set("Yellow", forKey: "BallColor")
         }
 
-        if UserDefaults.standard.bool(forKey: "Purchase") != true
+        if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             interstitialAd = createAndLoadInterstitial()
         }
@@ -1766,7 +1770,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         {
             whoWonGame = "BOTTOM"
             
-            if UserDefaults.standard.bool(forKey: "Purchase") == true
+            if KeychainWrapper.standard.bool(forKey: "Purchase") == true
             {
                 if UserDefaults.standard.string(forKey: "Sound") != "Off"
                 {
@@ -1798,7 +1802,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         {
             whoWonGame = "TOP"
             
-            if UserDefaults.standard.bool(forKey: "Purchase") == true
+            if KeychainWrapper.standard.bool(forKey: "Purchase") == true
             {
                 if UserDefaults.standard.string(forKey: "Sound") != "Off"
                 {
