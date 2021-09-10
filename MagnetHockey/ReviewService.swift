@@ -36,7 +36,7 @@ class ReviewService
 
     public var shouldRequestReview: Bool
     {
-        if ((UserDefaults.standard.integer(forKey: "NumberReviews") <= 2) && (UserDefaults.standard.integer(forKey: "MagnetHockeyGames") >= 4))
+        if ((UserDefaults.standard.integer(forKey: "NumberReviews") <= 2) && (UserDefaults.standard.integer(forKey: "MagnetHockeyGames") >= 4) && (UserDefaults.standard.string(forKey: "EnjoyedApp") != "No"))
         {
             if lastRequest == nil
             {

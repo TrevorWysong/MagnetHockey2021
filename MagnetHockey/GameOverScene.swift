@@ -257,27 +257,29 @@ class GameOverScene: SKScene
         if reviewService.shouldRequestReview == true
         {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { timer in
-                self.refreshAlert.addAction(UIAlertAction(title: "No", style: .default, handler: { (action: UIAlertAction!) in
-                      print("Handle no logic here")
-                }))
-
-                self.refreshAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
-                self.reviewService.requestReview(isWrittenReview: false)
-                }))
-
-                UIApplication.shared.keyWindow?.rootViewController?.present(self.refreshAlert, animated: true, completion: nil)
-                
-                
-                if UserDefaults.standard.integer(forKey: "NumberReviews") > 0
+                if (UserDefaults.standard.integer(forKey: "NumberReviews") < 1)
                 {
-                    self.numberReviews = UserDefaults.standard.integer(forKey: "NumberReviews") + 1
-                    UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "NumberReviews") + 1, forKey: "NumberReviews")
-                    UserDefaults.standard.synchronize()
-                }
-                else
-                {
+                    self.refreshAlert.addAction(UIAlertAction(title: "No", style: .default, handler: { (action: UIAlertAction!) in
+                          print("Handle no logic here")
+                        UserDefaults.standard.set("No", forKey: "EnjoyedApp")
+                        UserDefaults.standard.synchronize()
+                    }))
+
+                    self.refreshAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
+                    self.reviewService.requestReview(isWrittenReview: false)
+                    }))
+
+                    UIApplication.shared.keyWindow?.rootViewController?.present(self.refreshAlert, animated: true, completion: nil)
+
                     self.numberReviews = 1
                     UserDefaults.standard.set(1, forKey: "NumberReviews")
+                    UserDefaults.standard.synchronize()
+                }
+                else if (UserDefaults.standard.integer(forKey: "NumberReviews") >= 1)
+                {
+                    self.reviewService.requestReview(isWrittenReview: false)
+                    self.numberReviews = UserDefaults.standard.integer(forKey: "NumberReviews") + 1
+                    UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "NumberReviews") + 1, forKey: "NumberReviews")
                     UserDefaults.standard.synchronize()
                 }
             })
