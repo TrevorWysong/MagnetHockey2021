@@ -31,7 +31,6 @@ class StoreScene: SKScene
     var touchedBuyColorPack = false
     var touchedMenu = false
     let alertController2 = UIAlertController(title: "Magnet Hockey Store", message: "You have already purchased everything!", preferredStyle: UIAlertController.Style.alert)
-    
     let alertController3 = UIAlertController(title: "Magnet Hockey Store", message: "Restored 'Remove Ads'!", preferredStyle: UIAlertController.Style.alert)
     let alertController4 = UIAlertController(title: "Magnet Hockey Store", message: "Restored 'Ball Color Pack'!", preferredStyle: UIAlertController.Style.alert)
     let alertController5 = UIAlertController(title: "Magnet Hockey Store", message: "Restored 'Remove Ads' and 'Ball Color Pack'!", preferredStyle: UIAlertController.Style.alert)

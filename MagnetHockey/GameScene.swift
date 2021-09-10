@@ -89,6 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var northTouchForCollision = false
     var repulsionMode = false
     var numberRounds = 0
+    var numberGames = 0
     var ballColorGame = ""
     let magnetPlayerSound = SKAction.playSoundFileNamed("Magnet Click.mp3", waitForCompletion: false)
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
@@ -805,6 +806,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         bannerViewInfoScene?.isHidden = true
         bannerViewSettingsScene?.isHidden = true
         
+        if UserDefaults.standard.integer(forKey: "MagnetHockeyGames") > 0
+        {
+            numberGames = UserDefaults.standard.integer(forKey: "MagnetHockeyGames") + 1
+            UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "MagnetHockeyGames") + 1, forKey: "MagnetHockeyGames")
+            UserDefaults.standard.synchronize()
+        }
+        else
+        {
+            numberGames = 1
+            UserDefaults.standard.set(1, forKey: "MagnetHockeyGames")
+            UserDefaults.standard.synchronize()
+        }
+        
         self.physicsWorld.contactDelegate = self
         backgroundColor = SKColor.systemTeal
  
@@ -818,11 +832,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             UserDefaults.standard.set(9, forKey: "Rounds")
             UserDefaults.standard.synchronize()
         }
-        
-//        if UserDefaults.standard.string(forKey: "BallColor") == "Yellow Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Black Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Blue Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Red Ball" || UserDefaults.standard.string(forKey: "BallColor") == "Orange Ball" ||
-//            UserDefaults.standard.string(forKey: "BallColor") == "Pink Ball" ||
-//            UserDefaults.standard.string(forKey: "BallColor") == "Purple Ball" ||
-//            UserDefaults.standard.string(forKey: "BallColor") == "Green Ball"
             
         if KeychainWrapper.standard.string(forKey: "BallColor") == "Yellow Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Black Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Blue Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Red Ball" || KeychainWrapper.standard.string(forKey: "BallColor") == "Orange Ball" ||
             KeychainWrapper.standard.string(forKey: "BallColor") == "Pink Ball" ||

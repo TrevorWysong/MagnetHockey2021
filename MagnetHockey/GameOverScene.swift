@@ -19,8 +19,11 @@ class GameOverScene: SKScene
     var gameWinnerForLabel = ""
     var touchedPlay = false
     var touchedMenu = false
+    var numberReviews = 0
     var adsAreDisabled = false
-//    let reviewService = ReviewService.shared
+    let reviewService = ReviewService.shared
+    
+    let refreshAlert = UIAlertController(title: "Magnet Hockey", message: "Are you having fun?", preferredStyle: UIAlertController.Style.alert)
     
     func createEdges()
     {
@@ -250,6 +253,35 @@ class GameOverScene: SKScene
         magnetEmitter.particleColorBlendFactorSpeed = 0.40
         magnetEmitter.advanceSimulationTime(1.0)
         addChild(magnetEmitter)
+        
+        if reviewService.shouldRequestReview == true
+        {
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false, block: { timer in
+                self.refreshAlert.addAction(UIAlertAction(title: "No", style: .default, handler: { (action: UIAlertAction!) in
+                      print("Handle no logic here")
+                }))
+
+                self.refreshAlert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { (action: UIAlertAction!) in
+                self.reviewService.requestReview(isWrittenReview: false)
+                }))
+
+                UIApplication.shared.keyWindow?.rootViewController?.present(self.refreshAlert, animated: true, completion: nil)
+                
+                
+                if UserDefaults.standard.integer(forKey: "NumberReviews") > 0
+                {
+                    self.numberReviews = UserDefaults.standard.integer(forKey: "NumberReviews") + 1
+                    UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "NumberReviews") + 1, forKey: "NumberReviews")
+                    UserDefaults.standard.synchronize()
+                }
+                else
+                {
+                    self.numberReviews = 1
+                    UserDefaults.standard.set(1, forKey: "NumberReviews")
+                    UserDefaults.standard.synchronize()
+                }
+            })
+        }
     }
     
     func gameScene()
