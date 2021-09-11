@@ -260,7 +260,6 @@ class GameOverScene: SKScene
                 if (UserDefaults.standard.integer(forKey: "NumberReviews") < 1)
                 {
                     self.refreshAlert.addAction(UIAlertAction(title: "No", style: .default, handler: { (action: UIAlertAction!) in
-                          print("Handle no logic here")
                         UserDefaults.standard.set("No", forKey: "EnjoyedApp")
                         UserDefaults.standard.synchronize()
                     }))

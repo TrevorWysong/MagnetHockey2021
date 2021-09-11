@@ -44,6 +44,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var centerCircle = SKSpriteNode()
     var playerLosesBackground = SKSpriteNode()
     var playerWinsBackground = SKSpriteNode()
+    var pauseBackground = SKSpriteNode()
     var xMark = SKSpriteNode()
     var checkMark = SKSpriteNode()
     var ballInSouthGoal = false
@@ -56,7 +57,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var topGoalPlus = SKSpriteNode()
     var bottomGoalPlus = SKSpriteNode()
     var pauseButton = SKSpriteNode()
+    var pauseButtonSprite = SKSpriteNode()
+    var playButtonSprite = SKSpriteNode()
     var touchedPauseButton = false
+    var GameIsPaused = false
     var southPlayer : BottomPlayer?
     var northPlayer : NorthPlayer?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
@@ -370,20 +374,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     }
     
    
-    func createPauseButton()
+    func createPauseAndPlayButton()
     {
         pauseButton = SKSpriteNode(imageNamed: "pauseButtonBackground.png")
         pauseButton.position = CGPoint(x: frame.width * 0.90, y: frame.height * 0.50)
         pauseButton.scale(to: CGSize(width: frame.width * 0.09, height: frame.width * 0.09))
         pauseButton.colorBlendFactor = 0.40
+        pauseButton.zPosition = 106
         addChild(pauseButton)
         
-        let pauseButtonSprite:SKSpriteNode!
+        playButtonSprite = SKSpriteNode(imageNamed: "playButtonSprite.png")
+        playButtonSprite.position = CGPoint(x: frame.width * 0.90, y: frame.height * 0.50)
+        playButtonSprite.scale(to: CGSize(width: frame.width * 0.08, height: frame.width * 0.08))
+        playButtonSprite.colorBlendFactor = 0
+        playButtonSprite.zPosition = 107
+        playButtonSprite.isHidden = true
+        addChild(playButtonSprite)
+        
         pauseButtonSprite = SKSpriteNode(imageNamed: "pauseButtonVertical.png")
         pauseButtonSprite.position = CGPoint(x: frame.width * 0.90, y: frame.height * 0.50)
         pauseButtonSprite.scale(to: CGSize(width: frame.width * 0.08, height: frame.width * 0.08))
         pauseButtonSprite.colorBlendFactor = 0
-        pauseButtonSprite.zPosition = 1
+        pauseButtonSprite.zPosition = 107
         addChild(pauseButtonSprite)
     }
     
@@ -430,6 +442,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         addChild(playerLosesBackground)
     }
     
+    func createPauseBackground()
+    {
+        pauseBackground = SKSpriteNode(imageNamed: "blurryPauseBackground.png")
+        pauseBackground.scale(to: CGSize(width: frame.width, height: frame.height))
+        pauseBackground.zPosition = -10
+        pauseBackground.colorBlendFactor = 0.05
+        pauseBackground.position = CGPoint(x: -1000, y: -1000)
+        addChild(pauseBackground)
+    }
+    
     func updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
     {
         playerLosesBackground.position = CGPoint(x: frame.width/2, y: frame.height * (3/4))
@@ -437,7 +459,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         checkMark.position = CGPoint(x: frame.width/2, y: frame.height * 0.30)
         xMark.position = CGPoint(x: frame.width/2, y: frame.height * 0.70)
         checkMark.zRotation = 0
-
     }
     
     func updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
@@ -449,12 +470,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         checkMark.zRotation = .pi
     }
     
+    func updatePauseBackground()
+    {
+        pauseBackground.position = CGPoint(x: frame.width/2, y: frame.height/2)
+        pauseBackground.zPosition = 105
+    }
+    
     func resetPlayerLoseWinBackground()
     {
         playerWinsBackground.position = CGPoint(x: -1000, y: -1000)
         playerLosesBackground.position = CGPoint(x: -1000, y: -1000)
         xMark.position = CGPoint(x: -1000, y: -1000)
         checkMark.position = CGPoint(x: -1000, y: -1000)
+    }
+    
+    func resetPauseBackground()
+    {
+        pauseBackground.position = CGPoint(x: -1000, y: -1000)
     }
     
     func createMagnets()
@@ -854,13 +886,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         drawCenterLine()
         getMaxBallAndMagnetSpeed()
         createCenterCircle()
-        createPauseButton()
+        createPauseAndPlayButton()
         createPlayers()
         createMagnets()
         createMagnetHolders()
         createGoals()
         createBall()
         createPlayerLoseWinBackgrounds()
+        createPauseBackground()
         createNorthPlayerScore()
         createSouthPlayerScore()
         createEdges()
@@ -2041,13 +2074,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         {
             let nodesArray = self.nodes(at: location)
             
-            if nodesArray.contains(pauseButton) && touchedPauseButton == true
+            if nodesArray.contains(pauseButton) && touchedPauseButton == true && GameIsPaused == false
             {
                 touchedPauseButton = false
                 pauseButton.colorBlendFactor = 0.40
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
+                updatePauseBackground()
+                pauseButtonSprite.isHidden = true
+                playButtonSprite.isHidden = false
+                GameIsPaused = true
+            }
+            else if nodesArray.contains(pauseButton) && touchedPauseButton == true && GameIsPaused == true
+            {
+                touchedPauseButton = false
+                pauseButton.colorBlendFactor = 0.40
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                resetPauseBackground()
+                pauseButtonSprite.isHidden = false
+                playButtonSprite.isHidden = true
+                GameIsPaused = false
             }
             else if touchedPauseButton == true
             {
