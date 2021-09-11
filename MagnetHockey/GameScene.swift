@@ -403,6 +403,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         addChild(pauseButtonSprite)
     }
     
+    func clearPauseButton()
+    {
+        pauseBackground.isHidden = true
+        pauseButton.isHidden = true
+        pauseButtonSprite.isHidden = true
+        playButtonSprite.isHidden = true
+    }
+    
+    func resetPauseButton()
+    {
+        pauseBackground.isHidden = false
+        pauseButton.isHidden = false
+        if GameIsPaused != true
+        {
+            pauseButtonSprite.isHidden = false
+        }
+        else
+        {
+            playButtonSprite.isHidden = true
+        }
+    }
+    
     func getMaxBallAndMagnetSpeed()
     {
         if frame.width > 700
@@ -472,6 +494,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         xMark.position = CGPoint(x: frame.width/2, y: frame.height * 0.30)
         checkMark.position = CGPoint(x: frame.width/2, y: frame.height * 0.70)
         checkMark.zRotation = .pi
+        clearPauseButton()
     }
     
     func updatePauseBackground()
@@ -486,6 +509,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         playerLosesBackground.position = CGPoint(x: -1000, y: -1000)
         xMark.position = CGPoint(x: -1000, y: -1000)
         checkMark.position = CGPoint(x: -1000, y: -1000)
+        resetPauseButton()
     }
     
     func resetPauseBackground()
@@ -1915,6 +1939,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
             updateNorthPlayerScore()
             clearMagnets()
+            clearPauseButton()
             clearPlayer()
             southPlayerMagnetCount = 0
             northPlayerMagnetCount = 0
@@ -1924,6 +1949,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
                     self.resetBallBottomPlayerBallStart()
                     self.resetMagnets()
+                    self.resetPauseButton()
                     self.resetPlayer()
                     self.resetMagnetHitMarkers()
                     self.resetPlayerLoseWinBackground()
@@ -1944,6 +1970,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
             southPlayerScore += 1
             clearMagnets()
+            clearPauseButton()
             updateSouthPlayerScore()
             bottomPlayerWinsRound = true
             southPlayerMagnetCount = 0
@@ -1954,6 +1981,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
                     self.resetBallTopPlayerBallStart()
                     self.resetMagnets()
+                    self.resetPauseButton()
                     self.resetPlayer()
                     self.resetMagnetHitMarkers()
                     self.resetPlayerLoseWinBackground()
@@ -1973,6 +2001,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             updateNorthPlayerScore()
             topPlayerWinsRound = true
             clearMagnets()
+            clearPauseButton()
             ball?.physicsBody?.isDynamic = false
             ball?.isHidden = true
             southPlayerMagnetCount = 0
@@ -1987,6 +2016,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                     self.ball?.isHidden = false
                     self.resetMagnetHitMarkers()
                     self.resetMagnets()
+                    self.resetPauseButton()
                     self.resetPlayer()
                     self.resetPlayerLoseWinBackground()
                     self.topPlayerWinsRound = false
@@ -2004,6 +2034,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             southPlayerScore += 1
             updateSouthPlayerScore()
             bottomPlayerWinsRound = true
+            clearPauseButton()
             clearMagnets()
             ball?.physicsBody?.isDynamic = false
             ball?.isHidden = true
@@ -2020,6 +2051,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                     self.resetMagnetHitMarkers()
                     self.resetMagnets()
                     self.resetPlayer()
+                    self.resetPauseButton()
                     self.resetPlayerLoseWinBackground()
                     self.bottomPlayerWinsRound = false
                     self.leftMagnetIsActive = true
@@ -2033,6 +2065,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         if ((southPlayerScore * 2 >= numberRounds) || northPlayerScore * 2 >= numberRounds) && (gameOver == false)
         {
             gameOver = true
+            clearPauseButton()
             Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                 self.gameOverIsTrue()
             })
@@ -2041,7 +2074,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     
     override func update(_ currentTime: TimeInterval)
     {
-
         if  isOffScreen(node: ball!)
         {
             resetBallStart()
