@@ -94,6 +94,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var repulsionMode = false
     var numberRounds = 0
     var numberGames = 0
+    var tempLeftMagnetVelocity = CGVector(dx: 0, dy: 0)
+    var tempCenterMagnetVelocity = CGVector(dx: 0, dy: 0)
+    var tempRightMagnetVelocity = CGVector(dx: 0, dy: 0)
+    var tempBallVelocity = CGVector(dx: 0, dy: 0)
     var ballColorGame = ""
     let magnetPlayerSound = SKAction.playSoundFileNamed("Magnet Click.mp3", waitForCompletion: false)
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
@@ -1100,6 +1104,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         northRightMagnetX.isHidden = true
     }
     
+    func pausePhysics()
+    {
+        tempBallVelocity = ball!.physicsBody!.velocity
+        tempLeftMagnetVelocity = leftMagnet.physicsBody!.velocity
+        tempCenterMagnetVelocity = centerMagnet.physicsBody!.velocity
+        tempRightMagnetVelocity = rightMagnet.physicsBody!.velocity
+        
+        ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+    }
+    
+    func resumePhysics()
+    {
+        ball?.physicsBody?.velocity = tempBallVelocity
+        leftMagnet.physicsBody?.velocity = tempLeftMagnetVelocity
+        centerMagnet.physicsBody?.velocity = tempCenterMagnetVelocity
+        rightMagnet.physicsBody?.velocity = tempRightMagnetVelocity
+        
+        tempBallVelocity = CGVector(dx: 0, dy: 0)
+        tempLeftMagnetVelocity = CGVector(dx: 0, dy: 0)
+        tempCenterMagnetVelocity = CGVector(dx: 0, dy: 0)
+        tempRightMagnetVelocity = CGVector(dx: 0, dy: 0)
+    }
+    
     func isOffScreen(node: SKShapeNode) -> Bool
     {
         return !frame.contains(node.position)
@@ -2084,6 +2114,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 updatePauseBackground()
                 pauseButtonSprite.isHidden = true
                 playButtonSprite.isHidden = false
+                pausePhysics()
                 GameIsPaused = true
             }
             else if nodesArray.contains(pauseButton) && touchedPauseButton == true && GameIsPaused == true
@@ -2096,6 +2127,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 resetPauseBackground()
                 pauseButtonSprite.isHidden = false
                 playButtonSprite.isHidden = true
+                resumePhysics()
                 GameIsPaused = false
             }
             else if touchedPauseButton == true
