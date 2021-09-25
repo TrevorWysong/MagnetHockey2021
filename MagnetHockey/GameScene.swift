@@ -2215,7 +2215,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             }
             else if nodesArray.contains(backToMenuButton) && touchedBackToMenuButton == true
             {
-                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                if UserDefaults.standard.string(forKey: "Sound") == "On"
+                {
+                    run(buttonSound)
+                    SKTAudio.sharedInstance().playBackgroundMusicFadeIn("MenuSong2.mp3")
+                }
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 backToMenuButton.colorBlendFactor = 0
