@@ -60,9 +60,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var pauseButtonSprite = SKSpriteNode()
     var backToMenuButton = SKSpriteNode()
     let backToMenuButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var soundButton = SKSpriteNode()
+    var soundButtonSprite = SKSpriteNode()
+    var soundButtonOffSprite = SKSpriteNode()
     var playButtonSprite = SKSpriteNode()
     var touchedPauseButton = false
     var touchedBackToMenuButton = false
+    var touchedSoundOff = false
     var GameIsPaused = false
     var southPlayer : BottomPlayer?
     var northPlayer : NorthPlayer?
@@ -379,7 +383,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         centerCircle.colorBlendFactor = 0.50
         addChild(centerCircle)
     }
-    
    
     func createPauseAndPlayButton()
     {
@@ -449,16 +452,87 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         addChild(backToMenuButtonLabel)
     }
     
+    func createSoundButton()
+    {
+        soundButton = SKSpriteNode(imageNamed: "SquareBlueButton.png")
+        soundButton.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.25)
+        soundButton.zPosition = 125
+        if frame.height > 800 && frame.width < 600
+        {
+            soundButton.scale(to: CGSize(width: frame.width * 0.25, height: frame.width * 0.25))
+        }
+        else
+        {
+            soundButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
+        }
+        soundButton.colorBlendFactor = 0
+        soundButton.isHidden = true
+        addChild(soundButton)
+        
+        soundButtonSprite = SKSpriteNode(imageNamed: "soundOn.png")
+        soundButtonSprite.position = CGPoint(x: soundButton.position.x, y: soundButton.position.y)
+        soundButtonSprite.zPosition = 126
+        if frame.height > 800 && frame.width < 600
+        {
+            soundButtonSprite.scale(to: CGSize(width: frame.width * 0.1125, height: frame.width * 0.1125))
+        }
+        else
+        {
+            soundButtonSprite.scale(to: CGSize(width: frame.width * 0.09, height: frame.width * 0.09))
+        }
+        soundButtonSprite.colorBlendFactor = 0
+        soundButtonSprite.isHidden = true
+        addChild(soundButtonSprite)
+        
+        soundButtonOffSprite = SKSpriteNode(imageNamed: "soundOff.png")
+        soundButtonOffSprite.position = CGPoint(x: soundButton.position.x, y: soundButton.position.y)
+        soundButtonOffSprite.zPosition = 126
+        if frame.height > 800 && frame.width < 600
+        {
+            soundButtonOffSprite.scale(to: CGSize(width: frame.width * 0.1125, height: frame.width * 0.1125))
+        }
+        else
+        {
+            soundButtonOffSprite.scale(to: CGSize(width: frame.width * 0.09, height: frame.width * 0.09))
+        }
+        soundButtonOffSprite.colorBlendFactor = 0
+        soundButtonOffSprite.isHidden = true
+        addChild(soundButtonOffSprite)
+    }
+    
     func showPauseMenuButton()
     {
         backToMenuButton.isHidden = false
         backToMenuButtonLabel.isHidden = false
+        soundButton.isHidden = false
+        
+        if UserDefaults.standard.string(forKey: "Sound") == "On"
+        {
+            soundButtonSprite.isHidden = false
+            soundButtonOffSprite.isHidden = true
+        }
+        else if UserDefaults.standard.string(forKey: "Sound") == "Off"
+        {
+            soundButtonSprite.isHidden = true
+            soundButtonOffSprite.isHidden = false
+        }
+        else
+        {
+            let save = UserDefaults.standard
+            save.set("On", forKey: "Sound")
+            save.synchronize()
+            soundButtonSprite.isHidden = false
+            soundButtonOffSprite.isHidden = true
+        }
     }
     
     func hidePauseMenuButtons()
     {
         backToMenuButton.isHidden = true
         backToMenuButtonLabel.isHidden = true
+        soundButton.isHidden = true
+        soundButtonSprite.isHidden = true
+        soundButtonOffSprite.isHidden = true
     }
     
     func getMaxBallAndMagnetSpeed()
@@ -959,6 +1033,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         createPlayerLoseWinBackgrounds()
         createPauseBackground()
         createBackToMenuButton()
+        createSoundButton()
         createNorthPlayerScore()
         createSouthPlayerScore()
         createEdges()
@@ -2167,6 +2242,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 backToMenuButton.colorBlendFactor = 0.50
                 touchedBackToMenuButton = true
             }
+            else if nodesArray.contains(soundButton)
+            {
+                soundButton.colorBlendFactor = 0.5
+                touchedSoundOff = true
+            }
             
         }
     }
@@ -2183,7 +2263,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             {
                 touchedPauseButton = false
                 pauseButton.colorBlendFactor = 0.40
-                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                if UserDefaults.standard.string(forKey: "Sound") == "On"
+                {
+                    run(buttonSound)
+                    SKTAudio.sharedInstance().playBackgroundMusic("MenuSong2.mp3")
+                }
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 updatePauseBackground()
@@ -2208,6 +2292,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 playButtonSprite.isHidden = true
                 resumePhysics()
                 hidePauseMenuButtons()
+                SKTAudio.sharedInstance().pauseBackgroundMusic()
                 // Configure the view.
                 let skView = self.view!
                 skView.isMultipleTouchEnabled = true
@@ -2218,7 +2303,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 if UserDefaults.standard.string(forKey: "Sound") == "On"
                 {
                     run(buttonSound)
-                    SKTAudio.sharedInstance().playBackgroundMusicFadeIn("MenuSong2.mp3")
                 }
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -2237,6 +2321,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.75)
                 skView.presentScene(scene, transition: transition)
             }
+            else if nodesArray.contains(soundButton) && touchedSoundOff == true && UserDefaults.standard.string(forKey: "Sound") == "On"
+            {
+                soundButtonSprite.isHidden = true
+                soundButtonOffSprite.isHidden = false
+                let save = UserDefaults.standard
+                save.set("Off", forKey: "Sound")
+                SKTAudio.sharedInstance().pauseBackgroundMusic()
+                save.synchronize()
+                touchedSoundOff = false
+                soundButton.colorBlendFactor = 0
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+            }
+            else if nodesArray.contains(soundButton) && touchedSoundOff == true && UserDefaults.standard.string(forKey: "Sound") == "Off"
+            {
+                soundButtonSprite.isHidden = false
+                soundButtonOffSprite.isHidden = true
+                let save = UserDefaults.standard
+                save.set("On", forKey: "Sound")
+                save.synchronize()
+                touchedSoundOff = false
+                soundButton.colorBlendFactor = 0
+                if UserDefaults.standard.string(forKey: "Sound") == "On"
+                {
+                    run(buttonSound)
+                    SKTAudio.sharedInstance().playBackgroundMusic("MenuSong2.mp3")
+                }
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+            }
             else
             {
                 if touchedPauseButton == true
@@ -2248,6 +2364,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 {
                     touchedBackToMenuButton = false
                     backToMenuButton.colorBlendFactor = 0
+                }
+                if touchedSoundOff == true
+                {
+                    touchedSoundOff = false
+                    soundButton.colorBlendFactor = 0
                 }
             }
         }

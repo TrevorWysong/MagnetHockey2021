@@ -230,7 +230,6 @@ class Settings: SKScene
             save.synchronize()
             soundButtonSprite.isHidden = false
             soundButtonOffSprite.isHidden = true
-            
         }
         
         ballColorButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
