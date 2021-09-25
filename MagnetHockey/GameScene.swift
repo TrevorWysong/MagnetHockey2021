@@ -58,8 +58,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var bottomGoalPlus = SKSpriteNode()
     var pauseButton = SKSpriteNode()
     var pauseButtonSprite = SKSpriteNode()
+    var backToMenuButton = SKSpriteNode()
+    let backToMenuButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     var playButtonSprite = SKSpriteNode()
     var touchedPauseButton = false
+    var touchedBackToMenuButton = false
     var GameIsPaused = false
     var southPlayer : BottomPlayer?
     var northPlayer : NorthPlayer?
@@ -423,6 +426,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         {
             playButtonSprite.isHidden = true
         }
+    }
+    
+    func createBackToMenuButton()
+    {
+        backToMenuButton = SKSpriteNode(imageNamed: "BlueButton.png")
+        backToMenuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.40)
+        backToMenuButton.scale(to: CGSize(width: frame.width * 0.60, height: frame.height * 0.1))
+        backToMenuButton.isHidden = true
+        backToMenuButton.zPosition = 125
+        addChild(backToMenuButton)
+        
+        // set size, color, position and text of the tapStartLabel
+        backToMenuButtonLabel.fontSize = frame.width/17.5
+        backToMenuButtonLabel.fontColor = SKColor.white
+        backToMenuButtonLabel.horizontalAlignmentMode = .center
+        backToMenuButtonLabel.verticalAlignmentMode = .center
+        backToMenuButtonLabel.position = CGPoint(x: backToMenuButton.position.x, y: backToMenuButton.position.y)
+        backToMenuButtonLabel.zPosition = 126
+        backToMenuButtonLabel.text = "Back to Menu"
+        backToMenuButtonLabel.isHidden = true
+        addChild(backToMenuButtonLabel)
+    }
+    
+    func showPauseMenuButton()
+    {
+        backToMenuButton.isHidden = false
+        backToMenuButtonLabel.isHidden = false
+    }
+    
+    func hidePauseMenuButtons()
+    {
+        backToMenuButton.isHidden = true
+        backToMenuButtonLabel.isHidden = true
     }
     
     func getMaxBallAndMagnetSpeed()
@@ -922,6 +958,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         createBall()
         createPlayerLoseWinBackgrounds()
         createPauseBackground()
+        createBackToMenuButton()
         createNorthPlayerScore()
         createSouthPlayerScore()
         createEdges()
@@ -2125,6 +2162,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 pauseButton.colorBlendFactor = 0
                 touchedPauseButton = true
             }
+            else if nodesArray.contains(backToMenuButton)
+            {
+                backToMenuButton.colorBlendFactor = 0.50
+                touchedBackToMenuButton = true
+            }
+            
         }
     }
     
@@ -2147,6 +2190,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 pauseButtonSprite.isHidden = true
                 playButtonSprite.isHidden = false
                 pausePhysics()
+                showPauseMenuButton()
+                // Configure the view.
+                let skView = self.view!
+                skView.isMultipleTouchEnabled = false
                 GameIsPaused = true
             }
             else if nodesArray.contains(pauseButton) && touchedPauseButton == true && GameIsPaused == true
@@ -2160,12 +2207,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
                 pauseButtonSprite.isHidden = false
                 playButtonSprite.isHidden = true
                 resumePhysics()
+                hidePauseMenuButtons()
+                // Configure the view.
+                let skView = self.view!
+                skView.isMultipleTouchEnabled = true
                 GameIsPaused = false
             }
-            else if touchedPauseButton == true
+            else if nodesArray.contains(backToMenuButton) && touchedBackToMenuButton == true
             {
-                touchedPauseButton = false
-                pauseButton.colorBlendFactor = 0.40
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                backToMenuButton.colorBlendFactor = 0
+                touchedBackToMenuButton = false
+                let scene = StartScene(size: (view?.bounds.size)!)
+
+                // Configure the view.
+                let skView = self.view!
+
+                /* Sprite Kit applies additional optimizations to improve rendering performance */
+                skView.ignoresSiblingOrder = true
+
+                /* Set the scale mode to scale to fit the window */
+                scene.scaleMode = .resizeFill
+                let transition = SKTransition.doorsCloseHorizontal(withDuration: 0.75)
+                skView.presentScene(scene, transition: transition)
+            }
+            else
+            {
+                if touchedPauseButton == true
+                {
+                    touchedPauseButton = false
+                    pauseButton.colorBlendFactor = 0.40
+                }
+                if touchedBackToMenuButton == true
+                {
+                    touchedBackToMenuButton = false
+                    backToMenuButton.colorBlendFactor = 0
+                }
             }
         }
     }
