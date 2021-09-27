@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "pauseButtonSprite.png",
+      "filename" : "pauseTitleBackground.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "pauseButtonSprite-1.png",
+      "filename" : "pauseTitleBackground-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "pauseButtonSprite-2.png",
+      "filename" : "pauseTitleBackground-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

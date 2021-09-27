@@ -78,7 +78,6 @@ class StartScene: SKScene
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?
         let bannerViewSettingsScene = self.view?.viewWithTag(103) as! GADBannerView?
         
-//        if UserDefaults.standard.bool(forKey: "Purchase") != true
         if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             bannerViewStartScene?.isHidden = false
@@ -114,24 +113,17 @@ class StartScene: SKScene
         if frame.width < 600 && frame.height > 800
         {
             titleLabel.fontSize = frame.width/7
-
+            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.84)
         }
         else
         {
             titleLabel.fontSize = frame.width/8
+            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.85)
         }
         titleLabel.fontName = "Futura"
         titleLabel.fontColor = SKColor.white
         titleLabel.horizontalAlignmentMode = .center
         titleLabel.verticalAlignmentMode = .center
-        if frame.height > 800 && frame.width < 600
-        {
-            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.84)
-        }
-        else
-        {
-            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.85)
-        }
         titleLabel.zPosition = 1
         titleLabel.text = "MAGNET"
         addChild(titleLabel)
@@ -140,24 +132,17 @@ class StartScene: SKScene
         if frame.width < 600 && frame.height > 800
         {
             titleLabel2.fontSize = frame.width/7
-
+            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.76)
         }
         else
         {
             titleLabel2.fontSize = frame.width/8
+            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.75)
         }
         titleLabel2.fontName = "Futura"
         titleLabel2.fontColor = SKColor.white
         titleLabel2.horizontalAlignmentMode = .center
         titleLabel2.verticalAlignmentMode = .center
-        if frame.height > 800 && frame.width < 600
-        {
-            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.76)
-        }
-        else
-        {
-            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.75)
-        }
         titleLabel2.zPosition = 1
         titleLabel2.text = "HOCKEY"
         addChild(titleLabel2)

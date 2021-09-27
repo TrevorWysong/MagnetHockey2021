@@ -60,6 +60,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var pauseButtonSprite = SKSpriteNode()
     var backToMenuButton = SKSpriteNode()
     let backToMenuButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    // you can use another font for the label if you want...
+    let pauseTitleLabel1 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let pauseTitleLabel2 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var pauseTitleBackground1 = SKSpriteNode()
+    var pauseTitleBackground2 = SKSpriteNode()
     var soundButton = SKSpriteNode()
     var soundButtonSprite = SKSpriteNode()
     var soundButtonOffSprite = SKSpriteNode()
@@ -434,7 +439,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     func createBackToMenuButton()
     {
         backToMenuButton = SKSpriteNode(imageNamed: "BlueButton.png")
-        backToMenuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.40)
+        backToMenuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.20)
         backToMenuButton.scale(to: CGSize(width: frame.width * 0.60, height: frame.height * 0.1))
         backToMenuButton.isHidden = true
         backToMenuButton.zPosition = 125
@@ -455,7 +460,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     func createSoundButton()
     {
         soundButton = SKSpriteNode(imageNamed: "SquareBlueButton.png")
-        soundButton.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.25)
+        soundButton.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.35)
         soundButton.zPosition = 125
         if frame.height > 800 && frame.width < 600
         {
@@ -505,6 +510,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         backToMenuButton.isHidden = false
         backToMenuButtonLabel.isHidden = false
         soundButton.isHidden = false
+        pauseTitleBackground1.isHidden = false
+        pauseTitleBackground2.isHidden = false
+        pauseTitleLabel1.isHidden = false
+        pauseTitleLabel2.isHidden = false
         
         if UserDefaults.standard.string(forKey: "Sound") == "On"
         {
@@ -533,6 +542,69 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         soundButton.isHidden = true
         soundButtonSprite.isHidden = true
         soundButtonOffSprite.isHidden = true
+        pauseTitleBackground1.isHidden = true
+        pauseTitleBackground2.isHidden = true
+        pauseTitleLabel1.isHidden = true
+        pauseTitleLabel2.isHidden = true
+    }
+    
+    func createPauseGameTitle()
+    {
+        pauseTitleBackground1 = SKSpriteNode(imageNamed: "pauseTitleBackground.png")
+        pauseTitleBackground1.scale(to: CGSize(width: frame.width * 0.67, height: frame.height/10))
+        pauseTitleBackground1.zPosition = 125
+        pauseTitleBackground1.isHidden = true
+        addChild(pauseTitleBackground1)
+        
+        // set size, color, position and text of the tapStartLabel
+        if frame.width < 600 && frame.height > 800
+        {
+            pauseTitleLabel1.fontSize = frame.width/6.5
+            pauseTitleLabel1.position = CGPoint(x: frame.width/2, y: frame.height * 0.79)
+            pauseTitleBackground1.position = CGPoint(x: frame.width/2, y: frame.height * 0.79)
+        }
+        else
+        {
+            pauseTitleLabel1.fontSize = frame.width/7.5
+            pauseTitleLabel1.position = CGPoint(x: frame.width/2, y: frame.height * 0.80)
+            pauseTitleBackground1.position = CGPoint(x: frame.width/2, y: frame.height * 0.80)
+        }
+        pauseTitleLabel1.fontName = "Futura"
+        pauseTitleLabel1.fontColor = SKColor.white
+        pauseTitleLabel1.horizontalAlignmentMode = .center
+        pauseTitleLabel1.verticalAlignmentMode = .center
+        pauseTitleLabel1.zPosition = 126
+        pauseTitleLabel1.text = "MAGNET"
+        pauseTitleLabel1.isHidden = true
+        addChild(pauseTitleLabel1)
+        
+        pauseTitleBackground2 = SKSpriteNode(imageNamed: "pauseTitleBackground.png")
+        pauseTitleBackground2.scale(to: CGSize(width: frame.width * 0.64, height: frame.height/10))
+        pauseTitleBackground2.zPosition = 125
+        pauseTitleBackground2.isHidden = true
+        addChild(pauseTitleBackground2)
+        
+        // set size, color, position and text of the tapStartLabel
+        if frame.width < 600 && frame.height > 800
+        {
+            pauseTitleLabel2.fontSize = frame.width/6.5
+            pauseTitleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.68)
+            pauseTitleBackground2.position = CGPoint(x: frame.width/2, y: frame.height * 0.68)
+        }
+        else
+        {
+            pauseTitleLabel2.fontSize = frame.width/7.5
+            pauseTitleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.67)
+            pauseTitleBackground2.position = CGPoint(x: frame.width/2, y: frame.height * 0.67)
+        }
+        pauseTitleLabel2.fontName = "Futura"
+        pauseTitleLabel2.fontColor = SKColor.white
+        pauseTitleLabel2.horizontalAlignmentMode = .center
+        pauseTitleLabel2.verticalAlignmentMode = .center
+        pauseTitleLabel2.zPosition = 126
+        pauseTitleLabel2.text = "HOCKEY"
+        pauseTitleLabel2.isHidden = true
+        addChild(pauseTitleLabel2)
     }
     
     func getMaxBallAndMagnetSpeed()
@@ -1032,6 +1104,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         createBall()
         createPlayerLoseWinBackgrounds()
         createPauseBackground()
+        createPauseGameTitle()
         createBackToMenuButton()
         createSoundButton()
         createNorthPlayerScore()
@@ -2189,6 +2262,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         if  isOffScreen(node: ball!)
         {
             resetBallStart()
+        }
+        
+        if GameIsPaused == true
+        {
+            ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         }
         
         springFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer!.position.y))
