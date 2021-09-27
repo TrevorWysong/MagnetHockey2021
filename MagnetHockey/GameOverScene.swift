@@ -7,10 +7,26 @@ import GoogleMobileAds
 class GameOverScene: SKScene
 {
     // you can use another font for the label if you want...
-    let tapStartLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
-    let gameWinnerLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
-    let gameWinnerLabelMiddle = SKLabelNode(fontNamed: "STHeitiTC-Medium")
-    let backToMenuButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var tapStartLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineWest = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineNorthWest = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineSouthWest = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineEast = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineSouthEast = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineNorthEast = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineSouth = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelOutlineNorth = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddle = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineWest = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineEast = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineSouth = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineNorth = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineNorthEast = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineNorthWest = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineSouthEast = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var gameWinnerLabelMiddleOutlineSouthWest = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var backToMenuButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     var magnetEmitter:SKEmitterNode!
     let buttonSound = SKAction.playSoundFileNamed("ChangeRounds.mp3", waitForCompletion: false)
     var backToMenuButton = SKSpriteNode()
@@ -103,16 +119,8 @@ class GameOverScene: SKScene
         backToMenuButton.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
         backToMenuButton.colorBlendFactor = 0
         addChild(backToMenuButton)
-
-        // set size, color, position and text of the tapStartLabel
-        backToMenuButtonLabel.fontSize = frame.width/17.5
-        backToMenuButtonLabel.fontColor = SKColor.white
-        backToMenuButtonLabel.horizontalAlignmentMode = .center
-        backToMenuButtonLabel.verticalAlignmentMode = .center
-        backToMenuButtonLabel.position = CGPoint(x: backToMenuButton.position.x, y: backToMenuButton.position.y)
-        backToMenuButtonLabel.zPosition = 1
-        backToMenuButtonLabel.text = "Back to Menu"
-        addChild(backToMenuButtonLabel)
+        
+        backToMenuButtonLabel = createText(textName: backToMenuButtonLabel, text: "Back to Menu", position: CGPoint(x: backToMenuButton.position.x, y: backToMenuButton.position.y), iPhoneFontSize: frame.width/17.5, iPadFontSize: frame.width/17.5, color: SKColor.white, zPos: 2)
         
         if let gameWinner = self.userData?.value(forKey: "gameWinner")
         {
@@ -179,40 +187,26 @@ class GameOverScene: SKScene
         bottomGameWinnerBackground.zPosition = 0
         addChild(bottomGameWinnerBackground)
         
-        // set size, color, position and text of the gameWinnerLabel
-        if frame.width < 600
-        {
-            gameWinnerLabel.fontSize = frame.width/6.5
-        }
-        else
-        {
-            gameWinnerLabel.fontSize = frame.width/8
-        }
-        gameWinnerLabel.fontColor = SKColor.white
-        gameWinnerLabel.horizontalAlignmentMode = .center
-        gameWinnerLabel.verticalAlignmentMode = .center
-        gameWinnerLabel.position = CGPoint(x: topGameWinnerBackground.position.x, y: topGameWinnerBackground.position.y)
-        gameWinnerLabel.zPosition = 1
-        gameWinnerLabel.text = gameWinnerForLabel
-        addChild(gameWinnerLabel)
+        gameWinnerLabel = createText(textName: gameWinnerLabel, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x, y: topGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.white, zPos: 2)
+        gameWinnerLabelOutlineWest = createText(textName: gameWinnerLabelOutlineWest, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x - 2, y: topGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelOutlineNorthWest = createText(textName: gameWinnerLabelOutlineNorthWest, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x - 2, y: topGameWinnerBackground.position.y + 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelOutlineSouthWest = createText(textName: gameWinnerLabelOutlineSouthWest, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x - 2, y: topGameWinnerBackground.position.y - 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelOutlineNorthEast = createText(textName: gameWinnerLabelOutlineNorthEast, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x + 2, y: topGameWinnerBackground.position.y + 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelOutlineSouthEast = createText(textName: gameWinnerLabelOutlineSouthEast, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x + 2, y: topGameWinnerBackground.position.y - 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelOutlineEast = createText(textName: gameWinnerLabelOutlineEast, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x + 2, y: topGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelOutlineSouth = createText(textName: gameWinnerLabelOutlineSouth, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x, y: topGameWinnerBackground.position.y - 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelOutlineNorth = createText(textName: gameWinnerLabelOutlineNorth, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x, y: topGameWinnerBackground.position.y + 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
         
-        // set size, color, position and text of the gameWinnerLabel
-        if frame.width < 600
-        {
-            gameWinnerLabelMiddle.fontSize = frame.width/6.5
-        }
-        else
-        {
-            gameWinnerLabelMiddle.fontSize = frame.width/8
-        }
-        gameWinnerLabelMiddle.fontColor = SKColor.white
-        gameWinnerLabelMiddle.horizontalAlignmentMode = .center
-        gameWinnerLabelMiddle.verticalAlignmentMode = .center
-        gameWinnerLabelMiddle.position = CGPoint(x: bottomGameWinnerBackground.position.x, y: bottomGameWinnerBackground.position.y)
-        gameWinnerLabelMiddle.zPosition = 1
-        gameWinnerLabelMiddle.text = "WINS!"
-        addChild(gameWinnerLabelMiddle)
-       
+        gameWinnerLabelMiddle = createText(textName: gameWinnerLabelMiddle, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x, y: bottomGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.white, zPos: 2)
+        gameWinnerLabelMiddleOutlineWest = createText(textName: gameWinnerLabelMiddleOutlineWest, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x - 2, y: bottomGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelMiddleOutlineEast = createText(textName: gameWinnerLabelMiddleOutlineEast, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x + 2, y: bottomGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelMiddleOutlineSouth = createText(textName: gameWinnerLabelMiddleOutlineSouth, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x, y: bottomGameWinnerBackground.position.y - 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelMiddleOutlineSouthWest = createText(textName: gameWinnerLabelMiddleOutlineSouthWest, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x - 2, y: bottomGameWinnerBackground.position.y - 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelMiddleOutlineSouthEast = createText(textName: gameWinnerLabelMiddleOutlineSouthEast, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x + 2, y: bottomGameWinnerBackground.position.y - 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelMiddleOutlineNorth = createText(textName: gameWinnerLabelMiddleOutlineNorth, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x, y: bottomGameWinnerBackground.position.y + 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelMiddleOutlineNorthEast = createText(textName: gameWinnerLabelMiddleOutlineNorthEast, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x + 2, y: bottomGameWinnerBackground.position.y + 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        gameWinnerLabelMiddleOutlineNorthWest = createText(textName: gameWinnerLabelMiddleOutlineNorthWest, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x - 2, y: bottomGameWinnerBackground.position.y + 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
+        
         playButton = SKSpriteNode(imageNamed: "IcyChillSquare.png")
         playButton.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.45)
         if frame.height > 800 && frame.width < 600
@@ -283,6 +277,27 @@ class GameOverScene: SKScene
                 }
             })
         }
+    }
+    
+    func createText(textName: SKLabelNode, text: String, position: CGPoint, iPhoneFontSize: CGFloat, iPadFontSize: CGFloat, color: SKColor, zPos: CGFloat) -> SKLabelNode
+    {
+        // set size, color, position and text of the gameWinnerLabel
+        if frame.width < 600
+        {
+            textName.fontSize = iPhoneFontSize
+        }
+        else
+        {
+            textName.fontSize = iPadFontSize
+        }
+        textName.fontColor = color
+        textName.horizontalAlignmentMode = .center
+        textName.verticalAlignmentMode = .center
+        textName.position = position
+        textName.zPosition = zPos
+        textName.text = text
+        addChild(textName)
+        return textName
     }
     
     func gameScene()
