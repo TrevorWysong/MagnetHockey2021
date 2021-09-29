@@ -1,6 +1,6 @@
 import SpriteKit
 
-protocol BottomPlayerDelegate : class
+protocol BottomPlayerDelegate : AnyObject
 {
     func bottomTouchIsActive(_ touchIsActive: Bool, fromBottomPlayer bottomPlayer: BottomPlayer)
 }

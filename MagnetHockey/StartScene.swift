@@ -32,6 +32,13 @@ class StartScene: SKScene
     var touchedStore = false
     var touchedSettings = false
     var touchedInstructions = false
+    var backButton = SKSpriteNode()
+    var forwardButton = SKSpriteNode()
+    var pageDotOne = SKSpriteNode()
+    var pageDotTwo = SKSpriteNode()
+    var touchedBackButton = false
+    var touchedForwardButton = false
+    var arrowPressCounter = 0
     
     func createEdges()
     {
@@ -69,6 +76,16 @@ class StartScene: SKScene
         }
         topEdge.zPosition = -5
         addChild(topEdge)
+    }
+    
+    func leftArrowPressed()
+    {
+        arrowPressCounter -= 1
+    }
+    
+    func rightArrowPressed()
+    {
+        arrowPressCounter += 1
     }
     
     override func didMove(to view: SKView)
@@ -113,12 +130,12 @@ class StartScene: SKScene
         if frame.width < 600 && frame.height > 800
         {
             titleLabel.fontSize = frame.width/7
-            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.84)
+            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.89)
         }
         else
         {
             titleLabel.fontSize = frame.width/8
-            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.85)
+            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.90)
         }
         titleLabel.fontName = "Futura"
         titleLabel.fontColor = SKColor.white
@@ -132,12 +149,12 @@ class StartScene: SKScene
         if frame.width < 600 && frame.height > 800
         {
             titleLabel2.fontSize = frame.width/7
-            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.76)
+            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.81)
         }
         else
         {
             titleLabel2.fontSize = frame.width/8
-            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.75)
+            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.80)
         }
         titleLabel2.fontName = "Futura"
         titleLabel2.fontColor = SKColor.white
@@ -282,12 +299,54 @@ class StartScene: SKScene
         magnetEmitter.particleColorBlendFactorSpeed = 0.20
         magnetEmitter.advanceSimulationTime(1.5)
         addChild(magnetEmitter)
+        
+        backButton = SKSpriteNode(imageNamed: "arrowLeft.png")
+        backButton.position = CGPoint(x: frame.width * 0.16, y: frame.height * 0.85)
+        backButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
+        backButton.colorBlendFactor = 0.5
+        addChild(backButton)
+        
+        forwardButton = SKSpriteNode(imageNamed: "arrowRight.png")
+        forwardButton.position = CGPoint(x: frame.width * 0.84, y: frame.height * 0.85)
+        forwardButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
+        forwardButton.colorBlendFactor = 0
+        addChild(forwardButton)
+        
+        pageDotOne = SKSpriteNode(imageNamed: "whiteDot.png")
+        pageDotOne.position = CGPoint(x: frame.width * 0.47, y: frame.height * 0.73)
+        pageDotOne.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
+        pageDotOne.colorBlendFactor = 0
+        addChild(pageDotOne)
+        
+        pageDotTwo = SKSpriteNode(imageNamed: "whiteDot.png")
+        pageDotTwo.position = CGPoint(x: frame.width * 0.53, y: frame.height * 0.73)
+        pageDotTwo.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
+        pageDotTwo.colorBlendFactor = 0.75
+        addChild(pageDotTwo)
     }
 
-    func gameScene()
+    func playMagnetHockey()
     {
         repulsionModeButton.colorBlendFactor = 0
-        let scene = GameScene(size: (view?.bounds.size)!)
+        let scene = MagnetHockey(size: (view?.bounds.size)!)
+            
+        // Configure the view.
+        let skView = self.view!
+        skView.isMultipleTouchEnabled = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .resizeFill
+        let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
+        skView.presentScene(scene, transition: transition)
+    }
+    
+    func playAirHockey2P()
+    {
+        repulsionModeButton.colorBlendFactor = 0
+        let scene = AirHockey2P(size: (view?.bounds.size)!)
             
         // Configure the view.
         let skView = self.view!
@@ -325,7 +384,7 @@ class StartScene: SKScene
                 }
                 touchedRepulsionMode = true
             }
-                
+            
             else if nodesArray.contains(standardModeButton)
             {
                 if standardModeButton.colorBlendFactor > 0
@@ -354,6 +413,18 @@ class StartScene: SKScene
                 instructionsButton.colorBlendFactor = 0.5
                 touchedInstructions = true
             }
+            
+            else if nodesArray.contains(backButton) && arrowPressCounter > 0
+            {
+                backButton.colorBlendFactor = 0.5
+                touchedBackButton = true
+            }
+
+            else if nodesArray.contains(forwardButton) && arrowPressCounter < 1
+            {
+                forwardButton.colorBlendFactor = 0.5
+                touchedForwardButton = true
+            }
         }
     }
     
@@ -366,7 +437,7 @@ class StartScene: SKScene
             let nodesArray = self.nodes(at: location)
             if nodesArray.contains(playButton) && touchedPlay == true
             {
-                if repulsionModeButton.colorBlendFactor > 0 && standardModeButton.colorBlendFactor == 0
+                if repulsionModeButton.colorBlendFactor > 0 && standardModeButton.colorBlendFactor == 0 && titleLabel.text == "MAGNET"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -374,9 +445,9 @@ class StartScene: SKScene
                     else{run(buttonSound)}
                     touchedPlay = false
                     playButton.colorBlendFactor = 0
-                    gameScene()
+                    playMagnetHockey()
                 }
-                else if standardModeButton.colorBlendFactor > 0 && repulsionModeButton.colorBlendFactor == 0
+                else if standardModeButton.colorBlendFactor > 0 && repulsionModeButton.colorBlendFactor == 0 && titleLabel.text == "MAGNET"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -384,7 +455,27 @@ class StartScene: SKScene
                     else{run(buttonSound)}
                     touchedPlay = false
                     playButton.colorBlendFactor = 0
-                    gameScene()
+                    playMagnetHockey()
+                }
+                if repulsionModeButton.colorBlendFactor > 0 && standardModeButton.colorBlendFactor == 0 && titleLabel.text == "AIR"
+                {
+                    SKTAudio.sharedInstance().pauseBackgroundMusic()
+                    if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                    else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                    else{run(buttonSound)}
+                    touchedPlay = false
+                    playButton.colorBlendFactor = 0
+                    playAirHockey2P()
+                }
+                else if standardModeButton.colorBlendFactor > 0 && repulsionModeButton.colorBlendFactor == 0 && titleLabel.text == "AIR"
+                {
+                    SKTAudio.sharedInstance().pauseBackgroundMusic()
+                    if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                    else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                    else{run(buttonSound)}
+                    touchedPlay = false
+                    playButton.colorBlendFactor = 0
+                    playAirHockey2P()
                 }
                 else
                 {
@@ -487,6 +578,32 @@ class StartScene: SKScene
                 skView.presentScene(scene, transition: transition)
             }
             
+            else if nodesArray.contains(backButton) && touchedBackButton == true && arrowPressCounter == 1
+            {
+                touchedBackButton = false
+                backButton.colorBlendFactor = 0.5
+                forwardButton.colorBlendFactor = 0
+                pageDotOne.colorBlendFactor = 0.0
+                pageDotTwo.colorBlendFactor = 0.5
+                arrowPressCounter -= 1
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+            }
+            
+            else if nodesArray.contains(forwardButton) && touchedForwardButton == true && arrowPressCounter == 0
+            {
+                touchedForwardButton = false
+                forwardButton.colorBlendFactor = 0.5
+                backButton.colorBlendFactor = 0.0
+                pageDotOne.colorBlendFactor = 0.5
+                pageDotTwo.colorBlendFactor = 0.0
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                arrowPressCounter += 1
+            }
+            
             else
             {
                 if touchedPlay == true
@@ -536,7 +653,34 @@ class StartScene: SKScene
                     touchedInstructions = false
                     instructionsButton.colorBlendFactor = 0
                 }
+                if touchedBackButton == true
+                {
+                    touchedBackButton = false
+                    backButton.colorBlendFactor = 0
+                }
+                if touchedForwardButton == true
+                {
+                    touchedForwardButton = false
+                    forwardButton.colorBlendFactor = 0
+                }
             }
+        }
+    }
+    
+    override func update(_ currentTime: TimeInterval)
+    {
+        if arrowPressCounter == 0
+        {
+            titleLabel.text = "MAGNET"
+        }
+        else if arrowPressCounter == 1
+        {
+            titleLabel.text = "AIR"
+        }
+        else
+        {
+            titleLabel.text = "MAGNET"
+            arrowPressCounter = 0
         }
     }
 }

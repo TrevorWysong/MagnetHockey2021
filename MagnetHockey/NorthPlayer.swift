@@ -1,6 +1,6 @@
 import SpriteKit
 
-protocol NorthPlayerDelegate : class
+protocol NorthPlayerDelegate : AnyObject
 {
     func northTouchIsActive(_ northTouchIsActive: Bool, fromNorthPlayer northPlayer: NorthPlayer)
 }

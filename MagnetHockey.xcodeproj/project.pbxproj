@@ -10,7 +10,7 @@
 		254DF563FA41078A7BA93D9A /* Pods_MagnetHockey.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 699E07A5DAC78BD0C09C86DF /* Pods_MagnetHockey.framework */; };
 		C30208C32539F1B7004B9258 /* InfoScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C30208C22539F1B7004B9258 /* InfoScene.swift */; };
 		C311E8DA2458CDF100D0CEC6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C311E7F62458CDB500D0CEC6 /* Assets.xcassets */; };
-		C311E8E52458CDF100D0CEC6 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8012458CDB700D0CEC6 /* GameScene.swift */; };
+		C311E8E52458CDF100D0CEC6 /* MagnetHockey.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8012458CDB700D0CEC6 /* MagnetHockey.swift */; };
 		C311E9262458CDF100D0CEC6 /* BottomPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8422458CDC400D0CEC6 /* BottomPlayer.swift */; };
 		C311E9282458CDF100D0CEC6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C311E8442458CDC500D0CEC6 /* LaunchScreen.xib */; };
 		C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */; };
@@ -38,6 +38,7 @@
 		C3683A5E26EA9ECE00852BAB /* KeychainItemAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3683A5C26EA9ECE00852BAB /* KeychainItemAccessibility.swift */; };
 		C3683A5F26EA9ECE00852BAB /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */; };
 		C3E2C3B525AB604300CD2CC0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3E2C3B425AB604300CD2CC0 /* Main.storyboard */; };
+		C3E697E627028EA7000DE0AE /* AirHockey2P.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E697E527028EA7000DE0AE /* AirHockey2P.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,7 +71,7 @@
 		C311E7CE2458CD6F00D0CEC6 /* MagnetHockeyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagnetHockeyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C311E7D92458CD6F00D0CEC6 /* MagnetHockeyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MagnetHockeyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C311E7F62458CDB500D0CEC6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		C311E8012458CDB700D0CEC6 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		C311E8012458CDB700D0CEC6 /* MagnetHockey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MagnetHockey.swift; sourceTree = "<group>"; };
 		C311E8422458CDC400D0CEC6 /* BottomPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomPlayer.swift; sourceTree = "<group>"; };
 		C311E8442458CDC500D0CEC6 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
@@ -99,6 +100,7 @@
 		C3683A5C26EA9ECE00852BAB /* KeychainItemAccessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainItemAccessibility.swift; path = "../../SwiftKeychainWrapper-develop/SwiftKeychainWrapper/KeychainItemAccessibility.swift"; sourceTree = "<group>"; };
 		C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainWrapper.swift; path = "../../SwiftKeychainWrapper-develop/SwiftKeychainWrapper/KeychainWrapper.swift"; sourceTree = "<group>"; };
 		C3E2C3B425AB604300CD2CC0 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		C3E697E527028EA7000DE0AE /* AirHockey2P.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHockey2P.swift; sourceTree = "<group>"; };
 		EDBB9D8084BC352C6FFBD103 /* Pods-MagnetHockeyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockeyTests.release.xcconfig"; path = "Target Support Files/Pods-MagnetHockeyTests/Pods-MagnetHockeyTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -189,7 +191,8 @@
 				C33AD55A245B2B850015F392 /* IAPService.swift */,
 				C33AD558245B2A310015F392 /* IAPProducts.swift */,
 				C33AD580245CCBEC0015F392 /* ReviewService.swift */,
-				C311E8012458CDB700D0CEC6 /* GameScene.swift */,
+				C311E8012458CDB700D0CEC6 /* MagnetHockey.swift */,
+				C3E697E527028EA7000DE0AE /* AirHockey2P.swift */,
 				C358B5A22480401B002C6B2D /* NorthPlayer.swift */,
 				C311E8422458CDC400D0CEC6 /* BottomPlayer.swift */,
 				C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */,
@@ -481,7 +484,7 @@
 				C33AD55B245B2B850015F392 /* IAPService.swift in Sources */,
 				C30208C32539F1B7004B9258 /* InfoScene.swift in Sources */,
 				C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */,
-				C311E8E52458CDF100D0CEC6 /* GameScene.swift in Sources */,
+				C311E8E52458CDF100D0CEC6 /* MagnetHockey.swift in Sources */,
 				C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */,
 				C3683A5F26EA9ECE00852BAB /* KeychainWrapper.swift in Sources */,
 				C365D43A25B22B2B00FD37C4 /* Settings.swift in Sources */,
@@ -491,6 +494,7 @@
 				C3683A5E26EA9ECE00852BAB /* KeychainItemAccessibility.swift in Sources */,
 				C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */,
 				C365D44225B22B4E00FD37C4 /* StartScene.swift in Sources */,
+				C3E697E627028EA7000DE0AE /* AirHockey2P.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

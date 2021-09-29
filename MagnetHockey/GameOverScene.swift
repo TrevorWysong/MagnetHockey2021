@@ -302,7 +302,7 @@ class GameOverScene: SKScene
     
     func gameScene()
     {
-        let scene = GameScene(size: (view?.bounds.size)!)
+        let scene = MagnetHockey(size: (view?.bounds.size)!)
             
         // Configure the view.
         let skView = self.view!

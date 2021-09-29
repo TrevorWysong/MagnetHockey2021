@@ -1,46 +1,21 @@
 //
-//  GameScene.swift
-//  Pong_TW
+//  AirHockey2P.swift
+//  AirHockey2P
 //
-//  Created by Wysong, Trevor on 4/8/20.
-//  Copyright © 2020 Wysong, Trevor. All rights reserved.
+//  Created by Wysong, Trevor on 9/27/21.
+//  Copyright © 2021 Wysong, Trevor. All rights reserved.
 //
+
 import SpriteKit
 import GameplayKit
 import GoogleMobileAds
 
-enum BodyType:UInt32
-{
-    //powers of 2
-    case player = 1
-    case sideWalls = 2
-    case topBottomWalls = 128
-    case ball = 512
-    case goals = 4
-    case playerForceField = 8
-    case leftMagnet = 16
-    case centerMagnet = 32
-    case rightMagnet = 64
-    case topGoalZone = 1024
-    case bottomGoalZone = 256
-}
-
-class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
+class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
 {
     var frameCounter = 0
     var ball : SKShapeNode?
     var ballRadius = CGFloat(0.0)
     var maxBallSpeed = CGFloat(0.0)
-    var maxMagnetSpeed = CGFloat(0.0)
-    var leftMagnet = SKShapeNode()
-    var rightMagnet = SKShapeNode()
-    var centerMagnet = SKShapeNode()
-    var southLeftMagnetX = SKSpriteNode()
-    var southCenterMagnetX = SKSpriteNode()
-    var southRightMagnetX = SKSpriteNode()
-    var northLeftMagnetX = SKSpriteNode()
-    var northCenterMagnetX = SKSpriteNode()
-    var northRightMagnetX = SKSpriteNode()
     var centerCircle = SKSpriteNode()
     var playerLosesBackground = SKSpriteNode()
     var playerWinsBackground = SKSpriteNode()
@@ -50,8 +25,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var ballInSouthGoal = false
     var ballInNorthGoal = false
     var ballSoundControl = true
-    var magnetBallSoundControl = true
-    var magnetHitsMagnetSoundControl = true
     var topGoal = SKSpriteNode()
     var bottomGoal = SKSpriteNode()
     var topGoalPlus = SKSpriteNode()
@@ -60,7 +33,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var pauseButtonSprite = SKSpriteNode()
     var backToMenuButton = SKSpriteNode()
     let backToMenuButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
-    // you can use another font for the label if you want...
     let pauseTitleLabel1 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let pauseTitleLabel2 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     var pauseTitleBackground1 = SKSpriteNode()
@@ -76,15 +48,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var southPlayer : BottomPlayer?
     var northPlayer : NorthPlayer?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
-    let springFieldSouthPlayer = SKFieldNode.springField()
-    let springFieldNorthPlayer = SKFieldNode.springField()
-    let electricFieldNorthPlayer = SKFieldNode.electricField()
-    let electricFieldSouthPlayer = SKFieldNode.electricField()
     let listenerNode = SKNode()
     var southPlayerArea = CGRect()
     var northPlayerArea = CGRect()
-    var southPlayerMagnetCount = 0
-    var northPlayerMagnetCount = 0
     var southPlayerScore = 0
     var northPlayerScore = 0
     var bottomPlayerForceForCollision = CGVector()
@@ -94,31 +60,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     var whoWonGame = ""
     var topPlayerWinsRound = false
     var bottomPlayerWinsRound = false
-    var leftMagnetIsActive = true
-    var centerMagnetIsActive = true
-    var rightMagnetIsActive = true
-    var leftMagnetJustHitGoal = false
-    var centerMagnetJustHitGoal = false
-    var rightMagnetJustHitGoal = false
     var gameOver = false
     var bottomTouchForCollision = false
     var northTouchForCollision = false
     var repulsionMode = false
     var numberRounds = 0
     var numberGames = 0
-    var tempLeftMagnetVelocity = CGVector(dx: 0, dy: 0)
-    var tempCenterMagnetVelocity = CGVector(dx: 0, dy: 0)
-    var tempRightMagnetVelocity = CGVector(dx: 0, dy: 0)
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
     var ballColorGame = ""
-    let magnetPlayerSound = SKAction.playSoundFileNamed("Magnet Click.mp3", waitForCompletion: false)
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
-    let magnetHitsWallSound = SKAction.playSoundFileNamed("ballHitMagnet.mp3", waitForCompletion: false)
-    let magnetHitsGoalSound = SKAction.playSoundFileNamed("MagnetInGoal.mp3", waitForCompletion: false)
     let goalSound = SKAction.playSoundFileNamed("Goal3.mp3", waitForCompletion: false)
-    let ballHitsMagnetSound = SKAction.playSoundFileNamed("magnetHitsWallFinal", waitForCompletion: false)
-    let magnetHitsMagnetSound = SKAction.playSoundFileNamed("magnetHitsWallFinal", waitForCompletion: false)
     let buttonSound = SKAction.playSoundFileNamed("ChangeRounds.mp3", waitForCompletion: false)
     var interstitialAd: GADInterstitial?
     
@@ -264,110 +216,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         topEdge.physicsBody?.angularDamping = 0.0
         topEdge.blendMode = .replace
         addChild(topEdge)
-    }
-    
-    func createSpringFieldPlayer()
-    {
-        springFieldSouthPlayer.strength = 1.5
-        springFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer?.position.y)!)
-        springFieldSouthPlayer.falloff = 0.0
-        springFieldSouthPlayer.categoryBitMask = 5
-        addChild(springFieldSouthPlayer)
-        
-        springFieldNorthPlayer.strength = 1.5
-        springFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer?.position.y)!)
-        if frame.width > 700
-        {
-            springFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/4.5, height: frame.width/4.5))
-            springFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/4.5, height: frame.width/4.5))
-        }
-        else
-        {
-            springFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.6, height: frame.width/3.6))
-            springFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.6, height: frame.width/3.6))
-        }
-        springFieldNorthPlayer.falloff = 0.0
-        springFieldNorthPlayer.categoryBitMask = 5
-        addChild(springFieldNorthPlayer)
-    }
-    
-    func createElectricFieldPlayer()
-    {
-        electricFieldNorthPlayer.strength = 1.5
-        electricFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer!.position.y))
-        electricFieldNorthPlayer.falloff = 0.0
-        electricFieldNorthPlayer.isEnabled = true
-        electricFieldNorthPlayer.categoryBitMask = 5
-
-        if frame.width > 700
-        {
-            electricFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/4, height: frame.width/4))
-        }
-        else
-        {
-            electricFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.2, height: frame.width/3.2))
-        }
-        addChild(electricFieldNorthPlayer)
-        
-        
-        electricFieldSouthPlayer.strength = 1.5
-        electricFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer!.position.y))
-        electricFieldSouthPlayer.falloff = 0.0
-        electricFieldSouthPlayer.isEnabled = true
-        electricFieldSouthPlayer.categoryBitMask = 5
-
-        if frame.width > 700
-        {
-            electricFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/4, height: frame.width/4))
-        }
-        else
-        {
-            electricFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.2, height: frame.width/3.2))
-        }
-        addChild(electricFieldSouthPlayer)
-    }
-    
-    func createSpringFieldTopGoal()
-    {
-        let springFieldTopGoal = SKFieldNode.springField()
-        springFieldTopGoal.strength = 0.2
-        springFieldTopGoal.position = CGPoint(x: topGoal.position.x, y: topGoal.position.y)
-        if frame.width > 700
-        {
-            springFieldTopGoal.region = SKRegion(size: CGSize(width: frame.width/10, height: frame.width/9.1))
-        }
-        else
-        {
-            springFieldTopGoal.region = SKRegion(size: CGSize(width: frame.width/8, height: frame.width/7.75))
-        }
-        springFieldTopGoal.falloff = 0
-        springFieldTopGoal.physicsBody?.collisionBitMask = 3
-        springFieldTopGoal.physicsBody?.fieldBitMask = 3
-        springFieldTopGoal.physicsBody?.contactTestBitMask = 3
-        springFieldTopGoal.categoryBitMask = 64
-        addChild(springFieldTopGoal)
-    }
-    
-    func createSpringFieldBottomGoal()
-    {
-        let springFieldBottomGoal = SKFieldNode.springField()
-        springFieldBottomGoal.strength = 0.2
-        
-        springFieldBottomGoal.position = CGPoint(x: bottomGoal.position.x, y: bottomGoal.position.y)
-        if frame.width > 700
-        {
-            springFieldBottomGoal.region = SKRegion(size: CGSize(width: frame.width/10, height: frame.width/9.1))
-        }
-        else
-        {
-            springFieldBottomGoal.region = SKRegion(size: CGSize(width: frame.width/8, height: frame.width/7.75))
-        }
-        springFieldBottomGoal.falloff = 0
-        springFieldBottomGoal.physicsBody?.collisionBitMask = 3
-        springFieldBottomGoal.physicsBody?.fieldBitMask = 3
-        springFieldBottomGoal.physicsBody?.contactTestBitMask = 3
-        springFieldBottomGoal.categoryBitMask = 64
-        addChild(springFieldBottomGoal)
     }
     
     func createCenterCircle()
@@ -607,22 +455,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         addChild(pauseTitleLabel2)
     }
     
-    func getMaxBallAndMagnetSpeed()
+    func getMaxBallSpeed()
     {
         if frame.width > 700
         {
             maxBallSpeed = (frame.height * frame.width) / 370
-            maxMagnetSpeed = 1000
         }
         else if frame.width < 700 && frame.height > 800
         {
             maxBallSpeed = (frame.height * frame.width) / 222.5
-            maxMagnetSpeed = 600
         }
         else
         {
             maxBallSpeed = (frame.height * frame.width) / 195
-            maxMagnetSpeed = 600
         }
     }
     
@@ -697,251 +542,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
     func resetPauseBackground()
     {
         pauseBackground.position = CGPoint(x: -1000, y: -1000)
-    }
-    
-    func createMagnets()
-    {
-        //create ball object
-        leftMagnet = SKShapeNode()
-        centerMagnet = SKShapeNode()
-        rightMagnet = SKShapeNode()
-        
-        //draw left magnet
-        let leftMagnetPath = CGMutablePath()
-        let π = CGFloat.pi
-        var leftMagnetRadius = CGFloat(0.0)
-        var centerMagnetRadius = CGFloat(0.0)
-        var rightMagnetRadius = CGFloat(0.0)
-        if frame.width < 700
-        {
-            leftMagnetRadius = frame.width / 40
-            centerMagnetRadius = frame.width / 40
-            rightMagnetRadius = frame.width / 40
-        }
-        else if frame.width >= 700
-        {
-            
-            leftMagnetRadius = frame.width / 50
-            centerMagnetRadius = frame.width / 50
-            rightMagnetRadius = frame.width / 50
-        }
-
-        leftMagnet.fillTexture = SKTexture(imageNamed: "newMagnetSmaller.png")
-        leftMagnetPath.addArc(center: CGPoint(x: 0, y:0), radius: leftMagnetRadius, startAngle: 0, endAngle: π*2, clockwise: true)
-        leftMagnet.path = leftMagnetPath
-        leftMagnet.fillColor = UIColor.white
-        //set ball physics properties
-        leftMagnet.physicsBody = SKPhysicsBody(circleOfRadius: leftMagnetRadius)
-        //how heavy it is
-        leftMagnet.physicsBody!.mass = 0.04
-        leftMagnet.physicsBody!.affectedByGravity = false
-        leftMagnet.physicsBody?.allowsRotation = true
-        //how much momentum is maintained after it hits somthing
-        leftMagnet.physicsBody!.restitution = 1
-        leftMagnet.position = CGPoint(x: frame.width * 1.5/5, y: frame.height/2)
-        //how much friction affects it
-        leftMagnet.physicsBody!.linearDamping = 0.85
-        leftMagnet.physicsBody!.angularDamping = 0.85
-        leftMagnet.physicsBody?.categoryBitMask = BodyType.leftMagnet.rawValue
-        leftMagnet.physicsBody?.fieldBitMask = 4294967295
-        leftMagnet.strokeColor = .black
-        leftMagnet.lineWidth = 0.5
-        //if not alreay in scene, add to scene
-        if leftMagnet.parent == nil
-        {
-            addChild(leftMagnet)
-        }
-        
-        //draw center magnet
-        let centerMagnetPath = CGMutablePath()
-        centerMagnet.fillTexture = SKTexture(imageNamed: "newMagnetSmaller.png")
-        centerMagnetPath.addArc(center: CGPoint(x: 0, y:0), radius: centerMagnetRadius, startAngle: 0, endAngle: π*2, clockwise: true)
-        centerMagnet.path = centerMagnetPath
-        centerMagnet.fillColor = UIColor.white
-        //set ball physics properties
-        centerMagnet.physicsBody = SKPhysicsBody(circleOfRadius: centerMagnetRadius)
-        //how heavy it is
-        centerMagnet.physicsBody!.mass = 0.04
-        centerMagnet.physicsBody!.affectedByGravity = false
-        centerMagnet.physicsBody?.allowsRotation = true
-        //how much momentum is maintained after it hits somthing
-        centerMagnet.physicsBody!.restitution = 1.0
-        centerMagnet.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        //how much friction affects it
-        centerMagnet.physicsBody!.linearDamping = 0.85
-        centerMagnet.physicsBody!.angularDamping = 0.85
-        centerMagnet.physicsBody?.fieldBitMask = 4294967295
-        centerMagnet.strokeColor = .black
-        centerMagnet.lineWidth = 0.5
-        //if not alreay in scene, add to scene
-        if centerMagnet.parent == nil
-        {
-            addChild(centerMagnet)
-        }
-        
-        //draw right magnet
-        let rightMagnetPath = CGMutablePath()
-        rightMagnet.fillTexture = SKTexture(imageNamed: "newMagnetSmaller.png")
-
-        rightMagnetPath.addArc(center: CGPoint(x: 0, y:0), radius: rightMagnetRadius, startAngle: 0, endAngle: π*2, clockwise: true)
-        rightMagnet.path = rightMagnetPath
-        rightMagnet.fillColor = UIColor.white
-        //set ball physics properties
-        rightMagnet.physicsBody = SKPhysicsBody(circleOfRadius: rightMagnetRadius)
-        //how heavy it is
-        rightMagnet.physicsBody!.mass = 0.04
-        rightMagnet.physicsBody!.affectedByGravity = false
-        rightMagnet.physicsBody?.allowsRotation = true
-        //how much momentum is maintained after it hits somthing
-        rightMagnet.physicsBody!.restitution = 1.0
-        rightMagnet.position = CGPoint(x: frame.width*(3.5/5), y: frame.height/2)
-        //how much friction affects it
-        rightMagnet.physicsBody!.linearDamping = 0.85
-        rightMagnet.physicsBody!.angularDamping = 0.85
-        rightMagnet.physicsBody?.fieldBitMask = 4294967295
-        rightMagnet.strokeColor = .black
-        rightMagnet.lineWidth = 0.5
-        //if not alreay in scene, add to scene
-        if rightMagnet.parent == nil
-        {
-            addChild(rightMagnet)
-        }
-        
-        leftMagnet.physicsBody?.collisionBitMask = 4294967295
-        centerMagnet.physicsBody?.collisionBitMask = 4294967295
-        rightMagnet.physicsBody?.collisionBitMask = 4294967295
-        leftMagnet.physicsBody?.contactTestBitMask = 4294967295
-        centerMagnet.physicsBody?.contactTestBitMask = 4294967295
-        rightMagnet.physicsBody?.contactTestBitMask = 4294967295
-        leftMagnet.physicsBody?.categoryBitMask = BodyType.leftMagnet.rawValue
-        centerMagnet.physicsBody?.categoryBitMask = BodyType.centerMagnet.rawValue
-        rightMagnet.physicsBody?.categoryBitMask = BodyType.rightMagnet.rawValue
-        
-        if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
-        {
-            leftMagnet.physicsBody?.charge = 0.70
-            centerMagnet.physicsBody?.charge = 0.70
-            rightMagnet.physicsBody?.charge = 0.70
-        }
-    }
-    
-    func createMagnetHolders()
-    {
-        let leftMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
-        let rightMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
-        let centerMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
-        leftMagnetHolder.position = CGPoint(x: frame.width * (1.5/5), y: frame.height/2)
-        centerMagnetHolder.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        rightMagnetHolder.position = CGPoint(x: frame.width*(3.5/5), y: frame.height/2)
-        leftMagnetHolder.zPosition = -1
-        centerMagnetHolder.zPosition = -1
-        rightMagnetHolder.zPosition = -1
-        if frame.width > 700
-        {
-            leftMagnetHolder.size = CGSize(width: 1/20 * frame.width, height: 1/20 * frame.width)
-            centerMagnetHolder.size = CGSize(width: 1/20 * frame.width, height: 1/20 * frame.width)
-            rightMagnetHolder.size = CGSize(width: 1/20 * frame.width, height: 1/20 * frame.width)
-        }
-        else
-        {
-            leftMagnetHolder.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            centerMagnetHolder.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            rightMagnetHolder.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-        }
-        addChild(leftMagnetHolder)
-        addChild(centerMagnetHolder)
-        addChild(rightMagnetHolder)
-    }
-    
-    func createMagnetXMarks()
-    {
-        southLeftMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        southCenterMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        southRightMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        northLeftMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        northCenterMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        northRightMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        
-        southLeftMagnetX.zPosition = -1
-        southCenterMagnetX.zPosition = -1
-        southRightMagnetX.zPosition = -1
-        northLeftMagnetX.zPosition = -1
-        northCenterMagnetX.zPosition = -1
-        northRightMagnetX.zPosition = -1
-
-        if frame.height == 812 && frame.width < 500
-        {
-            southLeftMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            southCenterMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            southRightMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            northLeftMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            northCenterMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            northRightMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            southLeftMagnetX.position = CGPoint(x: frame.width * 1 / 11, y: frame.width/14)
-            southCenterMagnetX.position = CGPoint(x: frame.width * 1.75 / 11, y: frame.width/14)
-            southRightMagnetX.position = CGPoint(x: frame.width * 2.5 / 11, y: frame.width/14)
-            northLeftMagnetX.position = CGPoint(x: frame.width*(10/11), y: frame.height - frame.width/17)
-            northCenterMagnetX.position = CGPoint(x: frame.width * (9.25/11), y: frame.height - frame.width/17)
-            northRightMagnetX.position = CGPoint(x: frame.width * 8 / 11, y: -200)
-        }
-        else
-        {
-            southLeftMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            southCenterMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            southRightMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            northLeftMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            northCenterMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            northRightMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            southLeftMagnetX.position = CGPoint(x: frame.width/11, y: frame.width/12)
-            southCenterMagnetX.position = CGPoint(x: frame.width/5.5, y: frame.width/12)
-            southRightMagnetX.position = CGPoint(x: frame.width/3.65, y: frame.width/12)
-            northLeftMagnetX.position = CGPoint(x: frame.width*(10/11), y: frame.height - frame.width/12)
-            northCenterMagnetX.position = CGPoint(x: frame.width * 4.5/5.5, y: frame.height - frame.width/12)
-            northRightMagnetX.position = CGPoint(x: frame.width * 4/5.5, y: frame.height - frame.width/12)
-        }
-        southLeftMagnetX.isHidden = true
-        southCenterMagnetX.isHidden = true
-        southRightMagnetX.isHidden = true
-        northLeftMagnetX.isHidden = true
-        northCenterMagnetX.isHidden = true
-        northRightMagnetX.isHidden = true
-        
-        addChild(southLeftMagnetX)
-        addChild(southCenterMagnetX)
-        addChild(southRightMagnetX)
-        addChild(northLeftMagnetX)
-        addChild(northCenterMagnetX)
-        addChild(northRightMagnetX)
-    }
-
-    
-    func placeMagnetXMarks()
-    {
-        if southPlayerMagnetCount >= 1
-        {
-            southLeftMagnetX.isHidden = false
-        }
-        if southPlayerMagnetCount >= 2
-        {
-            southCenterMagnetX.isHidden = false
-        }
-        if southPlayerMagnetCount == 3
-        {
-            southRightMagnetX.isHidden = false
-        }
-        
-        if northPlayerMagnetCount >= 1
-        {
-            northLeftMagnetX.isHidden = false
-        }
-        if northPlayerMagnetCount >= 2
-        {
-            northCenterMagnetX.isHidden = false
-        }
-        if northPlayerMagnetCount == 3
-        {
-            northRightMagnetX.isHidden = false
-        }
     }
     
     func createGoals()
@@ -1094,12 +694,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         }
         
         drawCenterLine()
-        getMaxBallAndMagnetSpeed()
+        getMaxBallSpeed()
         createCenterCircle()
         createPauseAndPlayButton()
         createPlayers()
-        createMagnets()
-        createMagnetHolders()
         createGoals()
         createBall()
         createPlayerLoseWinBackgrounds()
@@ -1110,14 +708,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         createNorthPlayerScore()
         createSouthPlayerScore()
         createEdges()
-        createSpringFieldTopGoal()
-        createMagnetXMarks()
-        createSpringFieldBottomGoal()
-        createSpringFieldPlayer()
         createPlayerLoseWinBackgrounds()
         if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
         {
-            createElectricFieldPlayer()
             repulsionMode = true
         }
     }
@@ -1216,8 +809,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             ball?.strokeColor = .black
         }
         
-        
-        
         let ySpawnsArray = [frame.height * 0.35, frame.height * 0.65]
         ball!.position = CGPoint(x: frame.width/2, y: ySpawnsArray.randomElement()!)
         ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
@@ -1254,27 +845,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         ball!.position = CGPoint(x: 50, y: size.height/2)
     }
     
-    func clearMagnets()
-    {
-        leftMagnet.position = CGPoint(x: frame.width + 2/3 * frame.width, y: -200)
-        leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        centerMagnet.position = CGPoint(x: frame.width + 2/3 * frame.width, y: -200)
-        centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        rightMagnet.position = CGPoint(x: frame.width + 2/3 * frame.width, y: -200)
-        rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-    }
-    
-    
-    func resetMagnets()
-    {
-        leftMagnet.position = CGPoint(x: frame.width * (1.5/5), y: frame.height/2)
-        leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        centerMagnet.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        rightMagnet.position = CGPoint(x: frame.width*(3.5/5), y: frame.height/2)
-    }
-    
     func clearPlayer()
     {
         southPlayer?.isHidden = true
@@ -1303,40 +873,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         northPlayer?.isHidden = false
     }
     
-    func resetMagnetHitMarkers()
-    {
-        southLeftMagnetX.isHidden = true
-        southCenterMagnetX.isHidden = true
-        southRightMagnetX.isHidden = true
-        northLeftMagnetX.isHidden = true
-        northCenterMagnetX.isHidden = true
-        northRightMagnetX.isHidden = true
-    }
-    
     func pausePhysics()
     {
         tempBallVelocity = ball!.physicsBody!.velocity
-        tempLeftMagnetVelocity = leftMagnet.physicsBody!.velocity
-        tempCenterMagnetVelocity = centerMagnet.physicsBody!.velocity
-        tempRightMagnetVelocity = rightMagnet.physicsBody!.velocity
-        
         ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func resumePhysics()
     {
         ball?.physicsBody?.velocity = tempBallVelocity
-        leftMagnet.physicsBody?.velocity = tempLeftMagnetVelocity
-        centerMagnet.physicsBody?.velocity = tempCenterMagnetVelocity
-        rightMagnet.physicsBody?.velocity = tempRightMagnetVelocity
-        
         tempBallVelocity = CGVector(dx: 0, dy: 0)
-        tempLeftMagnetVelocity = CGVector(dx: 0, dy: 0)
-        tempCenterMagnetVelocity = CGVector(dx: 0, dy: 0)
-        tempRightMagnetVelocity = CGVector(dx: 0, dy: 0)
     }
     
     func isOffScreen(node: SKShapeNode) -> Bool
@@ -1527,246 +1073,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             body!.applyImpulse(CGVector(dx: 0, dy: strength))
             if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitWallSound)}
         }
-        
-        // Left magnet Collision detect with wall to prevent sticking (SpriteKit Issue)
-        if (contact.bodyB.categoryBitMask == BodyType.sideWalls.rawValue && contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue) && leftMagnetIsActive == true
-        {
-            let strength = 1.0 * ((leftMagnet.position.x) < frame.width / 2 ? 1 : -1)
-            let body = leftMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: strength, dy: 0))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.sideWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue) && leftMagnetIsActive == true
-        {
-            let strength = 1.0 * ((leftMagnet.position.x) < frame.width / 2 ? 1 : -1)
-            let body = leftMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: strength, dy: 0))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.topBottomWalls.rawValue) && leftMagnetIsActive == true
-        {
-            let strength = 1.0 * ((leftMagnet.position.x) < frame.height / 2 ? 1 : -1)
-            let body = leftMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: 0, dy: strength))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.topBottomWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue) && leftMagnetIsActive == true
-        {
-            let strength = 1.0 * ((leftMagnet.position.y) < frame.height / 2 ? 1 : -1)
-            let body = leftMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: 0, dy: strength))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        
-        // Center magnet Collision detect with wall to prevent sticking (SpriteKit Issue)
-        if (contact.bodyB.categoryBitMask == BodyType.sideWalls.rawValue && contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue) && centerMagnetIsActive == true
-        {
-            let strength = 1.0 * ((centerMagnet.position.x) < frame.width / 2 ? 1 : -1)
-            let body = centerMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: strength, dy: 0))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.sideWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue) && centerMagnetIsActive == true
-        {
-            let strength = 1.0 * ((centerMagnet.position.x) < frame.width / 2 ? 1 : -1)
-            let body = centerMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: strength, dy: 0))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.topBottomWalls.rawValue) && centerMagnetIsActive == true
-        {
-            let strength = 1.0 * ((centerMagnet.position.x) < frame.height / 2 ? 1 : -1)
-            let body = centerMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: 0, dy: strength))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.topBottomWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue) && centerMagnetIsActive == true
-        {
-            let strength = 1.0 * ((centerMagnet.position.y) < frame.height / 2 ? 1 : -1)
-            let body = centerMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: 0, dy: strength))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        
-        // Right magnet Collision detect with wall to prevent sticking (SpriteKit Issue)
-        if (contact.bodyB.categoryBitMask == BodyType.sideWalls.rawValue && contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue) && rightMagnetIsActive == true
-        {
-            let strength = 1.0 * ((rightMagnet.position.x) < frame.width / 2 ? 1 : -1)
-            let body = rightMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: strength, dy: 0))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.sideWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue) && rightMagnetIsActive == true
-        {
-            let strength = 1.0 * ((rightMagnet.position.x) < frame.width / 2 ? 1 : -1)
-            let body = rightMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: strength, dy: 0))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.topBottomWalls.rawValue) && rightMagnetIsActive == true
-        {
-            let strength = 1.0 * ((rightMagnet.position.x) < frame.height / 2 ? 1 : -1)
-            let body = rightMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: 0, dy: strength))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.topBottomWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue) && rightMagnetIsActive == true
-        {
-            let strength = 1.0 * ((rightMagnet.position.y) < frame.height / 2 ? 1 : -1)
-            let body = rightMagnet.physicsBody
-            body!.applyImpulse(CGVector(dx: 0, dy: strength))
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsWallSound)}
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.topGoalZone.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (leftMagnet.physicsBody!.velocity.dy < -100 || leftMagnet.physicsBody!.velocity.dy > 100 || leftMagnet.physicsBody!.velocity.dx < -100 || leftMagnet.physicsBody!.velocity.dx > 100) && (leftMagnetJustHitGoal == false)
-            {
-                run(magnetHitsGoalSound)
-                leftMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.leftMagnetJustHitGoal = false
-                })
-            }
-            leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.topGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (leftMagnet.physicsBody!.velocity.dy < -100 || leftMagnet.physicsBody!.velocity.dy > 100 || leftMagnet.physicsBody!.velocity.dx < -100 || leftMagnet.physicsBody!.velocity.dx > 100) && (leftMagnetJustHitGoal == false)
-            {
-                run(magnetHitsGoalSound)
-                leftMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.leftMagnetJustHitGoal = false
-                })
-            }
-            leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        if (contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.topGoalZone.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (centerMagnet.physicsBody!.velocity.dy < -100 || centerMagnet.physicsBody!.velocity.dy > 100 || centerMagnet.physicsBody!.velocity.dx < -100 || centerMagnet.physicsBody!.velocity.dx > 100) && centerMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                centerMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.centerMagnetJustHitGoal = false
-                })
-            }
-            centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.topGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (centerMagnet.physicsBody!.velocity.dy < -100 || centerMagnet.physicsBody!.velocity.dy > 100 || centerMagnet.physicsBody!.velocity.dx < -100 || centerMagnet.physicsBody!.velocity.dx > 100) && centerMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                centerMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.centerMagnetJustHitGoal = false
-                })
-            }
-            centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        if (contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.topGoalZone.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (rightMagnet.physicsBody!.velocity.dy < -100 || rightMagnet.physicsBody!.velocity.dy > 100 || rightMagnet.physicsBody!.velocity.dx < -100 || rightMagnet.physicsBody!.velocity.dx > 100) && rightMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                rightMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.rightMagnetJustHitGoal = false
-                })
-            }
-            rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.topGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (rightMagnet.physicsBody!.velocity.dy < -100 || rightMagnet.physicsBody!.velocity.dy > 100 || rightMagnet.physicsBody!.velocity.dx < -100 || rightMagnet.physicsBody!.velocity.dx > 100) && rightMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                rightMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.rightMagnetJustHitGoal = false
-                })
-            }
-            rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.bottomGoalZone.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (leftMagnet.physicsBody!.velocity.dy < -100 || leftMagnet.physicsBody!.velocity.dy > 100 || leftMagnet.physicsBody!.velocity.dx < -100 || leftMagnet.physicsBody!.velocity.dx > 100) && (leftMagnetJustHitGoal == false)
-            {
-                run(magnetHitsGoalSound)
-                leftMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.leftMagnetJustHitGoal = false
-                })
-            }
-            leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.bottomGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (leftMagnet.physicsBody!.velocity.dy < -100 || leftMagnet.physicsBody!.velocity.dy > 100 || leftMagnet.physicsBody!.velocity.dx < -100 || leftMagnet.physicsBody!.velocity.dx > 100) && (leftMagnetJustHitGoal == false)
-            {
-                run(magnetHitsGoalSound)
-                leftMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.leftMagnetJustHitGoal = false
-                })
-            }
-            leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        if (contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.bottomGoalZone.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (centerMagnet.physicsBody!.velocity.dy < -100 || centerMagnet.physicsBody!.velocity.dy > 100 || centerMagnet.physicsBody!.velocity.dx < -100 || centerMagnet.physicsBody!.velocity.dx > 100) && centerMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                centerMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.centerMagnetJustHitGoal = false
-                })
-            }
-            centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.bottomGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (centerMagnet.physicsBody!.velocity.dy < -100 || centerMagnet.physicsBody!.velocity.dy > 100 || centerMagnet.physicsBody!.velocity.dx < -100 || centerMagnet.physicsBody!.velocity.dx > 100) && centerMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                centerMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.centerMagnetJustHitGoal = false
-                })
-            }
-            centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        if (contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.bottomGoalZone.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (rightMagnet.physicsBody!.velocity.dy < -100 || rightMagnet.physicsBody!.velocity.dy > 100 || rightMagnet.physicsBody!.velocity.dx < -100 || rightMagnet.physicsBody!.velocity.dx > 100) && rightMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                rightMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.rightMagnetJustHitGoal = false
-                })
-            }
-            rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.bottomGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue)
-        {
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" && (rightMagnet.physicsBody!.velocity.dy < -100 || rightMagnet.physicsBody!.velocity.dy > 100 || rightMagnet.physicsBody!.velocity.dx < -100 || rightMagnet.physicsBody!.velocity.dx > 100) && rightMagnetJustHitGoal == false
-            {
-                run(magnetHitsGoalSound)
-                rightMagnetJustHitGoal = true
-                Timer.scheduledTimer(withTimeInterval: 0.50, repeats: false, block: { timer in
-                    self.rightMagnetJustHitGoal = false
-                })
-            }
-            rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-        }
-        
+
         if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.bottomGoalZone.rawValue)
         {
             ballInSouthGoal = true
@@ -1786,164 +1093,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         {
             ballInNorthGoal = true
             if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(goalSound)}
-        }
-        
-        if ((contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue) && (contact.bodyA.fieldBitMask != 45 && contact.bodyB.fieldBitMask != 45) && (leftMagnetIsActive == true))
-        {
-            leftMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.leftMagnet.position = CGPoint(x: -100, y: -100)
-                self.leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.northPlayerMagnetCount += 1
-            })
-        }
-        else if (contact.bodyB.categoryBitMask == BodyType.player.rawValue && contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && (contact.bodyA.fieldBitMask != 45 && contact.bodyB.fieldBitMask != 45) && (leftMagnetIsActive == true))
-        {
-            leftMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.leftMagnet.position = CGPoint(x: -100, y: -100)
-                self.leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.northPlayerMagnetCount += 1
-            })
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue && (contact.bodyA.fieldBitMask == 45 || contact.bodyB.fieldBitMask == 45) && (leftMagnetIsActive == true))
-        {
-            leftMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.leftMagnet.position = CGPoint(x: -100, y: -100)
-                self.leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.southPlayerMagnetCount += 1
-            })
-        }
-        else if (contact.bodyB.categoryBitMask == BodyType.player.rawValue && contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && (contact.bodyA.fieldBitMask == 45 || contact.bodyB.fieldBitMask == 45) && (leftMagnetIsActive == true))
-        {
-            leftMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.leftMagnet.position = CGPoint(x: -100, y: -100)
-                self.leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.southPlayerMagnetCount += 1
-            })
-        }
-
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue && (contact.bodyA.fieldBitMask != 45 && contact.bodyB.fieldBitMask != 45) && (centerMagnetIsActive == true))
-        {
-            centerMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.centerMagnet.position = CGPoint(x: -100, y: -100)
-                self.centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.northPlayerMagnetCount += 1
-            })
-        }
-        else if (contact.bodyB.categoryBitMask == BodyType.player.rawValue && contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && (contact.bodyA.fieldBitMask != 45 && contact.bodyB.fieldBitMask != 45) && (centerMagnetIsActive == true))
-        {
-            centerMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.centerMagnet.position = CGPoint(x: -100, y: -100)
-                self.centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.northPlayerMagnetCount += 1
-            })
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue && (contact.bodyA.fieldBitMask == 45 || contact.bodyB.fieldBitMask == 45) && (centerMagnetIsActive == true))
-        {
-            centerMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.centerMagnet.position = CGPoint(x: -100, y: -100)
-                self.centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.southPlayerMagnetCount += 1
-            })
-        }
-        else if (contact.bodyB.categoryBitMask == BodyType.player.rawValue && contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && (contact.bodyA.fieldBitMask == 45 || contact.bodyB.fieldBitMask == 45) && (centerMagnetIsActive == true))
-        {
-            centerMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.centerMagnet.position = CGPoint(x: -100, y: -100)
-                self.centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.southPlayerMagnetCount += 1
-            })
-        }
-
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue && (contact.bodyA.fieldBitMask != 45 && contact.bodyB.fieldBitMask != 45) && (rightMagnetIsActive == true))
-        {
-            rightMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.rightMagnet.position = CGPoint(x: -100, y: -100)
-                self.rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.northPlayerMagnetCount += 1
-            })
-        }
-        
-        else if (contact.bodyB.categoryBitMask == BodyType.player.rawValue && contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && (contact.bodyA.fieldBitMask != 45 && contact.bodyB.fieldBitMask != 45) && (rightMagnetIsActive == true))
-        {
-            rightMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.rightMagnet.position = CGPoint(x: -100, y: -100)
-                self.rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.northPlayerMagnetCount += 1
-            })
-        }
-
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue && (contact.bodyA.fieldBitMask == 45 || contact.bodyB.fieldBitMask == 45) && rightMagnetIsActive == true)
-        {
-            rightMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.rightMagnet.position = CGPoint(x: -100, y: -100)
-                self.rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.southPlayerMagnetCount += 1
-
-            })
-        }
-        
-        else if (contact.bodyB.categoryBitMask == BodyType.player.rawValue && contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && (contact.bodyA.fieldBitMask == 45 || contact.bodyB.fieldBitMask == 45) && (rightMagnetIsActive == true))
-        {
-            rightMagnetIsActive = false
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetPlayerSound)}
-            Timer.scheduledTimer(withTimeInterval: 0.02, repeats: false, block: { timer in
-                self.rightMagnet.position = CGPoint(x: -100, y: -100)
-                self.rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                self.southPlayerMagnetCount += 1
-            })
-        }
-        
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue) || (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue) || (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue) ||
-            (contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) ||
-            (contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) ||
-            (contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue)
-        {
-            if magnetBallSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
-            {
-                magnetBallSoundControl = false
-                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitsMagnetSound)}
-                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
-                    self.magnetBallSoundControl = true
-                })
-            }
-        }
-        if (contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue) || (contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue) || (contact.bodyA.categoryBitMask == BodyType.leftMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue) ||
-            (contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.leftMagnet.rawValue) ||
-            (contact.bodyA.categoryBitMask == BodyType.centerMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.rightMagnet.rawValue) ||
-            (contact.bodyA.categoryBitMask == BodyType.rightMagnet.rawValue && contact.bodyB.categoryBitMask == BodyType.centerMagnet.rawValue)
-        {
-            if magnetHitsMagnetSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
-            {
-                magnetHitsMagnetSoundControl = false
-                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(magnetHitsMagnetSound)}
-                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
-                    self.magnetHitsMagnetSoundControl = true
-                })
-            }
         }
     }
     
@@ -2123,24 +1272,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             ball?.position = CGPoint(x: bottomGoal.position.x, y: bottomGoal.position.y)
             updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
             updateNorthPlayerScore()
-            clearMagnets()
             clearPauseButton()
             clearPlayer()
-            southPlayerMagnetCount = 0
-            northPlayerMagnetCount = 0
             topPlayerWinsRound = true
             if (northPlayerScore * 2) < numberRounds
             {
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
                     self.resetBallBottomPlayerBallStart()
-                    self.resetMagnets()
                     self.resetPauseButton()
                     self.resetPlayer()
-                    self.resetMagnetHitMarkers()
                     self.resetPlayerLoseWinBackground()
-                    self.leftMagnetIsActive = true
-                    self.centerMagnetIsActive = true
-                    self.rightMagnetIsActive = true
                     self.ball?.physicsBody?.isDynamic = true
                     self.topPlayerWinsRound = false
                 })
@@ -2154,95 +1295,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
             ball?.position = CGPoint(x: topGoal.position.x, y: topGoal.position.y)
             updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
             southPlayerScore += 1
-            clearMagnets()
             clearPauseButton()
             updateSouthPlayerScore()
             bottomPlayerWinsRound = true
-            southPlayerMagnetCount = 0
-            northPlayerMagnetCount = 0
             clearPlayer()
             if (southPlayerScore * 2) < numberRounds
             {
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
                     self.resetBallTopPlayerBallStart()
-                    self.resetMagnets()
                     self.resetPauseButton()
                     self.resetPlayer()
-                    self.resetMagnetHitMarkers()
                     self.resetPlayerLoseWinBackground()
                     self.ball?.physicsBody?.isDynamic = true
-                    self.leftMagnetIsActive = true
-                    self.centerMagnetIsActive = true
-                    self.rightMagnetIsActive = true
                     self.bottomPlayerWinsRound = false
-                })
-            }
-        }
-        
-        if southPlayerMagnetCount >= 2
-        {
-            updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
-            northPlayerScore += 1
-            updateNorthPlayerScore()
-            topPlayerWinsRound = true
-            clearMagnets()
-            clearPauseButton()
-            ball?.physicsBody?.isDynamic = false
-            ball?.isHidden = true
-            southPlayerMagnetCount = 0
-            northPlayerMagnetCount = 0
-            clearPlayer()
-            if (northPlayerScore * 2) < numberRounds
-            {
-                Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
-                    self.southPlayerMagnetCount = 0
-                    self.northPlayerMagnetCount = 0
-                    self.resetBallBottomPlayerBallStart()
-                    self.ball?.isHidden = false
-                    self.resetMagnetHitMarkers()
-                    self.resetMagnets()
-                    self.resetPauseButton()
-                    self.resetPlayer()
-                    self.resetPlayerLoseWinBackground()
-                    self.topPlayerWinsRound = false
-                    self.leftMagnetIsActive = true
-                    self.centerMagnetIsActive = true
-                    self.rightMagnetIsActive = true
-                    self.ball?.physicsBody?.isDynamic = true
-                })
-            }
-        }
-            
-        else if northPlayerMagnetCount >= 2
-        {
-            updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
-            southPlayerScore += 1
-            updateSouthPlayerScore()
-            bottomPlayerWinsRound = true
-            clearPauseButton()
-            clearMagnets()
-            ball?.physicsBody?.isDynamic = false
-            ball?.isHidden = true
-            southPlayerMagnetCount = 0
-            northPlayerMagnetCount = 0
-            clearPlayer()
-            if (southPlayerScore * 2) < numberRounds
-            {
-                Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
-                    self.southPlayerMagnetCount = 0
-                    self.northPlayerMagnetCount = 0
-                    self.resetBallTopPlayerBallStart()
-                    self.ball?.isHidden = false
-                    self.resetMagnetHitMarkers()
-                    self.resetMagnets()
-                    self.resetPlayer()
-                    self.resetPauseButton()
-                    self.resetPlayerLoseWinBackground()
-                    self.bottomPlayerWinsRound = false
-                    self.leftMagnetIsActive = true
-                    self.centerMagnetIsActive = true
-                    self.rightMagnetIsActive = true
-                    self.ball?.physicsBody?.isDynamic = true
                 })
             }
         }
@@ -2267,43 +1332,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthP
         if GameIsPaused == true
         {
             ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            leftMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            centerMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-            rightMagnet.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         }
         
-        springFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer!.position.y))
-        springFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer!.position.y))
-        if repulsionMode == true
-        {
-            electricFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer!.position.y))
-            electricFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer!.position.y))
-        }
-        placeMagnetXMarks()
         scoring()
         
         if sqrt(pow((ball?.physicsBody?.velocity.dx)!, 2) + pow((ball?.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxBallSpeed)
         {
             ball?.physicsBody?.velocity.dx = (ball?.physicsBody?.velocity.dx)! * (maxBallSpeed / (sqrt(pow((ball?.physicsBody?.velocity.dx)!, 2) + pow((ball?.physicsBody?.velocity.dy)!, 2))))
             ball?.physicsBody?.velocity.dy = (ball?.physicsBody?.velocity.dy)! * (maxBallSpeed / (sqrt(pow((ball?.physicsBody?.velocity.dx)!, 2) + pow((ball?.physicsBody?.velocity.dy)!, 2))))
-        }
-        
-        if sqrt(pow((leftMagnet.physicsBody?.velocity.dx)!, 2) + pow((leftMagnet.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxMagnetSpeed)
-        {
-            leftMagnet.physicsBody?.velocity.dx = (leftMagnet.physicsBody?.velocity.dx)! * (maxMagnetSpeed / (sqrt(pow((leftMagnet.physicsBody?.velocity.dx)!, 2) + pow((leftMagnet.physicsBody?.velocity.dy)!, 2))))
-            leftMagnet.physicsBody?.velocity.dy = (leftMagnet.physicsBody?.velocity.dy)! * (maxMagnetSpeed / (sqrt(pow((leftMagnet.physicsBody?.velocity.dx)!, 2) + pow((leftMagnet.physicsBody?.velocity.dy)!, 2))))
-        }
-        
-        if sqrt(pow((centerMagnet.physicsBody?.velocity.dx)!, 2) + pow((centerMagnet.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxMagnetSpeed)
-        {
-            centerMagnet.physicsBody?.velocity.dx = (centerMagnet.physicsBody?.velocity.dx)! * (maxMagnetSpeed / (sqrt(pow((centerMagnet.physicsBody?.velocity.dx)!, 2) + pow((centerMagnet.physicsBody?.velocity.dy)!, 2))))
-            centerMagnet.physicsBody?.velocity.dy = (centerMagnet.physicsBody?.velocity.dy)! * (maxMagnetSpeed / (sqrt(pow((centerMagnet.physicsBody?.velocity.dx)!, 2) + pow((centerMagnet.physicsBody?.velocity.dy)!, 2))))
-        }
-        
-        if sqrt(pow((rightMagnet.physicsBody?.velocity.dx)!, 2) + pow((rightMagnet.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxMagnetSpeed)
-        {
-            rightMagnet.physicsBody?.velocity.dx = (rightMagnet.physicsBody?.velocity.dx)! * (maxMagnetSpeed / (sqrt(pow((rightMagnet.physicsBody?.velocity.dx)!, 2) + pow((rightMagnet.physicsBody?.velocity.dy)!, 2))))
-            rightMagnet.physicsBody?.velocity.dy = (rightMagnet.physicsBody?.velocity.dy)! * (maxMagnetSpeed / (sqrt(pow((rightMagnet.physicsBody?.velocity.dx)!, 2) + pow((rightMagnet.physicsBody?.velocity.dy)!, 2))))
         }
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
