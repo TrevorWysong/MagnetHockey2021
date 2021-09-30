@@ -317,6 +317,23 @@ class GameOverScene: SKScene
         skView.presentScene(scene, transition: transition)
     }
     
+    func gameSceneAirHockey()
+    {
+        let scene = AirHockey2P(size: (view?.bounds.size)!)
+            
+        // Configure the view.
+        let skView = self.view!
+        skView.isMultipleTouchEnabled = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .resizeFill
+        let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
+        skView.presentScene(scene, transition: transition)
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
         let touch = touches.first
@@ -342,7 +359,7 @@ class GameOverScene: SKScene
         if let location = touch?.location(in: self)
         {
             let nodesArray = self.nodes(at: location)
-            if nodesArray.contains(playButton) && touchedPlay == true
+            if nodesArray.contains(playButton) && touchedPlay == true && UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
             {
                 SKTAudio.sharedInstance().pauseBackgroundMusic()
                 if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(buttonSound)}
@@ -351,6 +368,16 @@ class GameOverScene: SKScene
                 touchedPlay = false
                 playButton.colorBlendFactor = 0
                 gameScene()
+            }
+            else if nodesArray.contains(playButton) && touchedPlay == true && UserDefaults.standard.string(forKey: "Game") == "Air Hockey"
+            {
+                SKTAudio.sharedInstance().pauseBackgroundMusic()
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                touchedPlay = false
+                playButton.colorBlendFactor = 0
+                gameSceneAirHockey()
             }
             else if nodesArray.contains(backToMenuButton) && touchedMenu == true
             {

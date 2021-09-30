@@ -142,7 +142,16 @@ class StartScene: SKScene
         titleLabel.horizontalAlignmentMode = .center
         titleLabel.verticalAlignmentMode = .center
         titleLabel.zPosition = 1
-        titleLabel.text = "MAGNET"
+        if UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
+        {
+            titleLabel.text = "MAGNET HOCKEY"
+            arrowPressCounter = 0
+        }
+        else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey"
+        {
+            titleLabel.text = "AIR HOCKEY"
+            arrowPressCounter = 1
+        }
         addChild(titleLabel)
         
         // set size, color, position and text of the tapStartLabel
@@ -303,26 +312,37 @@ class StartScene: SKScene
         backButton = SKSpriteNode(imageNamed: "arrowLeft.png")
         backButton.position = CGPoint(x: frame.width * 0.16, y: frame.height * 0.85)
         backButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
-        backButton.colorBlendFactor = 0.5
         addChild(backButton)
         
         forwardButton = SKSpriteNode(imageNamed: "arrowRight.png")
         forwardButton.position = CGPoint(x: frame.width * 0.84, y: frame.height * 0.85)
         forwardButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
-        forwardButton.colorBlendFactor = 0
         addChild(forwardButton)
         
         pageDotOne = SKSpriteNode(imageNamed: "whiteDot.png")
         pageDotOne.position = CGPoint(x: frame.width * 0.47, y: frame.height * 0.73)
         pageDotOne.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
-        pageDotOne.colorBlendFactor = 0
         addChild(pageDotOne)
         
         pageDotTwo = SKSpriteNode(imageNamed: "whiteDot.png")
         pageDotTwo.position = CGPoint(x: frame.width * 0.53, y: frame.height * 0.73)
         pageDotTwo.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
-        pageDotTwo.colorBlendFactor = 0.75
         addChild(pageDotTwo)
+        
+        if UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
+        {
+            forwardButton.colorBlendFactor = 0
+            backButton.colorBlendFactor = 0.5
+            pageDotOne.colorBlendFactor = 0
+            pageDotTwo.colorBlendFactor = 0.75
+        }
+        else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey"
+        {
+            forwardButton.colorBlendFactor = 0.5
+            backButton.colorBlendFactor = 0
+            pageDotOne.colorBlendFactor = 0.75
+            pageDotTwo.colorBlendFactor = 0
+        }
     }
 
     func playMagnetHockey()
@@ -589,6 +609,10 @@ class StartScene: SKScene
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
+                titleLabel.text = "MAGNET"
+                let saveGame = UserDefaults.standard
+                saveGame.set("Magnet Hockey", forKey: "Game")
+                saveGame.synchronize()
             }
             
             else if nodesArray.contains(forwardButton) && touchedForwardButton == true && arrowPressCounter == 0
@@ -601,7 +625,11 @@ class StartScene: SKScene
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
+                titleLabel.text = "AIR"
                 arrowPressCounter += 1
+                let saveGame = UserDefaults.standard
+                saveGame.set("Air Hockey", forKey: "Game")
+                saveGame.synchronize()
             }
             
             else

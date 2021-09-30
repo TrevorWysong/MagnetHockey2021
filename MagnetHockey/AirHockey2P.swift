@@ -399,7 +399,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     func createPauseGameTitle()
     {
         pauseTitleBackground1 = SKSpriteNode(imageNamed: "pauseTitleBackground.png")
-        pauseTitleBackground1.scale(to: CGSize(width: frame.width * 0.67, height: frame.height/10))
+        pauseTitleBackground1.scale(to: CGSize(width: frame.width * 0.29, height: frame.height/10))
         pauseTitleBackground1.zPosition = 125
         pauseTitleBackground1.isHidden = true
         addChild(pauseTitleBackground1)
@@ -408,13 +408,13 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         if frame.width < 600 && frame.height > 800
         {
             pauseTitleLabel1.fontSize = frame.width/6.5
-            pauseTitleLabel1.position = CGPoint(x: frame.width/2, y: frame.height * 0.79)
+            pauseTitleLabel1.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.79)
             pauseTitleBackground1.position = CGPoint(x: frame.width/2, y: frame.height * 0.79)
         }
         else
         {
             pauseTitleLabel1.fontSize = frame.width/7.5
-            pauseTitleLabel1.position = CGPoint(x: frame.width/2, y: frame.height * 0.80)
+            pauseTitleLabel1.position = CGPoint(x: frame.width * 0.49, y: frame.height * 0.80)
             pauseTitleBackground1.position = CGPoint(x: frame.width/2, y: frame.height * 0.80)
         }
         pauseTitleLabel1.fontName = "Futura"
@@ -422,7 +422,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         pauseTitleLabel1.horizontalAlignmentMode = .center
         pauseTitleLabel1.verticalAlignmentMode = .center
         pauseTitleLabel1.zPosition = 126
-        pauseTitleLabel1.text = "MAGNET"
+        pauseTitleLabel1.text = "AIR"
         pauseTitleLabel1.isHidden = true
         addChild(pauseTitleLabel1)
         

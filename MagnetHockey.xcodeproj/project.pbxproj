@@ -199,7 +199,6 @@
 				C365D3C525ABA81700FD37C4 /* BackgroundMusic.swift */,
 				C334C9DE26DC6F3C0088D46B /* Sound Effects */,
 				C311E7F62458CDB500D0CEC6 /* Assets.xcassets */,
-				C34CEF5326FFC94100D983E5 /* GameSceneAndSettings.spriteatlas */,
 			);
 			path = MagnetHockey;
 			sourceTree = "<group>";
@@ -219,13 +218,6 @@
 				C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */,
 			);
 			path = "Sound Effects";
-			sourceTree = "<group>";
-		};
-		C34CEF5326FFC94100D983E5 /* GameSceneAndSettings.spriteatlas */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = GameSceneAndSettings.spriteatlas;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
