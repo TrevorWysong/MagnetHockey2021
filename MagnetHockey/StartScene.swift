@@ -14,11 +14,11 @@ class StartScene: SKScene
     // you can use another font for the label if you want...
     let titleLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let titleLabel2 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
-    let repulsionModeLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
-    let standardModeLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let gameModeLabel1 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let gameModeLabel2 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let storeButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
-    var repulsionModeButton = SKSpriteNode()
-    var standardModeButton = SKSpriteNode()
+    var gameModeButton1 = SKSpriteNode()
+    var gameModeButton2 = SKSpriteNode()
     var settingsButton = SKSpriteNode()
     var instructionsButton = SKSpriteNode()
     var playButton:SKSpriteNode!
@@ -27,8 +27,8 @@ class StartScene: SKScene
     var magnetEmitter:SKEmitterNode!
     let buttonSound = SKAction.playSoundFileNamed("ChangeRounds.mp3", waitForCompletion: false)
     var touchedPlay = false
-    var touchedRepulsionMode = false
-    var touchedStandardMode = false
+    var touchedGameMode1 = false
+    var touchedGameMode2 = false
     var touchedStore = false
     var touchedSettings = false
     var touchedInstructions = false
@@ -152,6 +152,14 @@ class StartScene: SKScene
             titleLabel.text = "AIR HOCKEY"
             arrowPressCounter = 1
         }
+        else
+        {
+            let saveGame = UserDefaults.standard
+            saveGame.set("Magnet Hockey", forKey: "Game")
+            saveGame.synchronize()
+            titleLabel.text = "MAGNET HOCKEY"
+            arrowPressCounter = 0
+        }
         addChild(titleLabel)
         
         // set size, color, position and text of the tapStartLabel
@@ -173,31 +181,31 @@ class StartScene: SKScene
         titleLabel2.text = "HOCKEY"
         addChild(titleLabel2)
         
-        repulsionModeButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
-        repulsionModeButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.60)
-        repulsionModeButton.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
-        addChild(repulsionModeButton)
+        gameModeButton1 = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
+        gameModeButton1.position = CGPoint(x: frame.width/2, y: frame.height * 0.60)
+        gameModeButton1.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
+        addChild(gameModeButton1)
         
-        standardModeButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
-        standardModeButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.48)
-        standardModeButton.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
-        standardModeButton.colorBlendFactor = 0.5
+        gameModeButton2 = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
+        gameModeButton2.position = CGPoint(x: frame.width/2, y: frame.height * 0.48)
+        gameModeButton2.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
+        gameModeButton2.colorBlendFactor = 0.5
         if UserDefaults.standard.string(forKey: "GameType") == "StandardMode"
         {
-            standardModeButton.colorBlendFactor = 0.5
-            repulsionModeButton.colorBlendFactor = 0
+            gameModeButton2.colorBlendFactor = 0.5
+            gameModeButton1.colorBlendFactor = 0
         }
         else if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
         {
-            standardModeButton.colorBlendFactor = 0
-            repulsionModeButton.colorBlendFactor = 0.5
+            gameModeButton2.colorBlendFactor = 0
+            gameModeButton1.colorBlendFactor = 0.5
         }
         else
         {
-            standardModeButton.colorBlendFactor = 0.5
-            repulsionModeButton.colorBlendFactor = 0
+            gameModeButton2.colorBlendFactor = 0.5
+            gameModeButton1.colorBlendFactor = 0
         }
-        addChild(standardModeButton)
+        addChild(gameModeButton2)
         
         storeButton = SKSpriteNode(imageNamed: "AgedEmeraldRectangle.png")
         storeButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.17)
@@ -253,24 +261,41 @@ class StartScene: SKScene
         addChild(storeButtonLabel)
         
         // set size, color, position and text of the tapStartLabel
-        repulsionModeLabel.fontSize = frame.width/17.5
-        repulsionModeLabel.fontColor = SKColor.white
-        repulsionModeLabel.horizontalAlignmentMode = .center
-        repulsionModeLabel.verticalAlignmentMode = .center
-        repulsionModeLabel.position = CGPoint(x: repulsionModeButton.position.x, y: repulsionModeButton.position.y)
-        repulsionModeLabel.zPosition = 1
-        repulsionModeLabel.text = "Repulsion Mode"
-        addChild(repulsionModeLabel)
+        gameModeLabel1.fontSize = frame.width/17.5
+        gameModeLabel1.fontColor = SKColor.white
+        gameModeLabel1.horizontalAlignmentMode = .center
+        gameModeLabel1.verticalAlignmentMode = .center
+        gameModeLabel1.position = CGPoint(x: gameModeButton1.position.x, y: gameModeButton1.position.y)
+        gameModeLabel1.zPosition = 1
+        addChild(gameModeLabel1)
         
         // set size, color, position and text of the tapStartLabel
-        standardModeLabel.fontSize = frame.width/17.5
-        standardModeLabel.fontColor = SKColor.white
-        standardModeLabel.horizontalAlignmentMode = .center
-        standardModeLabel.verticalAlignmentMode = .center
-        standardModeLabel.position = CGPoint(x: standardModeButton.position.x, y: standardModeButton.position.y)
-        standardModeLabel.zPosition = 1
-        standardModeLabel.text = "Standard Mode"
-        addChild(standardModeLabel)
+        gameModeLabel2.fontSize = frame.width/17.5
+        gameModeLabel2.fontColor = SKColor.white
+        gameModeLabel2.horizontalAlignmentMode = .center
+        gameModeLabel2.verticalAlignmentMode = .center
+        gameModeLabel2.position = CGPoint(x: gameModeButton2.position.x, y: gameModeButton2.position.y)
+        gameModeLabel2.zPosition = 1
+        addChild(gameModeLabel2)
+        
+        if UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
+        {
+            gameModeLabel1.text = "Repulsion Mode"
+            gameModeLabel2.text = "Standard Mode"
+        }
+        else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey"
+        {
+            gameModeLabel1.text = "1-Player Mode"
+            gameModeLabel2.text = "2-Player Mode"
+        }
+        else
+        {
+            let saveGame = UserDefaults.standard
+            saveGame.set("Magnet Hockey", forKey: "Game")
+            saveGame.synchronize()
+            gameModeLabel1.text = "Repulsion Mode"
+            gameModeLabel2.text = "Standard Mode"
+        }
        
         playButton = SKSpriteNode(imageNamed: "IcyChillSquare.png")
         playButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.325)
@@ -343,11 +368,21 @@ class StartScene: SKScene
             pageDotOne.colorBlendFactor = 0.75
             pageDotTwo.colorBlendFactor = 0
         }
+        else
+        {
+            let saveGame = UserDefaults.standard
+            saveGame.set("Magnet Hockey", forKey: "Game")
+            saveGame.synchronize()
+            forwardButton.colorBlendFactor = 0
+            backButton.colorBlendFactor = 0.5
+            pageDotOne.colorBlendFactor = 0
+            pageDotTwo.colorBlendFactor = 0.75
+        }
     }
 
     func playMagnetHockey()
     {
-        repulsionModeButton.colorBlendFactor = 0
+        gameModeButton1.colorBlendFactor = 0
         let scene = MagnetHockey(size: (view?.bounds.size)!)
             
         // Configure the view.
@@ -365,7 +400,7 @@ class StartScene: SKScene
     
     func playAirHockey2P()
     {
-        repulsionModeButton.colorBlendFactor = 0
+        gameModeButton1.colorBlendFactor = 0
         let scene = AirHockey2P(size: (view?.bounds.size)!)
             
         // Configure the view.
@@ -392,30 +427,30 @@ class StartScene: SKScene
                 playButton.colorBlendFactor = 0.5
                 touchedPlay = true
             }
-            else if nodesArray.contains(repulsionModeButton)
+            else if nodesArray.contains(gameModeButton1)
             {
-                if repulsionModeButton.colorBlendFactor > 0
+                if gameModeButton1.colorBlendFactor > 0
                 {
-                    repulsionModeButton.colorBlendFactor = 0
+                    gameModeButton1.colorBlendFactor = 0
                 }
                 else
                 {
-                    repulsionModeButton.colorBlendFactor = 0.5
+                    gameModeButton1.colorBlendFactor = 0.5
                 }
-                touchedRepulsionMode = true
+                touchedGameMode1 = true
             }
             
-            else if nodesArray.contains(standardModeButton)
+            else if nodesArray.contains(gameModeButton2)
             {
-                if standardModeButton.colorBlendFactor > 0
+                if gameModeButton2.colorBlendFactor > 0
                 {
-                    standardModeButton.colorBlendFactor = 0
+                    gameModeButton2.colorBlendFactor = 0
                 }
                 else
                 {
-                    standardModeButton.colorBlendFactor = 0.5
+                    gameModeButton2.colorBlendFactor = 0.5
                 }
-                touchedStandardMode = true
+                touchedGameMode2 = true
             }
                 
             else if nodesArray.contains(storeButton)
@@ -457,7 +492,7 @@ class StartScene: SKScene
             let nodesArray = self.nodes(at: location)
             if nodesArray.contains(playButton) && touchedPlay == true
             {
-                if repulsionModeButton.colorBlendFactor > 0 && standardModeButton.colorBlendFactor == 0 && titleLabel.text == "MAGNET"
+                if gameModeButton1.colorBlendFactor > 0 && gameModeButton2.colorBlendFactor == 0 && titleLabel.text == "MAGNET"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -467,7 +502,7 @@ class StartScene: SKScene
                     playButton.colorBlendFactor = 0
                     playMagnetHockey()
                 }
-                else if standardModeButton.colorBlendFactor > 0 && repulsionModeButton.colorBlendFactor == 0 && titleLabel.text == "MAGNET"
+                else if gameModeButton2.colorBlendFactor > 0 && gameModeButton1.colorBlendFactor == 0 && titleLabel.text == "MAGNET"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -477,7 +512,7 @@ class StartScene: SKScene
                     playButton.colorBlendFactor = 0
                     playMagnetHockey()
                 }
-                if repulsionModeButton.colorBlendFactor > 0 && standardModeButton.colorBlendFactor == 0 && titleLabel.text == "AIR"
+                if gameModeButton1.colorBlendFactor > 0 && gameModeButton2.colorBlendFactor == 0 && titleLabel.text == "AIR"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -487,7 +522,7 @@ class StartScene: SKScene
                     playButton.colorBlendFactor = 0
                     playAirHockey2P()
                 }
-                else if standardModeButton.colorBlendFactor > 0 && repulsionModeButton.colorBlendFactor == 0 && titleLabel.text == "AIR"
+                else if gameModeButton2.colorBlendFactor > 0 && gameModeButton1.colorBlendFactor == 0 && titleLabel.text == "AIR"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -505,27 +540,27 @@ class StartScene: SKScene
                     playButton.colorBlendFactor = 0
                 }
             }
-            else if nodesArray.contains(repulsionModeButton) && touchedRepulsionMode == true
+            else if nodesArray.contains(gameModeButton1) && touchedGameMode1 == true
             {
                 let saveGameType = UserDefaults.standard
                 saveGameType.set("RepulsionMode", forKey: "GameType")
                 saveGameType.synchronize()
-                touchedRepulsionMode = false
-                standardModeButton.colorBlendFactor = 0
-                repulsionModeButton.colorBlendFactor = 0.5
+                touchedGameMode1 = false
+                gameModeButton2.colorBlendFactor = 0
+                gameModeButton1.colorBlendFactor = 0.5
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
             }
                 
-            else if nodesArray.contains(standardModeButton) && touchedStandardMode == true
+            else if nodesArray.contains(gameModeButton2) && touchedGameMode2 == true
             {
                 let saveGameType = UserDefaults.standard
                 saveGameType.set("StandardMode", forKey: "GameType")
                 saveGameType.synchronize()
-                touchedStandardMode = false
-                repulsionModeButton.colorBlendFactor = 0
-                standardModeButton.colorBlendFactor = 0.5
+                touchedGameMode2 = false
+                gameModeButton1.colorBlendFactor = 0
+                gameModeButton2.colorBlendFactor = 0.5
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -610,6 +645,8 @@ class StartScene: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 titleLabel.text = "MAGNET"
+                gameModeLabel1.text = "Repulsion Mode"
+                gameModeLabel2.text = "Standard Mode"
                 let saveGame = UserDefaults.standard
                 saveGame.set("Magnet Hockey", forKey: "Game")
                 saveGame.synchronize()
@@ -626,6 +663,8 @@ class StartScene: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 titleLabel.text = "AIR"
+                gameModeLabel1.text = "1-Player Mode"
+                gameModeLabel2.text = "2-Player Mode"
                 arrowPressCounter += 1
                 let saveGame = UserDefaults.standard
                 saveGame.set("Air Hockey", forKey: "Game")
@@ -639,31 +678,31 @@ class StartScene: SKScene
                     touchedPlay = false
                     playButton.colorBlendFactor = 0
                 }
-                if touchedRepulsionMode == true
+                if touchedGameMode1 == true
                 {
-                    touchedRepulsionMode = false
-                    if repulsionModeButton.colorBlendFactor > 0 && standardModeButton.colorBlendFactor > 0
+                    touchedGameMode1 = false
+                    if gameModeButton1.colorBlendFactor > 0 && gameModeButton2.colorBlendFactor > 0
                     {
-                        standardModeButton.colorBlendFactor = 0.5
-                        repulsionModeButton.colorBlendFactor = 0
+                        gameModeButton2.colorBlendFactor = 0.5
+                        gameModeButton1.colorBlendFactor = 0
                     }
                     else
                     {
-                        standardModeButton.colorBlendFactor = 0
-                        repulsionModeButton.colorBlendFactor = 0.5
+                        gameModeButton2.colorBlendFactor = 0
+                        gameModeButton1.colorBlendFactor = 0.5
                     }                }
-                if touchedStandardMode == true
+                if touchedGameMode2 == true
                 {
-                    touchedStandardMode = false
-                    if standardModeButton.colorBlendFactor > 0 && repulsionModeButton.colorBlendFactor > 0
+                    touchedGameMode2 = false
+                    if gameModeButton2.colorBlendFactor > 0 && gameModeButton1.colorBlendFactor > 0
                     {
-                        standardModeButton.colorBlendFactor = 0
-                        repulsionModeButton.colorBlendFactor = 0.5
+                        gameModeButton2.colorBlendFactor = 0
+                        gameModeButton1.colorBlendFactor = 0.5
                     }
                     else
                     {
-                        standardModeButton.colorBlendFactor = 0.5
-                        repulsionModeButton.colorBlendFactor = 0
+                        gameModeButton2.colorBlendFactor = 0.5
+                        gameModeButton1.colorBlendFactor = 0
                     }
                 }
                 if touchedStore == true
