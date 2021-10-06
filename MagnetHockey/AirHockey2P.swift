@@ -170,11 +170,11 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         let bottomRightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
-            bottomRightEdge.position = CGPoint(x: frame.width * 2.25, y: -1 * frame.height/10)
+            bottomRightEdge.position = CGPoint(x: frame.width * 2.30, y: -1 * frame.height/10)
         }
         else
         {
-            bottomRightEdge.position = CGPoint(x: frame.width * 2.25, y: 0 - (frame.width * 6.46/20))
+            bottomRightEdge.position = CGPoint(x: frame.width * 2.30, y: 0 - (frame.width * 6.46/20))
         }
         bottomRightEdge.zPosition = -5
         //setup physics for this edge
@@ -193,11 +193,11 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         let bottomLeftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
-            bottomLeftEdge.position = CGPoint(x: frame.width * -1.25, y: -1 * frame.height/10)
+            bottomLeftEdge.position = CGPoint(x: frame.width * -1.30, y: -1 * frame.height/10)
         }
         else
         {
-            bottomLeftEdge.position = CGPoint(x: frame.width * -1.25, y: 0 - (frame.width * 6.46/20))
+            bottomLeftEdge.position = CGPoint(x: frame.width * -1.30, y: 0 - (frame.width * 6.46/20))
         }
         bottomLeftEdge.zPosition = -5
         //setup physics for this edge
@@ -213,27 +213,75 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         bottomLeftEdge.blendMode = .replace
         addChild(bottomLeftEdge)
         
-        let topEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.00/100) * frame.width))
+        let topRightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2.02/30 * frame.height))
+            topRightEdge.position = CGPoint(x: frame.width * -1.30, y: frame.height + (frame.height * 0.10))
         }
         else
         {
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.24/37.5) * frame.width))
+            topRightEdge.position = CGPoint(x: frame.width * -1.30, y: frame.height + (frame.width * 0.323))
         }
-        topEdge.zPosition = -5
+        topRightEdge.zPosition = -5
         //setup physics for this edge
-        topEdge.physicsBody = SKPhysicsBody(rectangleOf: topEdge.size)
-        topEdge.physicsBody!.isDynamic = false
-        topEdge.physicsBody?.categoryBitMask = BodyType.topBottomWalls.rawValue
-        topEdge.physicsBody?.contactTestBitMask = 512
-        topEdge.physicsBody?.restitution = 1.0
-        topEdge.physicsBody?.friction = 0.0
-        topEdge.physicsBody?.linearDamping = 0.0
-        topEdge.physicsBody?.angularDamping = 0.0
-        topEdge.blendMode = .replace
-        addChild(topEdge)
+        topRightEdge.physicsBody = SKPhysicsBody(rectangleOf: topRightEdge.size)
+        topRightEdge.physicsBody!.isDynamic = false
+        topRightEdge.physicsBody?.categoryBitMask = BodyType.topBottomWalls.rawValue
+        topRightEdge.physicsBody?.contactTestBitMask = 512
+        topRightEdge.physicsBody?.restitution = 1.0
+        topRightEdge.physicsBody?.friction = 0.0
+        topRightEdge.physicsBody?.linearDamping = 0.0
+        topRightEdge.physicsBody?.angularDamping = 0.0
+        topRightEdge.blendMode = .replace
+        addChild(topRightEdge)
+        
+        let topLeftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
+        if frame.height > 800 && frame.width < 500
+        {
+            topLeftEdge.position = CGPoint(x: frame.width * 2.30, y: frame.height + (frame.height * 0.10))
+        }
+        else
+        {
+            topLeftEdge.position = CGPoint(x: frame.width * 2.30, y: frame.height + (frame.width * 0.323))
+        }
+        topLeftEdge.zPosition = -5
+        //setup physics for this edge
+        topLeftEdge.physicsBody = SKPhysicsBody(rectangleOf: topLeftEdge.size)
+        topLeftEdge.physicsBody!.isDynamic = false
+        topLeftEdge.physicsBody?.categoryBitMask = BodyType.topBottomWalls.rawValue
+        topLeftEdge.physicsBody?.contactTestBitMask = 512
+        topLeftEdge.physicsBody?.restitution = 1.0
+        topLeftEdge.physicsBody?.friction = 0.0
+        topLeftEdge.physicsBody?.linearDamping = 0.0
+        topLeftEdge.physicsBody?.angularDamping = 0.0
+        topLeftEdge.blendMode = .replace
+        addChild(topLeftEdge)
+        
+        let topGoalEdge = SKSpriteNode(color: UIColor.black, size: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
+        if frame.height > 800 && frame.width < 500
+        {
+            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.height * 0.10))
+        }
+        else
+        {
+            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 - (frame.width * 6.46/20))
+        }
+        topGoalEdge.zPosition = 100
+        topGoalEdge.blendMode = .replace
+        addChild(topGoalEdge)
+        
+        let bottomGoalEdge = SKSpriteNode(color: UIColor.black, size: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
+        if frame.height > 800 && frame.width < 500
+        {
+            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: -1 * frame.height/10)
+        }
+        else
+        {
+            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.width * 0.323))
+        }
+        bottomGoalEdge.zPosition = 100
+        bottomGoalEdge.blendMode = .replace
+        addChild(bottomGoalEdge)
     }
     
     func createCenterCircle()
@@ -776,6 +824,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     func resetBallStart()
     {
         ball!.position = CGPoint(x: 50, y: size.height/2)
+        ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func clearPlayer()
@@ -1006,27 +1055,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             body!.applyImpulse(CGVector(dx: 0, dy: strength))
             if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitWallSound)}
         }
-
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.bottomGoalZone.rawValue)
-        {
-            ballInSouthGoal = true
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(goalSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.bottomGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue)
-        {
-            ballInSouthGoal = true
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(goalSound)}
-        }
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.topGoalZone.rawValue)
-        {
-            ballInNorthGoal = true
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(goalSound)}
-        }
-        else if (contact.bodyA.categoryBitMask == BodyType.topGoalZone.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue)
-        {
-            ballInNorthGoal = true
-            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(goalSound)}
-        }
     }
     
     func createNorthPlayerScore()
@@ -1199,6 +1227,11 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     {
         if ballInSouthGoal == true
         {
+            ball?.isHidden = true
+            ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+            if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+            else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+            else{run(goalSound)}
             ballInSouthGoal = false
             northPlayerScore += 1
             ball?.physicsBody?.isDynamic = false
@@ -1211,6 +1244,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             {
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
                     self.resetBallBottomPlayerBallStart()
+                    self.ball?.isHidden = false
                     self.resetPauseButton()
                     self.resetPlayer()
                     self.resetPlayerLoseWinBackground()
@@ -1222,6 +1256,11 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             
         else if ballInNorthGoal == true
         {
+            ball?.isHidden = true
+            ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+            if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+            else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+            else{run(goalSound)}
             ballInNorthGoal = false
             ball?.physicsBody?.isDynamic = false
             updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
@@ -1234,6 +1273,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             {
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
                     self.resetBallTopPlayerBallStart()
+                    self.ball?.isHidden = false
                     self.resetPauseButton()
                     self.resetPlayer()
                     self.resetPlayerLoseWinBackground()
@@ -1255,7 +1295,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     override func update(_ currentTime: TimeInterval)
     {
-        if  isOffScreen(node: ball!)
+        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!)
         {
             resetBallStart()
         }
@@ -1263,6 +1303,16 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         if GameIsPaused == true
         {
             ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        }
+        
+        if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height)
+        {
+            ballInNorthGoal = true
+        }
+        
+        if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < 0)
+        {
+            ballInSouthGoal = true
         }
         
         scoring()
