@@ -82,11 +82,16 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     func createPlayers()
     {
+        
         southPlayerArea = CGRect(x: 0, y: 0, width: frame.width, height: frame.height/2)
         northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height)
         
+        
         if frame.height >= 812 && frame.height <= 900 && frame.width < 500
         {
+            southPlayerArea = CGRect(x: 0, y: frame.height * 0.10, width: frame.width, height: frame.height * 0.40)
+            northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.40)
+            
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.25)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.75)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
@@ -94,6 +99,9 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
         else if frame.height == 926 && frame.width < 500
         {
+            southPlayerArea = CGRect(x: 0, y: frame.height * 0.06, width: frame.width, height: frame.height * 0.44)
+            northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.44)
+            
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2525)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.7475)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
@@ -101,6 +109,9 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
         else
         {
+            southPlayerArea = CGRect(x: 0, y: frame.height * 0.00, width: frame.width, height: frame.height * 0.50)
+            northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
+            
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2325)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.7675)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
@@ -257,19 +268,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         topLeftEdge.blendMode = .replace
         addChild(topLeftEdge)
         
-        let topGoalEdge = SKSpriteNode(color: UIColor.black, size: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
-        if frame.height > 800 && frame.width < 500
-        {
-            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.height * 0.10))
-        }
-        else
-        {
-            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 - (frame.width * 6.46/20))
-        }
-        topGoalEdge.zPosition = 100
-        topGoalEdge.blendMode = .replace
-        addChild(topGoalEdge)
-        
         let bottomGoalEdge = SKSpriteNode(color: UIColor.black, size: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
@@ -277,11 +275,44 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
         else
         {
-            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.width * 0.323))
+            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 - (frame.width * 6.46/20))
         }
         bottomGoalEdge.zPosition = 100
         bottomGoalEdge.blendMode = .replace
+        //setup physics for this edge
+        bottomGoalEdge.physicsBody = SKPhysicsBody(rectangleOf: bottomGoalEdge.size)
+        bottomGoalEdge.physicsBody!.isDynamic = false
+        bottomGoalEdge.physicsBody?.mass = 10000000
+        bottomGoalEdge.physicsBody?.categoryBitMask = 4
+        bottomGoalEdge.physicsBody?.collisionBitMask = 256
+        bottomGoalEdge.physicsBody?.restitution = 0.0
+        bottomGoalEdge.physicsBody?.friction = 0.0
+        bottomGoalEdge.physicsBody?.linearDamping = 0.0
+        bottomGoalEdge.physicsBody?.angularDamping = 0.0
         addChild(bottomGoalEdge)
+        
+        let topGoalEdge = SKSpriteNode(color: UIColor.black, size: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
+        if frame.height > 800 && frame.width < 500
+        {
+            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.height * 0.10))
+        }
+        else
+        {
+            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.width * 0.323))
+        }
+        topGoalEdge.zPosition = 100
+        topGoalEdge.blendMode = .replace
+        //setup physics for this edge
+        topGoalEdge.physicsBody = SKPhysicsBody(rectangleOf: topGoalEdge.size)
+        topGoalEdge.physicsBody!.isDynamic = false
+        topGoalEdge.physicsBody?.mass = 10000000
+        topGoalEdge.physicsBody?.categoryBitMask = 4
+        topGoalEdge.physicsBody?.collisionBitMask = 256
+        topGoalEdge.physicsBody?.restitution = 0.0
+        topGoalEdge.physicsBody?.friction = 0.0
+        topGoalEdge.physicsBody?.linearDamping = 0.0
+        topGoalEdge.physicsBody?.angularDamping = 0.0
+        addChild(topGoalEdge)
     }
     
     func createCenterCircle()
@@ -786,6 +817,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             ball?.physicsBody?.categoryBitMask = BodyType.ball.rawValue
             ball?.physicsBody?.fieldBitMask = 640
             ball?.physicsBody?.contactTestBitMask = BodyType.player.rawValue
+            ball?.physicsBody?.collisionBitMask = 1 | 2 | 128
             ball?.lineWidth = 2
             ball?.strokeColor = .black
         }
@@ -990,7 +1022,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
-//            let vball = ball!.physicsBody!.velocity
             let vball = CGVector(dx: 0, dy: 0)
             let vrelativedx = vball.dx - vmallet.dx
             let vrelativedy = vball.dy - vmallet.dy
