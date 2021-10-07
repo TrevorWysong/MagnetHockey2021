@@ -40,7 +40,7 @@ class GameViewController: UIViewController
         super.viewDidLoad()
         // This is not part of the newly created project:
 
-        if UserDefaults.standard.bool(forKey: "Purchase") != true
+        if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             let ads = GADMobileAds.sharedInstance()
             ads.start { status in
