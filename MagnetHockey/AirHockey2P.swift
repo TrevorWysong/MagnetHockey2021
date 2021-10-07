@@ -82,16 +82,11 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     func createPlayers()
     {
-        
-        southPlayerArea = CGRect(x: 0, y: 0, width: frame.width, height: frame.height/2)
-        northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height)
-        
+        southPlayerArea = CGRect(x: 0, y: frame.height * 0.00, width: frame.width, height: frame.height * 0.50)
+        northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
         
         if frame.height >= 812 && frame.height <= 900 && frame.width < 500
         {
-            southPlayerArea = CGRect(x: 0, y: frame.height * 0.10, width: frame.width, height: frame.height * 0.40)
-            northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.40)
-            
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.25)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.75)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
@@ -99,9 +94,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
         else if frame.height == 926 && frame.width < 500
         {
-            southPlayerArea = CGRect(x: 0, y: frame.height * 0.06, width: frame.width, height: frame.height * 0.44)
-            northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.44)
-            
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2525)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.7475)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
@@ -109,9 +101,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
         else
         {
-            southPlayerArea = CGRect(x: 0, y: frame.height * 0.00, width: frame.width, height: frame.height * 0.50)
-            northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
-            
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2325)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.7675)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
@@ -268,7 +257,9 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         topLeftEdge.blendMode = .replace
         addChild(topLeftEdge)
         
-        let bottomGoalEdge = SKSpriteNode(color: UIColor.black, size: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
+        let bottomGoalEdge = SKSpriteNode(imageNamed: "goalGradientBottom.png")
+        bottomGoalEdge.color = .black
+        bottomGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
             bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: -1 * frame.height/10)
@@ -291,10 +282,12 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         bottomGoalEdge.physicsBody?.angularDamping = 0.0
         addChild(bottomGoalEdge)
         
-        let topGoalEdge = SKSpriteNode(color: UIColor.black, size: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
+        let topGoalEdge = SKSpriteNode(imageNamed: "goalGradient.png")
+        topGoalEdge.color = .black
+        topGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
-            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.height * 0.10))
+            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.height * 0.10))
         }
         else
         {
