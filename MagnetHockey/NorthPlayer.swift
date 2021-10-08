@@ -28,13 +28,28 @@ class NorthPlayer: SKShapeNode
         let screenRect = UIScreen.main.bounds
         let screenWidth = screenRect.size.width
         
-        if screenWidth > 700
+        
+        if UserDefaults.standard.string(forKey: "Game") != "Air Hockey"
         {
-            radius = screenWidth/15
+            if screenWidth > 700
+            {
+                radius = screenWidth/15
+            }
+            else
+            {
+                radius = screenWidth/11
+            }
         }
         else
         {
-            radius = screenWidth/11
+            if screenWidth > 700
+            {
+                radius = screenWidth/12
+            }
+            else
+            {
+                radius = screenWidth/9
+            }
         }
         
         //set the active area variable this class with the variable passed in

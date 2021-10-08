@@ -17,6 +17,8 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     var ballRadius = CGFloat(0.0)
     var maxBallSpeed = CGFloat(0.0)
     var centerCircle = SKSpriteNode()
+    var semiCircleBottom = SKSpriteNode()
+    var semiCircleTop = SKSpriteNode()
     var playerLosesBackground = SKSpriteNode()
     var playerWinsBackground = SKSpriteNode()
     var pauseBackground = SKSpriteNode()
@@ -87,22 +89,22 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         
         if frame.height >= 812 && frame.height <= 900 && frame.width < 500
         {
-            let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.25)
-            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.75)
+            let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.22)
+            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.78)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
         else if frame.height == 926 && frame.width < 500
         {
-            let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2525)
-            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.7475)
+            let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.225)
+            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.775)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
         else
         {
-            let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2325)
-            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.7675)
+            let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.185)
+            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.815)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
@@ -310,21 +312,51 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     func createCenterCircle()
     {
+        semiCircleTop = SKSpriteNode(imageNamed: "semiCircleTop.png")
+        semiCircleBottom = SKSpriteNode(imageNamed: "semiCircleBottom.png")
+        semiCircleTop.zPosition = -15
+        semiCircleTop.colorBlendFactor = 0.90
+        semiCircleBottom.zPosition = -15
+        semiCircleBottom.colorBlendFactor = 0.90
+
         if frame.width > 700
         {
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
+            centerCircle.scale(to: CGSize(width: frame.width * 0.45, height: frame.width * 0.415))
+            
+            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.935)
+            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.065)
+            semiCircleTop.scale(to: CGSize(width: frame.width * 0.625, height: (frame.width * 0.625) * 0.532))
+            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.625, height: (frame.width * 0.625) * 0.532))
+        }
+        else if frame.width < 700 && frame.height > 800
+        {
+            centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
+            centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
+            
+            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.90)
+            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.10)
+            semiCircleTop.scale(to: CGSize(width: frame.width * 0.62, height: (frame.width * 0.62) * 0.532))
+            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.62, height: (frame.width * 0.62) * 0.532))
         }
         else
         {
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
+
+            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.96)
+            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.04)
+            semiCircleTop.scale(to: CGSize(width: frame.width * 0.645, height: (frame.width * 0.645) * 0.532))
+            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.645, height: (frame.width * 0.645) * 0.532))
         }
         centerCircle.zPosition = -100
         centerCircle.colorBlendFactor = 0.50
         addChild(centerCircle)
+        addChild(semiCircleTop)
+        addChild(semiCircleBottom)
     }
    
     func createPauseAndPlayButton()
@@ -863,18 +895,18 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         
         if frame.height >= 812  && frame.height <= 900 && frame.width < 500
         {
-            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.25)
-            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.75)
+            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.22)
+            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.78)
         }
         else if frame.height == 926 && frame.width < 500
         {
-            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.2525)
-            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.7475)
+            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.225)
+            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.775)
         }
         else
         {
-            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.2325)
-            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.7675)
+            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.185)
+            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.815)
         }
         southPlayer?.isHidden = false
         northPlayer?.isHidden = false
