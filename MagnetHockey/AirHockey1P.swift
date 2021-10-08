@@ -1,16 +1,15 @@
 //
-//  AirHockey2P.swift
-//  AirHockey2P
+//  AirHockey1P.swift
+//  AirHockey1P
 //
-//  Created by Wysong, Trevor on 9/27/21.
+//  Created by Wysong, Trevor on 10/8/21.
 //  Copyright © 2021 Wysong, Trevor. All rights reserved.
 //
-
 import SpriteKit
 import GameplayKit
 import GoogleMobileAds
 
-class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
+class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotPlayerDelegate, GADInterstitialDelegate
 {
     var frameCounter = 0
     var ball : SKShapeNode?
@@ -44,16 +43,16 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     var touchedSoundOff = false
     var GameIsPaused = false
     var southPlayer : BottomPlayer?
-    var northPlayer : NorthPlayer?
+    var botPlayer : BotPlayer?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
     let listenerNode = SKNode()
     var southPlayerArea = CGRect()
-    var northPlayerArea = CGRect()
+    var botPlayerArea = CGRect()
     var southPlayerScore = 0
-    var northPlayerScore = 0
+    var botPlayerScore = 0
     var bottomPlayerForceForCollision = CGVector()
-    var northPlayerForceForCollision = CGVector()
-    let northPlayerScoreText = SKLabelNode(fontNamed: "Helvetica Neue UltraLight")
+    var botPlayerForceForCollision = CGVector()
+    let botPlayerScoreText = SKLabelNode(fontNamed: "Helvetica Neue UltraLight")
     let southPlayerScoreText = SKLabelNode(fontNamed: "Helvetica Neue UltraLight")
     var whoWonGame = ""
     var topPlayerWinsRound = false
@@ -77,45 +76,44 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         bottomTouchForCollision = bottomTouchIsActive
     }
     
-    func northTouchIsActive(_ northTouchIsActive: Bool, fromNorthPlayer northPlayer: NorthPlayer)
-    {
-        northTouchForCollision = northTouchIsActive
+    func botTouchIsActive(_ botTouchIsActive: Bool, fromBotPlayer botPlayer: BotPlayer) {
+        
     }
     
     func createPlayers()
     {
         southPlayerArea = CGRect(x: 0, y: frame.height * 0.00, width: frame.width, height: frame.height * 0.50)
-        northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
+        botPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
         
         if frame.height >= 812 && frame.height <= 900 && frame.width < 500
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.22)
-            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.78)
+            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.78)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
+            botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
         }
         else if frame.height == 926 && frame.width < 500
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.225)
-            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.775)
+            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.775)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
+            botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
         }
         else
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.185)
-            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.815)
+            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.815)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
+            botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
         }
 
         southPlayer?.physicsBody?.categoryBitMask = BodyType.player.rawValue
-        northPlayer?.physicsBody?.categoryBitMask = BodyType.player.rawValue
+        botPlayer?.physicsBody?.categoryBitMask = BodyType.player.rawValue
         southPlayer?.physicsBody?.contactTestBitMask = 25
-        northPlayer?.physicsBody?.contactTestBitMask = 75
+        botPlayer?.physicsBody?.contactTestBitMask = 75
         southPlayer?.physicsBody?.fieldBitMask = 45
         southPlayer?.physicsBody?.usesPreciseCollisionDetection = true
-        northPlayer?.physicsBody?.usesPreciseCollisionDetection = true
+        botPlayer?.physicsBody?.usesPreciseCollisionDetection = true
     }
     
     func bottomPlayer(at position: CGPoint, boundary:CGRect) -> BottomPlayer
@@ -127,13 +125,13 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         return bottomPlayer;
     }
     
-    func northPlayer(at position: CGPoint, boundary:CGRect) -> NorthPlayer
+    func botPlayer(at position: CGPoint, boundary:CGRect) -> BotPlayer
     {
-        let northPlayer = NorthPlayer(activeArea: boundary)
-        northPlayer.position = position
-        northPlayer.delegate = self
-        addChild(northPlayer)
-        return northPlayer;
+        let botPlayer = BotPlayer(activeArea: boundary)
+        botPlayer.position = position
+        botPlayer.delegate = self
+        addChild(botPlayer)
+        return botPlayer;
     }
     
     func createEdges()
@@ -748,7 +746,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         createPauseGameTitle()
         createBackToMenuButton()
         createSoundButton()
-        createNorthPlayerScore()
+        createBotPlayerScore()
         createSouthPlayerScore()
         createEdges()
         createPlayerLoseWinBackgrounds()
@@ -893,7 +891,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     func clearPlayer()
     {
         southPlayer?.isHidden = true
-        northPlayer?.isHidden = true
+        botPlayer?.isHidden = true
     }
      
     func resetPlayer()
@@ -902,20 +900,20 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         if frame.height >= 812  && frame.height <= 900 && frame.width < 500
         {
             southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.22)
-            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.78)
+            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.78)
         }
         else if frame.height == 926 && frame.width < 500
         {
             southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.225)
-            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.775)
+            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.775)
         }
         else
         {
             southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.185)
-            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.815)
+            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.815)
         }
         southPlayer?.isHidden = false
-        northPlayer?.isHidden = false
+        botPlayer?.isHidden = false
     }
     
     func pausePhysics()
@@ -1119,27 +1117,27 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
     }
     
-    func createNorthPlayerScore()
+    func createBotPlayerScore()
     {
-        northPlayerScoreText.text = String(northPlayerScore)
-        northPlayerScoreText.zRotation =  .pi / 2
+        botPlayerScoreText.text = String(botPlayerScore)
+        botPlayerScoreText.zRotation =  .pi / 2
 
         if frame.width > 700
         {
-            northPlayerScoreText.position = CGPoint(x: frame.width/12, y: frame.height/2 + frame.height/30)
-            northPlayerScoreText.fontSize = 50
+            botPlayerScoreText.position = CGPoint(x: frame.width/12, y: frame.height/2 + frame.height/30)
+            botPlayerScoreText.fontSize = 50
         }
         else
         {
-            northPlayerScoreText.position = CGPoint(x: frame.width/10, y: frame.height/2 + frame.height/30)
-            northPlayerScoreText.fontSize = 32
+            botPlayerScoreText.position = CGPoint(x: frame.width/10, y: frame.height/2 + frame.height/30)
+            botPlayerScoreText.fontSize = 32
         }
-        addChild(northPlayerScoreText)
+        addChild(botPlayerScoreText)
         addChild(southPlayerScoreText)
     }
-    func updateNorthPlayerScore()
+    func updateBotPlayerScore()
     {
-        northPlayerScoreText.text = String(northPlayerScore)
+        botPlayerScoreText.text = String(botPlayerScore)
     }
     
     func createSouthPlayerScore()
@@ -1219,7 +1217,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     func gameOverIsTrue()
     {
-        if southPlayerScore > northPlayerScore
+        if southPlayerScore > botPlayerScore
         {
             whoWonGame = "BOTTOM"
             
@@ -1295,14 +1293,14 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
             else{run(goalSound)}
             ballInSouthGoal = false
-            northPlayerScore += 1
+            botPlayerScore += 1
             ball?.physicsBody?.isDynamic = false
             updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
-            updateNorthPlayerScore()
+            updateBotPlayerScore()
             clearPauseButton()
             clearPlayer()
             topPlayerWinsRound = true
-            if (northPlayerScore * 2) < numberRounds
+            if (botPlayerScore * 2) < numberRounds
             {
                 Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
                     self.resetBallBottomPlayerBallStart()
@@ -1345,7 +1343,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             }
         }
         
-        if ((southPlayerScore * 2 >= numberRounds) || northPlayerScore * 2 >= numberRounds) && (gameOver == false)
+        if ((southPlayerScore * 2 >= numberRounds) || botPlayerScore * 2 >= numberRounds) && (gameOver == false)
         {
             gameOver = true
             clearPauseButton()
@@ -1357,6 +1355,10 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     override func update(_ currentTime: TimeInterval)
     {
+        botDefend()
+        botReset()
+        botAttack()
+        
         if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!)
         {
             resetBallStart()
@@ -1429,6 +1431,55 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
                 touchedSoundOff = true
             }
             
+        }
+    }
+    
+    func botDefend()
+    {
+        
+    }
+    
+    func botAttack()
+    {
+        if ball!.position.y > frame.height * 0.5
+        {
+            if botPlayer!.position.x < ball!.position.x
+            {
+                botPlayer!.position.x += 1
+            }
+            if botPlayer!.position.x > ball!.position.x
+            {
+                botPlayer!.position.x -= 1
+            }
+            
+            if botPlayer!.position.y < ball!.position.y
+            {
+                botPlayer!.position.y += 1
+            }
+            if botPlayer!.position.y > ball!.position.y
+            {
+                botPlayer!.position.y -= 1
+            }
+        }
+    }
+    
+    func botReset()
+    {
+        if (ball!.position.y) < frame.height * 0.5
+        {
+            if botPlayer!.position.y <= frame.height * 0.72 && botPlayer!.position.y >= frame.height * 0.78
+            {
+                botPlayer!.position.y += 0
+            }
+            else if botPlayer!.position.y < frame.height * 0.72
+            {
+                botPlayer!.position.y += 1
+
+            }
+            else if botPlayer!.position.y > frame.height * 0.78
+            {
+                botPlayer!.position.y -= 0
+            }
         }
     }
     

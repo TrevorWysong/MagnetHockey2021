@@ -415,6 +415,24 @@ class StartScene: SKScene
         let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
         skView.presentScene(scene, transition: transition)
     }
+    
+    func playAirHockey1P()
+    {
+        gameModeButton1.colorBlendFactor = 0
+        let scene = AirHockey1P(size: (view?.bounds.size)!)
+            
+        // Configure the view.
+        let skView = self.view!
+        skView.isMultipleTouchEnabled = false
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .resizeFill
+        let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
+        skView.presentScene(scene, transition: transition)
+    }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
     {
@@ -520,7 +538,7 @@ class StartScene: SKScene
                     else{run(buttonSound)}
                     touchedPlay = false
                     playButton.colorBlendFactor = 0
-                    playAirHockey2P()
+                    playAirHockey1P()
                 }
                 else if gameModeButton2.colorBlendFactor > 0 && gameModeButton1.colorBlendFactor == 0 && titleLabel.text == "AIR"
                 {
@@ -690,7 +708,8 @@ class StartScene: SKScene
                     {
                         gameModeButton2.colorBlendFactor = 0
                         gameModeButton1.colorBlendFactor = 0.5
-                    }                }
+                    }
+                }
                 if touchedGameMode2 == true
                 {
                     touchedGameMode2 = false
