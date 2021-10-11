@@ -1500,51 +1500,9 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
             {
                 botPlayer!.physicsBody?.velocity.dy = 0
-
+                
                 //in playable mirror x zone .10 to .90
-                if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == false
-                {
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = false
-                    if botPlayer!.physicsBody!.velocity.dx > 0
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > 40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 40
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 5 && botPlayer!.physicsBody!.velocity.dx < 40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 5
-                        }
-                        else
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer?.physicsBody?.velocity.dx -= 1
-                        }
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx < 0
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < -40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 40
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < -5 && botPlayer!.physicsBody!.velocity.dx < -40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 5
-                        }
-                        else
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer?.physicsBody?.velocity.dx += 1
-                        }
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx == 0
-                    {
-                        botMirrorSwitch1 = true
-                    }
-                }
-                //in playable mirror x zone .10 to .90
-                else if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == true && botMirrorSwitch2 == false && botMirrorSwitch3 == false
+                if ((botPlayer!.position.x >= frame.width * 0.20 && botPlayer!.position.x <= frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80))
                 {
                     if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
                     {
@@ -1584,61 +1542,17 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
                 
                 //in unplayable mirror x zone < frame.width * .20
-                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch2 == false
+                if (botPlayer!.position.x < frame.width * 0.20)
                 {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = true
-                    botMirrorSwitch3 = false
+                    botPlayer?.position.x = frame.width * 0.2
+                    botPlayer?.physicsBody?.velocity.dx = 0
                 }
                 
-                //in playable mirror x zone .10 to .90
-                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch1 == false && botMirrorSwitch2 == true && botMirrorSwitch3 == false
+                //in uplayable mirror x zone .90
+                if (botPlayer!.position.x > frame.width * 0.80)
                 {
-                    if botPlayer!.position.x <= frame.width * 0.20
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 80
-                        }
-                    }
-                    else
-                    {
-                        botMirrorSwitch1 = false
-                        botMirrorSwitch2 = false
-                        botMirrorSwitch3 = false
-                    }
-                }
-                
-                //in unplayable mirror x zone < frame.width * .10
-                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch3 == false
-                {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = true
-                }
-                
-                //in playable mirror x zone .10 to .90
-                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch1 == false && botMirrorSwitch2 == false && botMirrorSwitch3 == true
-                {
-                    if botPlayer!.position.x >= frame.width * 0.80
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 80
-                        }
-                    }
-                    else
-                    {
-                        botMirrorSwitch1 = false
-                        botMirrorSwitch2 = false
-                        botMirrorSwitch3 = false
-                    }
-                }
-                else
-                {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = false
+                    botPlayer?.position.x = frame.width * 0.80
+                    botPlayer?.physicsBody?.velocity.dx = 0
                 }
             }
 
@@ -1648,62 +1562,20 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 botPlayer!.physicsBody?.velocity.dy = 300
                 
                 //in playable mirror x zone .10 to .90
-                if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == false
-                {
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = false
-                    if botPlayer!.physicsBody!.velocity.dx > 0
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > 40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 40
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 5 && botPlayer!.physicsBody!.velocity.dx < 40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 5
-                        }
-                        else
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer?.physicsBody?.velocity.dx -= 1
-                        }
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx < 0
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < -40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 40
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < -5 && botPlayer!.physicsBody!.velocity.dx < -40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 5
-                        }
-                        else
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer?.physicsBody?.velocity.dx += 1
-                        }
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx == 0
-                    {
-                        botMirrorSwitch1 = true
-                    }
-                }
-                //in playable mirror x zone .10 to .90
-                else if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == true && botMirrorSwitch2 == false && botMirrorSwitch3 == false
+                if ((botPlayer!.position.x >= frame.width * 0.20 && botPlayer!.position.x <= frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80))
                 {
                     if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
                     {
                         if botPlayer!.physicsBody!.velocity.dx < 300
                         {
-                            botPlayer!.physicsBody?.velocity.dx += 40
+                            botPlayer!.physicsBody?.velocity.dx += 60
                         }
                     }
                     else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
                     {
                         if botPlayer!.physicsBody!.velocity.dx > -300
                         {
-                            botPlayer!.physicsBody?.velocity.dx -= 40
+                            botPlayer!.physicsBody?.velocity.dx -= 60
                         }
                     }
                     else if abs(botPlayer!.position.x - ball!.position.x) <= 10
@@ -1730,61 +1602,17 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
                 
                 //in unplayable mirror x zone < frame.width * .20
-                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch2 == false
+                if (botPlayer!.position.x < frame.width * 0.20)
                 {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = true
-                    botMirrorSwitch3 = false
+                    botPlayer?.position.x = frame.width * 0.2
+                    botPlayer?.physicsBody?.velocity.dx = 0
                 }
                 
-                //in playable mirror x zone .10 to .90
-                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch1 == false && botMirrorSwitch2 == true && botMirrorSwitch3 == false
+                //in uplayable mirror x zone .90
+                if (botPlayer!.position.x > frame.width * 0.80)
                 {
-                    if botPlayer!.position.x <= frame.width * 0.20
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 80
-                        }
-                    }
-                    else
-                    {
-                        botMirrorSwitch1 = false
-                        botMirrorSwitch2 = false
-                        botMirrorSwitch3 = false
-                    }
-                }
-                
-                //in unplayable mirror x zone < frame.width * .10
-                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch3 == false
-                {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = true
-                }
-                
-                //in playable mirror x zone .10 to .90
-                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch1 == false && botMirrorSwitch2 == false && botMirrorSwitch3 == true
-                {
-                    if botPlayer!.position.x >= frame.width * 0.80
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 80
-                        }
-                    }
-                    else
-                    {
-                        botMirrorSwitch1 = false
-                        botMirrorSwitch2 = false
-                        botMirrorSwitch3 = false
-                    }
-                }
-                else
-                {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = false
+                    botPlayer?.position.x = frame.width * 0.80
+                    botPlayer?.physicsBody?.velocity.dx = 0
                 }
             }
 
@@ -1792,64 +1620,22 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             else if botPlayer!.position.y > frame.height * 0.90
             {
                 botPlayer!.physicsBody?.velocity.dy = -300
-                
-                //in playable mirror x zone .10 to .90
-                if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == false
-                {
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = false
-                    if botPlayer!.physicsBody!.velocity.dx > 0
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > 40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 40
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 5 && botPlayer!.physicsBody!.velocity.dx < 40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 5
-                        }
-                        else
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer?.physicsBody?.velocity.dx -= 1
-                        }
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx < 0
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < -40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 40
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < -5 && botPlayer!.physicsBody!.velocity.dx < -40
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 5
-                        }
-                        else
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer?.physicsBody?.velocity.dx += 1
-                        }
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx == 0
-                    {
-                        botMirrorSwitch1 = true
-                    }
-                }
-                //in playable mirror x zone .10 to .90
-                else if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == true && botMirrorSwitch2 == false && botMirrorSwitch3 == false
+                        
+                //in playable mirror x zone .20 to .80
+                if ((botPlayer!.position.x >= frame.width * 0.20 && botPlayer!.position.x <= frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80))
                 {
                     if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
                     {
                         if botPlayer!.physicsBody!.velocity.dx < 300
                         {
-                            botPlayer!.physicsBody?.velocity.dx += 40
+                            botPlayer!.physicsBody?.velocity.dx += 60
                         }
                     }
                     else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
                     {
                         if botPlayer!.physicsBody!.velocity.dx > -300
                         {
-                            botPlayer!.physicsBody?.velocity.dx -= 40
+                            botPlayer!.physicsBody?.velocity.dx -= 60
                         }
                     }
                     else if abs(botPlayer!.position.x - ball!.position.x) <= 10
@@ -1876,61 +1662,17 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
                 
                 //in unplayable mirror x zone < frame.width * .20
-                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch2 == false
+                if (botPlayer!.position.x < frame.width * 0.20)
                 {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = true
-                    botMirrorSwitch3 = false
+                    botPlayer?.position.x = frame.width * 0.2
+                    botPlayer?.physicsBody?.velocity.dx = 0
                 }
                 
-                //in playable mirror x zone .10 to .90
-                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch1 == false && botMirrorSwitch2 == true && botMirrorSwitch3 == false
+                //in uplayable mirror x zone .90
+                if (botPlayer!.position.x > frame.width * 0.80)
                 {
-                    if botPlayer!.position.x <= frame.width * 0.20
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 80
-                        }
-                    }
-                    else
-                    {
-                        botMirrorSwitch1 = false
-                        botMirrorSwitch2 = false
-                        botMirrorSwitch3 = false
-                    }
-                }
-                
-                //in unplayable mirror x zone < frame.width * .10
-                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch3 == false
-                {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = true
-                }
-                
-                //in playable mirror x zone .10 to .90
-                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch1 == false && botMirrorSwitch2 == false && botMirrorSwitch3 == true
-                {
-                    if botPlayer!.position.x >= frame.width * 0.80
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 80
-                        }
-                    }
-                    else
-                    {
-                        botMirrorSwitch1 = false
-                        botMirrorSwitch2 = false
-                        botMirrorSwitch3 = false
-                    }
-                }
-                else
-                {
-                    botMirrorSwitch1 = false
-                    botMirrorSwitch2 = false
-                    botMirrorSwitch3 = false
+                    botPlayer?.position.x = frame.width * 0.80
+                    botPlayer?.physicsBody?.velocity.dx = 0
                 }
                 
             }
