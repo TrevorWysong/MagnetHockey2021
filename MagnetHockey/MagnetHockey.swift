@@ -816,7 +816,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         centerMagnet.physicsBody?.categoryBitMask = BodyType.centerMagnet.rawValue
         rightMagnet.physicsBody?.categoryBitMask = BodyType.rightMagnet.rawValue
         
-        if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
+        if UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
         {
             leftMagnet.physicsBody?.charge = 0.70
             centerMagnet.physicsBody?.charge = 0.70

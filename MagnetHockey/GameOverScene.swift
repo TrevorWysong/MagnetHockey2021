@@ -317,9 +317,26 @@ class GameOverScene: SKScene
         skView.presentScene(scene, transition: transition)
     }
     
-    func gameSceneAirHockey()
+    func gameSceneAirHockey2P()
     {
         let scene = AirHockey2P(size: (view?.bounds.size)!)
+            
+        // Configure the view.
+        let skView = self.view!
+        skView.isMultipleTouchEnabled = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .resizeFill
+        let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
+        skView.presentScene(scene, transition: transition)
+    }
+    
+    func gameSceneAirHockey1P()
+    {
+        let scene = AirHockey1P(size: (view?.bounds.size)!)
             
         // Configure the view.
         let skView = self.view!
@@ -377,7 +394,18 @@ class GameOverScene: SKScene
                 else{run(buttonSound)}
                 touchedPlay = false
                 playButton.colorBlendFactor = 0
-                gameSceneAirHockey()
+                if UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
+                {
+                    gameSceneAirHockey1P()
+                }
+                else if UserDefaults.standard.string(forKey: "GameType") == "GameMode2"
+                {
+                    gameSceneAirHockey2P()
+                }
+                else
+                {
+                    gameSceneAirHockey2P()
+                }
             }
             else if nodesArray.contains(backToMenuButton) && touchedMenu == true
             {

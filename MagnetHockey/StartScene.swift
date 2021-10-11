@@ -118,11 +118,11 @@ class StartScene: SKScene
         
         createEdges()
         
-        if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode" || UserDefaults.standard.string(forKey: "GameType") == "StandardMode" {}
+        if UserDefaults.standard.string(forKey: "GameType") == "GameMode1" || UserDefaults.standard.string(forKey: "GameType") == "GameMode2" {}
         else
         {
             let saveGameType = UserDefaults.standard
-            saveGameType.set("StandardMode", forKey: "GameType")
+            saveGameType.set("GameType2", forKey: "GameType")
             saveGameType.synchronize()
         }
         
@@ -190,12 +190,12 @@ class StartScene: SKScene
         gameModeButton2.position = CGPoint(x: frame.width/2, y: frame.height * 0.48)
         gameModeButton2.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
         gameModeButton2.colorBlendFactor = 0.5
-        if UserDefaults.standard.string(forKey: "GameType") == "StandardMode"
+        if UserDefaults.standard.string(forKey: "GameType") == "GameMode2"
         {
             gameModeButton2.colorBlendFactor = 0.5
             gameModeButton1.colorBlendFactor = 0
         }
-        else if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
+        else if UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
         {
             gameModeButton2.colorBlendFactor = 0
             gameModeButton1.colorBlendFactor = 0.5
@@ -561,7 +561,7 @@ class StartScene: SKScene
             else if nodesArray.contains(gameModeButton1) && touchedGameMode1 == true
             {
                 let saveGameType = UserDefaults.standard
-                saveGameType.set("RepulsionMode", forKey: "GameType")
+                saveGameType.set("GameMode1", forKey: "GameType")
                 saveGameType.synchronize()
                 touchedGameMode1 = false
                 gameModeButton2.colorBlendFactor = 0
@@ -574,7 +574,7 @@ class StartScene: SKScene
             else if nodesArray.contains(gameModeButton2) && touchedGameMode2 == true
             {
                 let saveGameType = UserDefaults.standard
-                saveGameType.set("StandardMode", forKey: "GameType")
+                saveGameType.set("GameMode2", forKey: "GameType")
                 saveGameType.synchronize()
                 touchedGameMode2 = false
                 gameModeButton1.colorBlendFactor = 0
