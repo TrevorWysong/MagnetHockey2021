@@ -64,10 +64,10 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var repulsionMode = false
     var botDefendSwitch = false
     var botAttackSwitch = false
-
     var numberRounds = 0
     var numberGames = 0
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
+    var tempBotVelocity = CGVector(dx: 0, dy: 0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
@@ -924,12 +924,18 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     {
         tempBallVelocity = ball!.physicsBody!.velocity
         ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        
+        tempBotVelocity = botPlayer!.physicsBody!.velocity
+        botPlayer?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func resumePhysics()
     {
         ball?.physicsBody?.velocity = tempBallVelocity
         tempBallVelocity = CGVector(dx: 0, dy: 0)
+        
+        botPlayer?.physicsBody?.velocity = tempBotVelocity
+        tempBotVelocity = CGVector(dx: 0, dy: 0)
     }
     
     func isOffScreen(node: SKShapeNode) -> Bool
@@ -1359,8 +1365,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     override func update(_ currentTime: TimeInterval)
     {
-        print(ballIsOnTarget())
-        if botPlayer!.position.y > frame.height * 0.515
+        if botPlayer!.position.y > frame.height * 0.50 && GameIsPaused == false
         {
             botDefend()
             botMirror()
@@ -1369,7 +1374,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         else
         {
             botPlayer?.physicsBody?.velocity.dy = 0
-            botPlayer?.physicsBody?.velocity.dy = 50
+            botPlayer?.physicsBody?.velocity.dy = 0
         }
         
         
@@ -1491,17 +1496,67 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 botPlayer!.physicsBody!.velocity.dy += 80
             }
         }
-//        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y)
-//        {
-//            if ballIsOnTarget() == false
-//            {
-//
-//            }
-//            else if ballIsOnTarget() == true
-//            {
-//                botDefendSwitch = false
-//            }
-//        }
+        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y)
+        {
+            if ballIsOnTarget() == false
+            {
+
+            }
+            else if ballIsOnTarget() == true
+            {
+                // returned to mirror Y zone
+                if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
+                {
+                    botPlayer!.physicsBody?.velocity.dy = 0
+                }
+                //below mirroring y-zone for passive defending
+                else if botPlayer!.position.y < frame.height * 0.87
+                {
+                    botPlayer!.physicsBody?.velocity.dy = 300
+                }
+                //above mirroring y-zone for passive defending
+                else if botPlayer!.position.y > frame.height * 0.90
+                {
+                    botPlayer!.physicsBody?.velocity.dy = -300
+                }
+                    
+                if botPlayer!.position.x - expectedBallXPos < -40
+                {
+                    if botPlayer!.physicsBody!.velocity.dx <= 400
+                    {
+                        botPlayer?.physicsBody?.velocity.dx += 40
+                    }
+                    else
+                    {
+                        botPlayer!.physicsBody!.velocity.dx = 400
+                    }
+                }
+                else if botPlayer!.position.x - expectedBallXPos < -2 && (botPlayer!.position.x - expectedBallXPos <= -4)
+                {
+                    botPlayer!.physicsBody!.velocity.dx = 1
+                }
+                else if botPlayer!.position.x - expectedBallXPos > 40
+                {
+                    if botPlayer!.physicsBody!.velocity.dx >= -400
+                    {
+                        botPlayer?.physicsBody?.velocity.dx -= 40
+                    }
+                    else
+                    {
+                        botPlayer!.physicsBody!.velocity.dx = -400
+                    }
+                }
+                else if botPlayer!.position.x - expectedBallXPos > 2 && (botPlayer!.position.x - expectedBallXPos >= 4)
+                {
+                    botPlayer!.physicsBody!.velocity.dx = -1
+                }
+                else if (botPlayer!.position.x - expectedBallXPos >= -2) && (botPlayer!.position.x - expectedBallXPos <= 2)
+                {
+                    ball?.physicsBody?.velocity.dx = 0
+                    botDefendSwitch = false
+                }
+            }
+        }
         else
         {
             botDefendSwitch = false
@@ -1512,12 +1567,12 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     func botAttack()
     {
         //If bot is above ball on bot's side trigger attack mode. Consider the balls velocity vector while going for attack
-        if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y || abs(botPlayer!.position.x - ball!.position.x) < 10) && botAttackSwitch == false
+        if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botAttackSwitch == false
         {
             botDefendSwitch = false
             botAttackSwitch = true
         }
-        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y || abs(botPlayer!.position.x - ball!.position.x) < 10) && botDefendSwitch == false && botAttackSwitch == true
+        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botDefendSwitch == false && botAttackSwitch == true
         {
             if botPlayer!.position.x < ball!.position.x
             {
