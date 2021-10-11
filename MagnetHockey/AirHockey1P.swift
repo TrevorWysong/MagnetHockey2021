@@ -1500,115 +1500,439 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
             {
                 botPlayer!.physicsBody?.velocity.dy = 0
-                
+
                 //in playable mirror x zone .10 to .90
-                if botPlayer!.position.x > frame.width * 0.10 && botPlayer!.position.x < frame.width * 0.90
+                if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == false
                 {
-                    if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 25
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = false
+                    if botPlayer!.physicsBody!.velocity.dx > 0
                     {
-                        if botPlayer!.physicsBody!.velocity.dx < 400
+                        if botPlayer!.physicsBody!.velocity.dx > 40
                         {
-                            botPlayer!.physicsBody?.velocity.dx += 10
+                            botPlayer?.physicsBody?.velocity.dx -= 40
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 5 && botPlayer!.physicsBody!.velocity.dx < 40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 5
                         }
                         else
                         {
-                            botPlayer!.physicsBody?.velocity.dx = 400
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer?.physicsBody?.velocity.dx -= 1
                         }
                     }
-                    else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 25
+                    else if botPlayer!.physicsBody!.velocity.dx < 0
                     {
-                        if botPlayer!.physicsBody!.velocity.dx > -400
+                        if botPlayer!.physicsBody!.velocity.dx < -40
                         {
-                            botPlayer!.physicsBody?.velocity.dx -= 10
+                            botPlayer?.physicsBody?.velocity.dx += 40
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < -5 && botPlayer!.physicsBody!.velocity.dx < -40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 5
                         }
                         else
                         {
-                            botPlayer!.physicsBody?.velocity.dx = -400
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer?.physicsBody?.velocity.dx += 1
                         }
                     }
-                    else if abs(botPlayer!.position.x - ball!.position.x) < 25
+                    else if botPlayer!.physicsBody!.velocity.dx == 0
                     {
-                        if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        botMirrorSwitch1 = true
+                    }
+                }
+                //in playable mirror x zone .10 to .90
+                else if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == true && botMirrorSwitch2 == false && botMirrorSwitch3 == false
+                {
+                    if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 300
+                        {
+                            botPlayer!.physicsBody?.velocity.dx += 60
+                        }
+                    }
+                    else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx > -300
+                        {
+                            botPlayer!.physicsBody?.velocity.dx -= 60
+                        }
+                    }
+                    else if abs(botPlayer!.position.x - ball!.position.x) <= 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
                         {
                             botPlayer!.physicsBody?.velocity.dx += 10
                         }
-                        else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) < 10
+                        else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
                         {
                             botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
                             botPlayer!.physicsBody?.velocity.dx += 1
                         }
-                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
                         {
                             botPlayer!.physicsBody?.velocity.dx -= 10
                         }
-                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) < 10
+                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
                         {
                             botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
                             botPlayer!.physicsBody?.velocity.dx -= 1
                         }
                     }
                 }
+                
+                //in unplayable mirror x zone < frame.width * .20
+                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch2 == false
+                {
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = true
+                    botMirrorSwitch3 = false
+                }
+                
+                //in playable mirror x zone .10 to .90
+                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch1 == false && botMirrorSwitch2 == true && botMirrorSwitch3 == false
+                {
+                    if botPlayer!.position.x <= frame.width * 0.20
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 80
+                        }
+                    }
+                    else
+                    {
+                        botMirrorSwitch1 = false
+                        botMirrorSwitch2 = false
+                        botMirrorSwitch3 = false
+                    }
+                }
+                
+                //in unplayable mirror x zone < frame.width * .10
+                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch3 == false
+                {
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = true
+                }
+                
+                //in playable mirror x zone .10 to .90
+                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch1 == false && botMirrorSwitch2 == false && botMirrorSwitch3 == true
+                {
+                    if botPlayer!.position.x >= frame.width * 0.80
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx > -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 80
+                        }
+                    }
+                    else
+                    {
+                        botMirrorSwitch1 = false
+                        botMirrorSwitch2 = false
+                        botMirrorSwitch3 = false
+                    }
+                }
+                else
+                {
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = false
+                }
             }
 
             //below mirroring y-zone for passive defending
             else if botPlayer!.position.y < frame.height * 0.87
             {
-                botPlayer!.physicsBody?.velocity.dy = 200
-
-                //Throttle speed if bot x distance is less than 10
-                if abs(botPlayer!.position.x - ball!.position.x) < 10
+                botPlayer!.physicsBody?.velocity.dy = 300
+                
+                //in playable mirror x zone .10 to .90
+                if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == false
                 {
-
-                    if botPlayer!.position.x < ball!.position.x
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = false
+                    if botPlayer!.physicsBody!.velocity.dx > 0
                     {
-                        botPlayer?.physicsBody?.velocity.dx = 25
+                        if botPlayer!.physicsBody!.velocity.dx > 40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 40
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 5 && botPlayer!.physicsBody!.velocity.dx < 40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 5
+                        }
+                        else
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer?.physicsBody?.velocity.dx -= 1
+                        }
                     }
-                    else if botPlayer!.position.x > ball!.position.x
+                    else if botPlayer!.physicsBody!.velocity.dx < 0
                     {
-                        botPlayer?.physicsBody?.velocity.dx = 25
+                        if botPlayer!.physicsBody!.velocity.dx < -40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 40
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < -5 && botPlayer!.physicsBody!.velocity.dx < -40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 5
+                        }
+                        else
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer?.physicsBody?.velocity.dx += 1
+                        }
+                    }
+                    else if botPlayer!.physicsBody!.velocity.dx == 0
+                    {
+                        botMirrorSwitch1 = true
+                    }
+                }
+                //in playable mirror x zone .10 to .90
+                else if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == true && botMirrorSwitch2 == false && botMirrorSwitch3 == false
+                {
+                    if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 300
+                        {
+                            botPlayer!.physicsBody?.velocity.dx += 40
+                        }
+                    }
+                    else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx > -300
+                        {
+                            botPlayer!.physicsBody?.velocity.dx -= 40
+                        }
+                    }
+                    else if abs(botPlayer!.position.x - ball!.position.x) <= 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx += 10
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer!.physicsBody?.velocity.dx += 1
+                        }
+                        if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx -= 10
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer!.physicsBody?.velocity.dx -= 1
+                        }
+                    }
+                }
+                
+                //in unplayable mirror x zone < frame.width * .20
+                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch2 == false
+                {
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = true
+                    botMirrorSwitch3 = false
+                }
+                
+                //in playable mirror x zone .10 to .90
+                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch1 == false && botMirrorSwitch2 == true && botMirrorSwitch3 == false
+                {
+                    if botPlayer!.position.x <= frame.width * 0.20
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 80
+                        }
+                    }
+                    else
+                    {
+                        botMirrorSwitch1 = false
+                        botMirrorSwitch2 = false
+                        botMirrorSwitch3 = false
+                    }
+                }
+                
+                //in unplayable mirror x zone < frame.width * .10
+                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch3 == false
+                {
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = true
+                }
+                
+                //in playable mirror x zone .10 to .90
+                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch1 == false && botMirrorSwitch2 == false && botMirrorSwitch3 == true
+                {
+                    if botPlayer!.position.x >= frame.width * 0.80
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx > -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 80
+                        }
+                    }
+                    else
+                    {
+                        botMirrorSwitch1 = false
+                        botMirrorSwitch2 = false
+                        botMirrorSwitch3 = false
                     }
                 }
                 else
                 {
-                    if botPlayer!.position.x < ball!.position.x
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 200
-                    }
-                    else if botPlayer!.position.x > ball!.position.x
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = -200
-                    }
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = false
                 }
             }
 
             //above mirroring y-zone for passive defending
             else if botPlayer!.position.y > frame.height * 0.90
             {
-                botPlayer!.physicsBody?.velocity.dy = -200
-
-                //Throttle speed if bot x distance is less than 10
-                if abs(botPlayer!.position.x - ball!.position.x) < 10
+                botPlayer!.physicsBody?.velocity.dy = -300
+                
+                //in playable mirror x zone .10 to .90
+                if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == false
                 {
-                    if botPlayer!.position.x < ball!.position.x
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = false
+                    if botPlayer!.physicsBody!.velocity.dx > 0
                     {
-                        botPlayer?.physicsBody?.velocity.dx = 25
+                        if botPlayer!.physicsBody!.velocity.dx > 40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 40
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 5 && botPlayer!.physicsBody!.velocity.dx < 40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 5
+                        }
+                        else
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer?.physicsBody?.velocity.dx -= 1
+                        }
                     }
-                    else if botPlayer!.position.x > ball!.position.x
+                    else if botPlayer!.physicsBody!.velocity.dx < 0
                     {
-                        botPlayer?.physicsBody?.velocity.dx = 25
+                        if botPlayer!.physicsBody!.velocity.dx < -40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 40
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < -5 && botPlayer!.physicsBody!.velocity.dx < -40
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 5
+                        }
+                        else
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer?.physicsBody?.velocity.dx += 1
+                        }
+                    }
+                    else if botPlayer!.physicsBody!.velocity.dx == 0
+                    {
+                        botMirrorSwitch1 = true
+                    }
+                }
+                //in playable mirror x zone .10 to .90
+                else if ((botPlayer!.position.x > frame.width * 0.20 && botPlayer!.position.x < frame.width * 0.80) || (ball!.position.x > frame.width * 0.20 && ball!.position.x < frame.width * 0.80)) && botMirrorSwitch1 == true && botMirrorSwitch2 == false && botMirrorSwitch3 == false
+                {
+                    if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 300
+                        {
+                            botPlayer!.physicsBody?.velocity.dx += 40
+                        }
+                    }
+                    else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx > -300
+                        {
+                            botPlayer!.physicsBody?.velocity.dx -= 40
+                        }
+                    }
+                    else if abs(botPlayer!.position.x - ball!.position.x) <= 10
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx += 10
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer!.physicsBody?.velocity.dx += 1
+                        }
+                        if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx -= 10
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
+                        {
+                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                            botPlayer!.physicsBody?.velocity.dx -= 1
+                        }
+                    }
+                }
+                
+                //in unplayable mirror x zone < frame.width * .20
+                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch2 == false
+                {
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = true
+                    botMirrorSwitch3 = false
+                }
+                
+                //in playable mirror x zone .10 to .90
+                else if ((botPlayer!.position.x <= frame.width * 0.20) && (ball!.position.x <= frame.width * 0.20)) && botMirrorSwitch1 == false && botMirrorSwitch2 == true && botMirrorSwitch3 == false
+                {
+                    if botPlayer!.position.x <= frame.width * 0.20
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx < 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 80
+                        }
+                    }
+                    else
+                    {
+                        botMirrorSwitch1 = false
+                        botMirrorSwitch2 = false
+                        botMirrorSwitch3 = false
+                    }
+                }
+                
+                //in unplayable mirror x zone < frame.width * .10
+                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch3 == false
+                {
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = true
+                }
+                
+                //in playable mirror x zone .10 to .90
+                else if (botPlayer!.position.x >= frame.width * 0.80) && botMirrorSwitch1 == false && botMirrorSwitch2 == false && botMirrorSwitch3 == true
+                {
+                    if botPlayer!.position.x >= frame.width * 0.80
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx > -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 80
+                        }
+                    }
+                    else
+                    {
+                        botMirrorSwitch1 = false
+                        botMirrorSwitch2 = false
+                        botMirrorSwitch3 = false
                     }
                 }
                 else
                 {
-                    if botPlayer!.position.x < ball!.position.x
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 200
-                    }
-                    else if botPlayer!.position.x > ball!.position.x
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = -200
-                    }
+                    botMirrorSwitch1 = false
+                    botMirrorSwitch2 = false
+                    botMirrorSwitch3 = false
                 }
+                
             }
         }
     }
