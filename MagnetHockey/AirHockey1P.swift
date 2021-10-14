@@ -64,6 +64,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var repulsionMode = false
     var botDefendSwitch = false
     var botAttackSwitch = false
+    var madeItToExpectedBallPos = false
     var numberRounds = 0
     var numberGames = 0
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
@@ -73,6 +74,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
     let goalSound = SKAction.playSoundFileNamed("Goal3.mp3", waitForCompletion: false)
     let buttonSound = SKAction.playSoundFileNamed("ChangeRounds.mp3", waitForCompletion: false)
+    
     var interstitialAd: GADInterstitial?
     
     func bottomTouchIsActive(_ bottomTouchIsActive: Bool, fromBottomPlayer bottomPlayer: BottomPlayer)
@@ -116,6 +118,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         southPlayer?.physicsBody?.contactTestBitMask = 25
         botPlayer?.physicsBody?.contactTestBitMask = 75
         southPlayer?.physicsBody?.fieldBitMask = 45
+        southPlayer?.physicsBody?.fieldBitMask = 50
         southPlayer?.physicsBody?.usesPreciseCollisionDetection = true
         botPlayer?.physicsBody?.usesPreciseCollisionDetection = true
     }
@@ -888,7 +891,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     func resetBallStart()
     {
-        ball!.position = CGPoint(x: 50, y: size.height/2)
+        ball!.position = CGPoint(x: size.width * 0.50, y: size.height * 0.35)
         ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
     }
     
@@ -970,6 +973,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
+            madeItToExpectedBallPos = false
         }
         if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false
         {
@@ -981,6 +985,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
+            madeItToExpectedBallPos = false
         }
         
         if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true
@@ -1007,6 +1012,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
+            madeItToExpectedBallPos = false
         }
         
         if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false
@@ -1019,6 +1025,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
+            madeItToExpectedBallPos = false
         }
         
         if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true
@@ -1036,6 +1043,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
             // set ball velocity to newvball
             ball!.physicsBody!.applyImpulse(newvball)
+            madeItToExpectedBallPos = false
             
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1056,6 +1064,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
+            madeItToExpectedBallPos = false
         }
         
         if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true
@@ -1073,6 +1082,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
             // set ball velocity to newvball
             ball!.physicsBody!.applyImpulse(newvball)
+            madeItToExpectedBallPos = false
             
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1093,6 +1103,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
+            madeItToExpectedBallPos = false
         }
         
         // Ball Collision detect with wall to prevent sticking (SpriteKit Issue)
@@ -1365,6 +1376,10 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     override func update(_ currentTime: TimeInterval)
     {
+        print(expectedBallXPos - botPlayer!.position.x)
+//        print(expectedBallXPos)
+//        print(botPlayer?.position.x)
+//        print(madeItToExpectedBallPos)
         if botPlayer!.position.y > frame.height * 0.50 && GameIsPaused == false
         {
             botDefend()
@@ -1375,6 +1390,11 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         {
             botPlayer?.physicsBody?.velocity.dy = 0
             botPlayer?.physicsBody?.velocity.dy += 1
+        }
+        
+        if ball!.physicsBody!.velocity.dy < 0
+        {
+            madeItToExpectedBallPos = false
         }
         
         
@@ -1467,7 +1487,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         let changeOfX = goalDifferenceFromBall / ballVectorSlope
         let goalLeftXBound = frame.width * 0.20
         let goalRightXBound = frame.width * 0.80
-        expectedBallXPos = ball!.position.x + changeOfX
+        expectedBallXPos = round(ball!.position.x + changeOfX)
 
         if (expectedBallXPos >= goalLeftXBound) && (expectedBallXPos <= goalRightXBound) && (ball!.physicsBody!.velocity.dy > 0)
         {
@@ -1496,64 +1516,325 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 botPlayer!.physicsBody!.velocity.dy += 80
             }
         }
-        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y)
+        else if ball!.position.y > frame.height * 0.40 && (botPlayer!.position.y >= ball!.position.y)
         {
-            if ballIsOnTarget() == false
-            {
-
-            }
-            else if ballIsOnTarget() == true
+            if ballIsOnTarget() == false && ball!.physicsBody!.velocity.dy >= frame.height * 0.20
             {
                 // returned to mirror Y zone
                 if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
                 {
                     botPlayer!.physicsBody?.velocity.dy = 0
+                    
+                    //in playable mirror x zone .10 to .90
+                    if ((botPlayer!.position.x >= frame.width * 0.35 && botPlayer!.position.x <= frame.width * 0.65) || (ball!.position.x > frame.width * 0.35 && ball!.position.x < frame.width * 0.65))
+                    {
+                        if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx < 300
+                            {
+                                botPlayer!.physicsBody?.velocity.dx += 60
+                            }
+                        }
+                        else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx > -300
+                            {
+                                botPlayer!.physicsBody?.velocity.dx -= 60
+                            }
+                        }
+                        else if abs(botPlayer!.position.x - ball!.position.x) <= 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx += 10
+                            }
+                            else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                                botPlayer!.physicsBody?.velocity.dx += 1
+                            }
+                            if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx -= 10
+                            }
+                            else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                                botPlayer!.physicsBody?.velocity.dx -= 1
+                            }
+                        }
+                    }
+                    
+                    //in unplayable mirror x zone < frame.width * .20
+                    if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x >= frame.width * 0.35
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx <= 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 60
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx = 300
+
+                        }
+                    }
+                    else if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x < frame.width * 0.35
+                    {
+                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.35))
+                        botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
+                    }
+                    else if (botPlayer!.position.x == frame.width * 0.35) && ball!.position.x <= frame.width * 0.35
+                    {
+                        botPlayer!.physicsBody?.velocity.dx = 0
+                    }
+                    
+                    //in uplayable mirror x zone .70
+                    if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x <= frame.width * 0.65
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx >= -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 60
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx = -300
+
+                        }
+                    }
+                    else if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x > frame.width * 0.65
+                    {
+                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.65))
+                        botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
+                    }
+                    else if (botPlayer!.position.x == frame.width * 0.65) && ball!.position.x >= frame.width * 0.65
+                    {
+                        botPlayer!.physicsBody?.velocity.dx = 0
+                    }
                 }
+
                 //below mirroring y-zone for passive defending
                 else if botPlayer!.position.y < frame.height * 0.87
                 {
                     botPlayer!.physicsBody?.velocity.dy = 300
+                    
+                    //in playable mirror x zone .10 to .90
+                    if ((botPlayer!.position.x >= frame.width * 0.35 && botPlayer!.position.x <= frame.width * 0.65) || (ball!.position.x > frame.width * 0.35 && ball!.position.x < frame.width * 0.65))
+                    {
+                        if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx < 300
+                            {
+                                botPlayer!.physicsBody?.velocity.dx += 60
+                            }
+                        }
+                        else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx > -300
+                            {
+                                botPlayer!.physicsBody?.velocity.dx -= 60
+                            }
+                        }
+                        else if abs(botPlayer!.position.x - ball!.position.x) <= 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx += 10
+                            }
+                            else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                                botPlayer!.physicsBody?.velocity.dx += 1
+                            }
+                            if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx -= 10
+                            }
+                            else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                                botPlayer!.physicsBody?.velocity.dx -= 1
+                            }
+                        }
+                    }
+                    
+                    //in unplayable mirror x zone < frame.width * .20
+                    if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x >= frame.width * 0.35
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx <= 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 60
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx = 300
+
+                        }
+                    }
+                    else if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x < frame.width * 0.35
+                    {
+                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.35))
+                        botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
+                    }
+                    else if (botPlayer!.position.x == frame.width * 0.35) && ball!.position.x <= frame.width * 0.35
+                    {
+                        botPlayer!.physicsBody?.velocity.dx = 0
+                    }
+                    
+                    //in uplayable mirror x zone .70
+                    if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x <= frame.width * 0.65
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx >= -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 60
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx = -300
+
+                        }
+                    }
+                    else if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x > frame.width * 0.65
+                    {
+                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.65))
+                        botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
+                    }
+                    else if (botPlayer!.position.x == frame.width * 0.65) && ball!.position.x >= frame.width * 0.65
+                    {
+                        botPlayer!.physicsBody?.velocity.dx = 0
+                    }
                 }
+
                 //above mirroring y-zone for passive defending
                 else if botPlayer!.position.y > frame.height * 0.90
                 {
                     botPlayer!.physicsBody?.velocity.dy = -300
-                }
+                            
+                    //in playable mirror x zone .25 to .80
+                    if ((botPlayer!.position.x >= frame.width * 0.35 && botPlayer!.position.x <= frame.width * 0.65) || (ball!.position.x > frame.width * 0.35 && ball!.position.x < frame.width * 0.65))
+                    {
+                        if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx < 300
+                            {
+                                botPlayer!.physicsBody?.velocity.dx += 60
+                            }
+                        }
+                        else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx > -300
+                            {
+                                botPlayer!.physicsBody?.velocity.dx -= 60
+                            }
+                        }
+                        else if abs(botPlayer!.position.x - ball!.position.x) <= 10
+                        {
+                            if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx += 10
+                            }
+                            else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                                botPlayer!.physicsBody?.velocity.dx += 1
+                            }
+                            if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx -= 10
+                            }
+                            else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
+                            {
+                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
+                                botPlayer!.physicsBody?.velocity.dx -= 1
+                            }
+                        }
+                    }
                     
-                if botPlayer!.position.x - expectedBallXPos < -40
-                {
-                    if botPlayer!.physicsBody!.velocity.dx <= 400
+                    //in unplayable mirror x zone < frame.width * .20
+                    if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x >= frame.width * 0.35
                     {
-                        botPlayer?.physicsBody?.velocity.dx += 40
+                        if botPlayer!.physicsBody!.velocity.dx <= 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx += 60
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx > 300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx = 300
+
+                        }
                     }
-                    else
+                    else if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x < frame.width * 0.35
                     {
-                        botPlayer!.physicsBody!.velocity.dx = 400
+                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.35))
+                        botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
+                    }
+                    else if (botPlayer!.position.x == frame.width * 0.35) && ball!.position.x <= frame.width * 0.35
+                    {
+                        botPlayer!.physicsBody?.velocity.dx = 0
+                    }
+                    
+                    //in uplayable mirror x zone .70
+                    if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x <= frame.width * 0.65
+                    {
+                        if botPlayer!.physicsBody!.velocity.dx >= -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx -= 60
+                        }
+                        else if botPlayer!.physicsBody!.velocity.dx < -300
+                        {
+                            botPlayer?.physicsBody?.velocity.dx = -300
+
+                        }
+                    }
+                    else if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x > frame.width * 0.65
+                    {
+                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.70))
+                        botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
+                    }
+                    else if (botPlayer!.position.x == frame.width * 0.65) && ball!.position.x >= frame.width * 0.65
+                    {
+                        botPlayer!.physicsBody?.velocity.dx = 0
                     }
                 }
-                else if botPlayer!.position.x - expectedBallXPos < -2 && (botPlayer!.position.x - expectedBallXPos <= -4)
+            }
+            
+            else if ballIsOnTarget() == true
+            {
+                // returned to mirror Y zone
+                if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90 && madeItToExpectedBallPos == false
                 {
-                    botPlayer!.physicsBody!.velocity.dx = 1
+                    botPlayer!.physicsBody?.velocity.dy = 0
                 }
-                else if botPlayer!.position.x - expectedBallXPos > 40
+                //below mirroring y-zone for passive defending
+                else if botPlayer!.position.y < frame.height * 0.87 && madeItToExpectedBallPos == false
                 {
-                    if botPlayer!.physicsBody!.velocity.dx >= -400
+                    botPlayer!.physicsBody?.velocity.dy = 300
+                }
+                //above mirroring y-zone for passive defending
+                else if botPlayer!.position.y > frame.height * 0.90 && madeItToExpectedBallPos == false
+                {
+                    botPlayer!.physicsBody?.velocity.dy = -300
+                }
+                
+                if madeItToExpectedBallPos == false
+                {
+                    if (botPlayer!.position.x - expectedBallXPos < -10)
                     {
-                        botPlayer?.physicsBody?.velocity.dx -= 40
+                        botPlayer?.physicsBody?.velocity.dx += 10
                     }
-                    else
+                    else if (botPlayer!.position.x - expectedBallXPos > 10)
                     {
-                        botPlayer!.physicsBody!.velocity.dx = -400
+                        botPlayer?.physicsBody?.velocity.dx -= 10
+                    }
+                    else if (botPlayer!.position.x - expectedBallXPos >= -10) && (botPlayer!.position.x - expectedBallXPos <= 10) && (botPlayer!.position.y > ball!.position.y) && (botPlayer!.position.y) >= (frame.height * 0.87) && (ball!.physicsBody!.velocity.dy > 0)
+                    {
+                        botPlayer?.physicsBody?.velocity.dx = 0
+                        madeItToExpectedBallPos = true
+                        print("made it to switch")
                     }
                 }
-                else if botPlayer!.position.x - expectedBallXPos > 2 && (botPlayer!.position.x - expectedBallXPos >= 4)
+                if madeItToExpectedBallPos == true
                 {
-                    botPlayer!.physicsBody!.velocity.dx = -1
-                }
-                else if (botPlayer!.position.x - expectedBallXPos >= -2) && (botPlayer!.position.x - expectedBallXPos <= 2)
-                {
-                    ball?.physicsBody?.velocity.dx = 0
-                    botDefendSwitch = false
+                    botPlayer?.physicsBody?.velocity = CGVector(dx: -ball!.physicsBody!.velocity.dx, dy: -ball!.physicsBody!.velocity.dy)
                 }
             }
         }
