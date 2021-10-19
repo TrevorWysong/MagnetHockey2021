@@ -1,18 +1,20 @@
 //
-//  AirHockey1P.swift
-//  AirHockey1P
+//  AirHockey2PMultiPuck.swift
+//  AirHockey2PMultiPuck
 //
-//  Created by Wysong, Trevor on 10/8/21.
+//  Created by Wysong, Trevor on 10/17/21.
 //  Copyright © 2021 Wysong, Trevor. All rights reserved.
 //
+
 import SpriteKit
 import GameplayKit
 import GoogleMobileAds
 
-class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotPlayerDelegate, GADInterstitialDelegate
+class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
 {
     var frameCounter = 0
     var ball : SKShapeNode?
+    var ball2 : SKShapeNode?
     var ballRadius = CGFloat(0.0)
     var playerRadius = CGFloat(0.0)
     var maxBallSpeed = CGFloat(0.0)
@@ -21,11 +23,15 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var semiCircleTop = SKSpriteNode()
     var playerLosesBackground = SKSpriteNode()
     var playerWinsBackground = SKSpriteNode()
+    var playerWinsBackground2 = SKSpriteNode()
     var pauseBackground = SKSpriteNode()
     var xMark = SKSpriteNode()
     var checkMark = SKSpriteNode()
+    var checkMark2 = SKSpriteNode()
     var ballInSouthGoal = false
     var ballInNorthGoal = false
+    var ball2InSouthGoal = false
+    var ball2InNorthGoal = false
     var ballSoundControl = true
     var pauseButton = SKSpriteNode()
     var pauseButtonSprite = SKSpriteNode()
@@ -44,17 +50,17 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var touchedSoundOff = false
     var GameIsPaused = false
     var southPlayer : BottomPlayer?
-    var botPlayer : BotPlayer?
+    var northPlayer : NorthPlayer?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
     let listenerNode = SKNode()
     var southPlayerArea = CGRect()
-    var botPlayerArea = CGRect()
+    var northPlayerArea = CGRect()
     var southPlayerScore = 0
-    var botPlayerScore = 0
-    var expectedBallXPos = CGFloat(0.0)
+    var northPlayerScore = 0
+    var roundScoreCounter = 0
     var bottomPlayerForceForCollision = CGVector()
-    var botPlayerForceForCollision = CGVector()
-    let botPlayerScoreText = SKLabelNode(fontNamed: "Helvetica Neue UltraLight")
+    var northPlayerForceForCollision = CGVector()
+    let northPlayerScoreText = SKLabelNode(fontNamed: "Helvetica Neue UltraLight")
     let southPlayerScoreText = SKLabelNode(fontNamed: "Helvetica Neue UltraLight")
     var whoWonGame = ""
     var topPlayerWinsRound = false
@@ -63,19 +69,15 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var bottomTouchForCollision = false
     var northTouchForCollision = false
     var repulsionMode = false
-    var botDefendSwitch = false
-    var botAttackSwitch = false
-    var madeItToExpectedBallPos = false
     var numberRounds = 0
     var numberGames = 0
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
-    var tempBotVelocity = CGVector(dx: 0, dy: 0)
+    var tempBallVelocity2 = CGVector(dx: 0, dy: 0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
     let goalSound = SKAction.playSoundFileNamed("Goal3.mp3", waitForCompletion: false)
     let buttonSound = SKAction.playSoundFileNamed("ChangeRounds.mp3", waitForCompletion: false)
-    
     var interstitialAd: GADInterstitial?
     
     func bottomTouchIsActive(_ bottomTouchIsActive: Bool, fromBottomPlayer bottomPlayer: BottomPlayer)
@@ -83,45 +85,45 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         bottomTouchForCollision = bottomTouchIsActive
     }
     
-    func botTouchIsActive(_ botTouchIsActive: Bool, fromBotPlayer botPlayer: BotPlayer) {
-        
+    func northTouchIsActive(_ northTouchIsActive: Bool, fromNorthPlayer northPlayer: NorthPlayer)
+    {
+        northTouchForCollision = northTouchIsActive
     }
     
     func createPlayers()
     {
         southPlayerArea = CGRect(x: 0, y: frame.height * 0.00, width: frame.width, height: frame.height * 0.50)
-        botPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
+        northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
         
         if frame.height >= 812 && frame.height <= 900 && frame.width < 500
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.22)
-            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.78)
+            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.78)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
+            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
         else if frame.height == 926 && frame.width < 500
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.225)
-            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.775)
+            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.775)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
+            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
         else
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.185)
-            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.815)
+            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.815)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
+            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
 
         southPlayer?.physicsBody?.categoryBitMask = BodyType.player.rawValue
-        botPlayer?.physicsBody?.categoryBitMask = BodyType.player.rawValue
+        northPlayer?.physicsBody?.categoryBitMask = BodyType.player.rawValue
         southPlayer?.physicsBody?.contactTestBitMask = 25
-        botPlayer?.physicsBody?.contactTestBitMask = 75
+        northPlayer?.physicsBody?.contactTestBitMask = 75
         southPlayer?.physicsBody?.fieldBitMask = 45
-        southPlayer?.physicsBody?.fieldBitMask = 50
         southPlayer?.physicsBody?.usesPreciseCollisionDetection = true
-        botPlayer?.physicsBody?.usesPreciseCollisionDetection = true
+        northPlayer?.physicsBody?.usesPreciseCollisionDetection = true
         playerRadius = southPlayer!.radius
     }
     
@@ -134,13 +136,13 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         return bottomPlayer;
     }
     
-    func botPlayer(at position: CGPoint, boundary:CGRect) -> BotPlayer
+    func northPlayer(at position: CGPoint, boundary:CGRect) -> NorthPlayer
     {
-        let botPlayer = BotPlayer(activeArea: boundary)
-        botPlayer.position = position
-        botPlayer.delegate = self
-        addChild(botPlayer)
-        return botPlayer;
+        let northPlayer = NorthPlayer(activeArea: boundary)
+        northPlayer.position = position
+        northPlayer.delegate = self
+        addChild(northPlayer)
+        return northPlayer;
     }
     
     func createEdges()
@@ -614,19 +616,33 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         checkMark = SKSpriteNode(imageNamed: "checkmark1.png")
         checkMark.scale(to: CGSize(width: frame.width/3.25, height: frame.width/3.25))
         checkMark.zPosition = 99
+        
+        checkMark2 = SKSpriteNode(imageNamed: "checkmark1.png")
+        checkMark2.scale(to: CGSize(width: frame.width/3.25, height: frame.width/3.25))
+        checkMark2.zPosition = 99
+        
         playerWinsBackground = SKSpriteNode(imageNamed: "roundWinnerGreen.png")
         playerWinsBackground.scale(to: CGSize(width: frame.width, height: frame.height/2))
+        
+        playerWinsBackground2 = SKSpriteNode(imageNamed: "roundWinnerGreen.png")
+        playerWinsBackground2.scale(to: CGSize(width: frame.width, height: frame.height/2))
+        
         playerLosesBackground = SKSpriteNode(imageNamed: "roundLoserRed.png")
         playerLosesBackground.scale(to: CGSize(width: frame.width, height: frame.height/2))
         playerWinsBackground.zPosition = -10
+        playerWinsBackground2.zPosition = -10
         playerLosesBackground.zPosition = -10
         playerWinsBackground.position = CGPoint(x: -1000, y: -1000)
+        playerWinsBackground2.position = CGPoint(x: -1000, y: -1000)
         playerLosesBackground.position = CGPoint(x: -1000, y: -1000)
         xMark.position = CGPoint(x: -1000, y: -1000)
         checkMark.position = CGPoint(x: -1000, y: -1000)
+        checkMark2.position = CGPoint(x: -1000, y: -1000)
         addChild(xMark)
         addChild(checkMark)
+        addChild(checkMark2)
         addChild(playerWinsBackground)
+        addChild(playerWinsBackground2)
         addChild(playerLosesBackground)
     }
     
@@ -659,6 +675,17 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         clearPauseButton()
     }
     
+    func updatePlayerLoseWinBackgroundsTieRound()
+    {
+        playerWinsBackground.position = CGPoint(x: frame.width/2, y: frame.height * (3/4))
+        playerWinsBackground2.position = CGPoint(x: frame.width/2, y: frame.height/4)
+        checkMark.position = CGPoint(x: frame.width/2, y: frame.height * 0.70)
+        checkMark.zRotation = .pi
+        checkMark2.position = CGPoint(x: frame.width/2, y: frame.height * 0.30)
+        checkMark2.zRotation = 0
+        clearPauseButton()
+    }
+    
     func updatePauseBackground()
     {
         pauseBackground.position = CGPoint(x: frame.width/2, y: frame.height/2)
@@ -668,9 +695,12 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     func resetPlayerLoseWinBackground()
     {
         playerWinsBackground.position = CGPoint(x: -1000, y: -1000)
+        playerWinsBackground2.position = CGPoint(x: -1000, y: -1000)
         playerLosesBackground.position = CGPoint(x: -1000, y: -1000)
         xMark.position = CGPoint(x: -1000, y: -1000)
         checkMark.position = CGPoint(x: -1000, y: -1000)
+        checkMark2.position = CGPoint(x: -1000, y: -1000)
+
         resetPauseButton()
     }
     
@@ -755,7 +785,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         createPauseGameTitle()
         createBackToMenuButton()
         createSoundButton()
-        createBotPlayerScore()
+        createNorthPlayerScore()
         createSouthPlayerScore()
         createEdges()
         createPlayerLoseWinBackgrounds()
@@ -865,21 +895,108 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             ball?.physicsBody?.categoryBitMask = BodyType.ball.rawValue
             ball?.physicsBody?.fieldBitMask = 640
             ball?.physicsBody?.contactTestBitMask = BodyType.player.rawValue
-            ball?.physicsBody?.collisionBitMask = 1 | 2 | 128
+            ball?.physicsBody?.collisionBitMask = 1 | 2 | 128 | 2048
             ball?.lineWidth = 2
             ball?.strokeColor = .black
         }
         
+        if  ball2 == nil
+        {
+            //create ball object
+            ball2 = SKShapeNode()
+            
+            //draw ball
+            let ballPath = CGMutablePath()
+            let π = CGFloat.pi
+            var ballRadius = CGFloat(0.0)
+            if frame.width < 700
+            {
+                ballRadius = frame.width / 20
+            }
+            else if frame.width >= 700
+            {
+                ballRadius = frame.width / 25
+            }
+            ballPath.addArc(center: CGPoint(x: 0, y:0), radius: ballRadius, startAngle: 0, endAngle: π*2, clockwise: true)
+            ball2!.path = ballPath
+            ball2!.lineWidth = 0
+            if ballColorGame == "Black Ball"
+            {
+                ball2!.fillColor = UIColor.black
+            }
+            else if ballColorGame == "Blue Ball"
+            {
+                ball2!.fillColor = UIColor.blue
+            }
+            else if ballColorGame == "Orange Ball"
+            {
+                ball2!.fillColor = UIColor.orange
+            }
+            else if ballColorGame == "Pink Ball"
+            {
+                ball2!.fillColor = UIColor.systemPink
+            }
+            else if ballColorGame == "Purple Ball"
+            {
+                ball2!.fillColor = UIColor.purple
+            }
+            else if ballColorGame == "Green Ball"
+            {
+                ball2!.fillColor = UIColor.green
+            }
+            else if ballColorGame == "Red Ball"
+            {
+                ball2!.fillColor = UIColor.red
+            }
+            else
+            {
+                ball2!.fillColor = UIColor.yellow
+            }
+            
+            //set ball physics properties
+            ball2!.physicsBody = SKPhysicsBody(circleOfRadius: ballRadius)
+            
+            //how heavy it is
+            ball2!.physicsBody!.mass = 0.015
+            ball2?.physicsBody?.friction = 0.10
+            ball2!.physicsBody!.affectedByGravity = false
+            
+            //how much momentum is maintained after it hits somthing
+            ball2!.physicsBody!.restitution = 1.00
+            
+            //how much friction affects it
+            ball2!.physicsBody!.linearDamping = 0.90
+            ball2!.physicsBody!.angularDamping = 0.90
+
+            ball2?.physicsBody?.categoryBitMask = BodyType.ball2.rawValue
+            ball2?.physicsBody?.fieldBitMask = 2064
+            ball2?.physicsBody?.contactTestBitMask = BodyType.player.rawValue
+            ball2?.physicsBody?.collisionBitMask = 1 | 2 | 128 | 512
+            ball2?.lineWidth = 2
+            ball2?.strokeColor = .black
+        }
+        
         let ySpawnsArray = [frame.height * 0.35, frame.height * 0.65]
-        ball!.position = CGPoint(x: frame.width/2, y: ySpawnsArray.randomElement()!)
+        ball!.position = CGPoint(x: frame.width/2, y: ySpawnsArray[0])
         ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
         ball?.physicsBody?.affectedByGravity = false
         ball?.strokeColor = UIColor.black
+        
+        ball2!.position = CGPoint(x: frame.width/2, y: ySpawnsArray[1])
+        ball2!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+        ball2?.physicsBody?.affectedByGravity = false
+        ball2?.strokeColor = UIColor.black
 
         //if not alreay in scene, add to scene
         if ball!.parent == nil
         {
             addChild(ball!)
+        }
+        
+        //if not alreay in scene, add to scene
+        if ball2!.parent == nil
+        {
+            addChild(ball2!)
         }
     }
     
@@ -887,30 +1004,54 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     {
         ball!.position = CGPoint(x: -200, y: -200)
         ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+        
+        ball2!.position = CGPoint(x: -300, y: -300)
+        ball2!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func resetBallTopPlayerBallStart()
     {
-        ball!.position = CGPoint(x: frame.width/2, y: size.height * (0.65))
+        ball!.position = CGPoint(x: frame.width/3, y: size.height * (0.65))
         ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+        
+        ball2!.position = CGPoint(x: frame.width * 2/3, y: size.height * (0.65))
+        ball2!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func resetBallBottomPlayerBallStart()
     {
-        ball!.position = CGPoint(x: frame.width/2, y: size.height * 0.35)
+        ball!.position = CGPoint(x: frame.width/3, y: size.height * (0.35))
         ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+        
+        ball2!.position = CGPoint(x: frame.width * 2/3, y: size.height * (0.35))
+        ball2!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+    }
+    
+    func resetBallTieStart()
+    {
+        ball!.position = CGPoint(x: frame.width/2, y: size.height * (0.35))
+        ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+        
+        ball2!.position = CGPoint(x: frame.width/2, y: size.height * (0.65))
+        ball2!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func resetBallStart()
     {
-        ball!.position = CGPoint(x: size.width * 0.50, y: size.height * 0.35)
+        ball!.position = CGPoint(x: 50, y: size.height/2)
         ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+    }
+    
+    func resetBall2Start()
+    {
+        ball2!.position = CGPoint(x: frame.width - 50, y: size.height/2)
+        ball2?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func clearPlayer()
     {
         southPlayer?.isHidden = true
-        botPlayer?.isHidden = true
+        northPlayer?.isHidden = true
     }
      
     func resetPlayer()
@@ -919,20 +1060,20 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         if frame.height >= 812  && frame.height <= 900 && frame.width < 500
         {
             southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.22)
-            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.78)
+            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.78)
         }
         else if frame.height == 926 && frame.width < 500
         {
             southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.225)
-            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.775)
+            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.775)
         }
         else
         {
             southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.185)
-            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.815)
+            northPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.815)
         }
         southPlayer?.isHidden = false
-        botPlayer?.isHidden = false
+        northPlayer?.isHidden = false
     }
     
     func pausePhysics()
@@ -940,8 +1081,8 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         tempBallVelocity = ball!.physicsBody!.velocity
         ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         
-        tempBotVelocity = botPlayer!.physicsBody!.velocity
-        botPlayer?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        tempBallVelocity2 = ball2!.physicsBody!.velocity
+        ball2?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
     }
     
     func resumePhysics()
@@ -949,8 +1090,8 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         ball?.physicsBody?.velocity = tempBallVelocity
         tempBallVelocity = CGVector(dx: 0, dy: 0)
         
-        botPlayer?.physicsBody?.velocity = tempBotVelocity
-        tempBotVelocity = CGVector(dx: 0, dy: 0)
+        ball2?.physicsBody?.velocity = tempBallVelocity2
+        tempBallVelocity2 = CGVector(dx: 0, dy: 0)
     }
     
     func isOffScreen(node: SKShapeNode) -> Bool
@@ -963,7 +1104,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
-//            let vball = ball!.physicsBody!.velocity
             let vball = CGVector(dx: 0, dy: 0)
             let vrelativedx = vball.dx - vmallet.dx
             let vrelativedy = vball.dy - vmallet.dy
@@ -985,7 +1125,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
-            madeItToExpectedBallPos = false
         }
         if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
         {
@@ -997,7 +1136,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
-            madeItToExpectedBallPos = false
         }
         
         if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
@@ -1024,7 +1162,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
-            madeItToExpectedBallPos = false
         }
         
         if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
@@ -1037,10 +1174,9 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
-            madeItToExpectedBallPos = false
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (botPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
             let vball = CGVector(dx: 0, dy: 0)
@@ -1055,7 +1191,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
             // set ball velocity to newvball
             ball!.physicsBody!.applyImpulse(newvball)
-            madeItToExpectedBallPos = false
             
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1066,7 +1201,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 })
             }
         }
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (botPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1076,10 +1211,9 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
-            madeItToExpectedBallPos = false
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (botPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
             let vball = CGVector(dx: 0, dy: 0)
@@ -1094,7 +1228,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
             // set ball velocity to newvball
             ball!.physicsBody!.applyImpulse(newvball)
-            madeItToExpectedBallPos = false
             
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1105,7 +1238,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 })
             }
         }
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (botPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1115,7 +1248,156 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     self.ballSoundControl = true
                 })
             }
-            madeItToExpectedBallPos = false
+        }
+        
+        
+        if (contact.bodyA.categoryBitMask == BodyType.ball2.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        {
+            let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
+            let vball = CGVector(dx: 0, dy: 0)
+            let vrelativedx = vball.dx - vmallet.dx
+            let vrelativedy = vball.dy - vmallet.dy
+            let vrelative = CGVector(dx: vrelativedx, dy: vrelativedy)
+            let c = (vrelative.dx * contact.contactNormal.dx) + (vrelative.dy * contact.contactNormal.dy)
+            let vperpendicular = CGVector(dx: contact.contactNormal.dx * c, dy: contact.contactNormal.dy * c)
+            let vtangential = CGVector(dx: vrelative.dx - vperpendicular.dx, dy: vrelative.dy - vperpendicular.dy)
+            // vtangential is unchanged in the collision, vperpendicular reflects
+            let newvrelative = CGVector(dx: vtangential.dx - vperpendicular.dx, dy: vtangential.dy - vperpendicular.dy)
+            let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
+            
+            ball2!.physicsBody!.applyImpulse(newvball)
+            
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
+        }
+        if (contact.bodyA.categoryBitMask == BodyType.ball2.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        {
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
+        }
+        
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball2.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        {
+            let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
+            let vball = CGVector(dx: 0, dy: 0)
+            let vrelativedx = vball.dx - vmallet.dx
+            let vrelativedy = vball.dy - vmallet.dy
+            let vrelative = CGVector(dx: vrelativedx, dy: vrelativedy)
+            let c = (vrelative.dx * contact.contactNormal.dx) + (vrelative.dy * contact.contactNormal.dy)
+            let vperpendicular = CGVector(dx: contact.contactNormal.dx * c, dy: contact.contactNormal.dy * c)
+            let vtangential = CGVector(dx: vrelative.dx - vperpendicular.dx, dy: vrelative.dy - vperpendicular.dy)
+            // vtangential is unchanged in the collision, vperpendicular reflects
+            let newvrelative = CGVector(dx: vtangential.dx - vperpendicular.dx, dy: vtangential.dy - vperpendicular.dy)
+            let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
+            // set ball velocity to newvball
+            ball2!.physicsBody!.applyImpulse(newvball)
+            
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
+        }
+        
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball2.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        {
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
+        }
+        
+        if (contact.bodyA.categoryBitMask == BodyType.ball2.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        {
+            let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
+            let vball = CGVector(dx: 0, dy: 0)
+            let vrelativedx = vball.dx - vmallet.dx
+            let vrelativedy = vball.dy - vmallet.dy
+            let vrelative = CGVector(dx: vrelativedx, dy: vrelativedy)
+            let c = (vrelative.dx * contact.contactNormal.dx) + (vrelative.dy * contact.contactNormal.dy)
+            let vperpendicular = CGVector(dx: contact.contactNormal.dx * c, dy: contact.contactNormal.dy * c)
+            let vtangential = CGVector(dx: vrelative.dx - vperpendicular.dx, dy: vrelative.dy - vperpendicular.dy)
+            // vtangential is unchanged in the collision, vperpendicular reflects
+            let newvrelative = CGVector(dx: vtangential.dx - vperpendicular.dx, dy: vtangential.dy - vperpendicular.dy)
+            let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
+            // set ball velocity to newvball
+            ball2!.physicsBody!.applyImpulse(newvball)
+            
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
+        }
+        if (contact.bodyA.categoryBitMask == BodyType.ball2.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        {
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
+        }
+        
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball2.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        {
+            let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
+            let vball = CGVector(dx: 0, dy: 0)
+            let vrelativedx = vball.dx - vmallet.dx
+            let vrelativedy = vball.dy - vmallet.dy
+            let vrelative = CGVector(dx: vrelativedx, dy: vrelativedy)
+            let c = (vrelative.dx * contact.contactNormal.dx) + (vrelative.dy * contact.contactNormal.dy)
+            let vperpendicular = CGVector(dx: contact.contactNormal.dx * c, dy: contact.contactNormal.dy * c)
+            let vtangential = CGVector(dx: vrelative.dx - vperpendicular.dx, dy: vrelative.dy - vperpendicular.dy)
+            // vtangential is unchanged in the collision, vperpendicular reflects
+            let newvrelative = CGVector(dx: vtangential.dx - vperpendicular.dx, dy: vtangential.dy - vperpendicular.dy)
+            let newvball = CGVector(dx: newvrelative.dx + vmallet.dx, dy: newvrelative.dy + vmallet.dy)
+            // set ball velocity to newvball
+            ball2!.physicsBody!.applyImpulse(newvball)
+            
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
+        }
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball2.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        {
+            if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
+            {
+                ballSoundControl = false
+                if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(playerHitBallSound)}
+                Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false, block: { timer in
+                    self.ballSoundControl = true
+                })
+            }
         }
         
         // Ball Collision detect with wall to prevent sticking (SpriteKit Issue)
@@ -1148,29 +1430,61 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             body!.applyImpulse(CGVector(dx: 0, dy: strength))
             if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitWallSound)}
         }
+        
+        
+        // Ball Collision detect with wall to prevent sticking (SpriteKit Issue)
+        if (contact.bodyA.categoryBitMask == BodyType.ball2.rawValue && contact.bodyB.categoryBitMask == BodyType.sideWalls.rawValue)
+        {
+            let strength = 1.0 * ((ball2?.position.x)! < frame.width / 2 ? 1 : -1)
+            let body = ball2?.physicsBody
+            body!.applyImpulse(CGVector(dx: strength, dy: 0))
+            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitWallSound)}
+        }
+        else if (contact.bodyA.categoryBitMask == BodyType.sideWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.ball2.rawValue)
+        {
+            let strength = 1.0 * ((ball2?.position.x)! < frame.width / 2 ? 1 : -1)
+            let body = ball2?.physicsBody
+            body!.applyImpulse(CGVector(dx: strength, dy: 0))
+            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitWallSound)}
+        }
+        
+        if (contact.bodyA.categoryBitMask == BodyType.ball2.rawValue && contact.bodyB.categoryBitMask == BodyType.topBottomWalls.rawValue)
+        {
+            let strength = 1.0 * ((ball?.position.y)! < frame.height / 2 ? 1 : -1)
+            let body = ball2?.physicsBody
+            body!.applyImpulse(CGVector(dx: 0, dy: strength))
+            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitWallSound)}
+        }
+        else if (contact.bodyA.categoryBitMask == BodyType.topBottomWalls.rawValue && contact.bodyB.categoryBitMask == BodyType.ball2.rawValue)
+        {
+            let strength = 1.0 * ((ball2?.position.y)! < frame.height / 2 ? 1 : -1)
+            let body = ball2?.physicsBody
+            body!.applyImpulse(CGVector(dx: 0, dy: strength))
+            if UserDefaults.standard.string(forKey: "Sound") != "Off" {run(ballHitWallSound)}
+        }
     }
     
-    func createBotPlayerScore()
+    func createNorthPlayerScore()
     {
-        botPlayerScoreText.text = String(botPlayerScore)
-        botPlayerScoreText.zRotation =  .pi / 2
+        northPlayerScoreText.text = String(northPlayerScore)
+        northPlayerScoreText.zRotation =  .pi / 2
 
         if frame.width > 700
         {
-            botPlayerScoreText.position = CGPoint(x: frame.width/12, y: frame.height/2 + frame.height/30)
-            botPlayerScoreText.fontSize = 50
+            northPlayerScoreText.position = CGPoint(x: frame.width/12, y: frame.height/2 + frame.height/30)
+            northPlayerScoreText.fontSize = 50
         }
         else
         {
-            botPlayerScoreText.position = CGPoint(x: frame.width/10, y: frame.height/2 + frame.height/30)
-            botPlayerScoreText.fontSize = 32
+            northPlayerScoreText.position = CGPoint(x: frame.width/10, y: frame.height/2 + frame.height/30)
+            northPlayerScoreText.fontSize = 32
         }
-        addChild(botPlayerScoreText)
+        addChild(northPlayerScoreText)
         addChild(southPlayerScoreText)
     }
-    func updateBotPlayerScore()
+    func updateNorthPlayerScore()
     {
-        botPlayerScoreText.text = String(botPlayerScore)
+        northPlayerScoreText.text = String(northPlayerScore)
     }
     
     func createSouthPlayerScore()
@@ -1203,12 +1517,13 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             {
                 SKTAudio.sharedInstance().playBackgroundMusic2("MenuSong3.mp3")
             }
-            
+
             let scene = GameOverScene(size: (view?.bounds.size)!)
 
             // Configure the view.
             let skView = self.view!
             skView.isMultipleTouchEnabled = false
+
 
             /* Sprite Kit applies additional optimizations to improve rendering performance */
             skView.ignoresSiblingOrder = true
@@ -1251,7 +1566,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     func gameOverIsTrue()
     {
-        if southPlayerScore > botPlayerScore
+        if southPlayerScore > northPlayerScore
         {
             whoWonGame = "BOTTOM"
             
@@ -1267,6 +1582,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 // Configure the view.
                 let skView = self.view!
                 skView.isMultipleTouchEnabled = false
+
 
                 /* Sprite Kit applies additional optimizations to improve rendering performance */
                 skView.ignoresSiblingOrder = true
@@ -1321,65 +1637,362 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     func scoring()
     {
-        if ballInSouthGoal == true
+        if roundScoreCounter == 0
         {
-            ball?.isHidden = true
-            ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
-            if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
-            else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
-            else{run(goalSound)}
-            ballInSouthGoal = false
-            botPlayerScore += 1
-            ball?.physicsBody?.isDynamic = false
-            updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
-            updateBotPlayerScore()
-            clearPauseButton()
-            clearPlayer()
-            topPlayerWinsRound = true
-            if (botPlayerScore * 2) < numberRounds
+            if ballInNorthGoal == true
             {
-                Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
-                    self.resetBallBottomPlayerBallStart()
-                    self.ball?.isHidden = false
-                    self.resetPauseButton()
-                    self.resetPlayer()
-                    self.resetPlayerLoseWinBackground()
-                    self.ball?.physicsBody?.isDynamic = true
-                    self.topPlayerWinsRound = false
-                })
+                ball?.isHidden = true
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                
+                ball?.physicsBody?.isDynamic = false
+                southPlayerScore += 1
+                roundScoreCounter += 1
+                updateSouthPlayerScore()
+                
+                if (southPlayerScore * 2) >= numberRounds
+                {
+                    ball?.isHidden = true
+                    ball2?.isHidden = true
+                    ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                    ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+                    ballInNorthGoal = false
+                    ball?.physicsBody?.isDynamic = false
+                    ball2?.physicsBody?.isDynamic = false
+                    updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
+                    clearPauseButton()
+                    clearPlayer()
+                    bottomPlayerWinsRound = true
+                }
+            }
+            
+            else if ballInSouthGoal == true
+            {
+                ball?.isHidden = true
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ball?.physicsBody?.isDynamic = false
+                northPlayerScore += 1
+                roundScoreCounter += 1
+                updateNorthPlayerScore()
+                
+                if (northPlayerScore * 2) >= numberRounds
+                {
+                    ball?.isHidden = true
+                    ball2?.isHidden = true
+                    ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                    ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+                    ballInSouthGoal = false
+                    ball?.physicsBody?.isDynamic = false
+                    updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
+                    clearPauseButton()
+                    clearPlayer()
+                    topPlayerWinsRound = true
+                }
+            }
+            
+            else if ball2InNorthGoal == true
+            {
+                ball2?.isHidden = true
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ball2?.physicsBody?.isDynamic = false
+                southPlayerScore += 1
+                roundScoreCounter += 1
+                updateSouthPlayerScore()
+                
+                if (southPlayerScore * 2) >= numberRounds
+                {
+                    ball?.isHidden = true
+                    ball2?.isHidden = true
+                    ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                    ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+                    ball2InNorthGoal = false
+                    ball?.physicsBody?.isDynamic = false
+                    ball2?.physicsBody?.isDynamic = false
+                    updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
+                    clearPauseButton()
+                    clearPlayer()
+                    bottomPlayerWinsRound = true
+                }
+            }
+            
+            else if ball2InSouthGoal == true
+            {
+                ball2?.isHidden = true
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                
+                ball2?.physicsBody?.isDynamic = false
+                northPlayerScore += 1
+                roundScoreCounter += 1
+                updateNorthPlayerScore()
+                
+                if (northPlayerScore * 2) >= numberRounds
+                {
+                    ball?.isHidden = true
+                    ball2?.isHidden = true
+                    ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                    ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+                    ball2InSouthGoal = false
+                    ball?.physicsBody?.isDynamic = false
+                    updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
+                    clearPauseButton()
+                    clearPlayer()
+                    topPlayerWinsRound = true
+                }
             }
         }
-            
-        else if ballInNorthGoal == true
+        else if roundScoreCounter == 1
         {
-            ball?.isHidden = true
-            ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
-            if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
-            else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
-            else{run(goalSound)}
-            ballInNorthGoal = false
-            ball?.physicsBody?.isDynamic = false
-            updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
-            southPlayerScore += 1
-            clearPauseButton()
-            updateSouthPlayerScore()
-            bottomPlayerWinsRound = true
-            clearPlayer()
-            if (southPlayerScore * 2) < numberRounds
+            if ballInSouthGoal == true && ball2InSouthGoal == true
             {
-                Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
-                    self.resetBallTopPlayerBallStart()
-                    self.ball?.isHidden = false
-                    self.resetPauseButton()
-                    self.resetPlayer()
-                    self.resetPlayerLoseWinBackground()
-                    self.ball?.physicsBody?.isDynamic = true
-                    self.bottomPlayerWinsRound = false
-                })
+                ball?.isHidden = true
+                ball2?.isHidden = true
+
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ballInSouthGoal = false
+                ball2InSouthGoal = false
+                northPlayerScore += 1
+                ball?.physicsBody?.isDynamic = false
+                ball2?.physicsBody?.isDynamic = false
+                updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
+                updateNorthPlayerScore()
+                clearPauseButton()
+                clearPlayer()
+                topPlayerWinsRound = true
+                roundScoreCounter = 0
+                if (northPlayerScore * 2) < numberRounds
+                {
+                    Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
+                        self.resetBallBottomPlayerBallStart()
+                        self.ball?.isHidden = false
+                        self.ball2?.isHidden = false
+                        self.resetPauseButton()
+                        self.resetPlayer()
+                        self.resetPlayerLoseWinBackground()
+                        self.ball?.physicsBody?.isDynamic = true
+                        self.ball2?.physicsBody?.isDynamic = true
+                        self.topPlayerWinsRound = false
+                    })
+                }
+            }
+                
+            else if ballInNorthGoal == true && ball2InNorthGoal == true
+            {
+                ball?.isHidden = true
+                ball2?.isHidden = true
+
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ballInNorthGoal = false
+                ball2InNorthGoal = false
+                ball?.physicsBody?.isDynamic = false
+                ball2?.physicsBody?.isDynamic = false
+                updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
+                southPlayerScore += 1
+                clearPauseButton()
+                updateSouthPlayerScore()
+                bottomPlayerWinsRound = true
+                clearPlayer()
+                roundScoreCounter = 0
+                if (southPlayerScore * 2) < numberRounds
+                {
+                    Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
+                        self.resetBallTopPlayerBallStart()
+                        self.ball?.isHidden = false
+                        self.ball2?.isHidden = false
+                        self.resetPauseButton()
+                        self.resetPlayer()
+                        self.resetPlayerLoseWinBackground()
+                        self.ball?.physicsBody?.isDynamic = true
+                        self.ball2?.physicsBody?.isDynamic = true
+                        self.bottomPlayerWinsRound = false
+                    })
+                }
+            }
+            
+            
+            else if ballInNorthGoal == true && ball2InSouthGoal == true && ball2!.isHidden == true && ball!.isHidden == false
+            {
+                ball?.isHidden = true
+                ball2?.isHidden = true
+
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ballInNorthGoal = false
+                ball2InSouthGoal = false
+                ball?.physicsBody?.isDynamic = false
+                ball2?.physicsBody?.isDynamic = false
+                updatePlayerLoseWinBackgroundsTieRound()
+                southPlayerScore += 1
+                clearPauseButton()
+                updateSouthPlayerScore()
+                bottomPlayerWinsRound = true
+                topPlayerWinsRound = true
+                clearPlayer()
+                roundScoreCounter = 0
+                if (southPlayerScore * 2) < numberRounds
+                {
+                    Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
+                        self.resetBallTieStart()
+                        self.ball?.isHidden = false
+                        self.ball2?.isHidden = false
+                        self.resetPauseButton()
+                        self.resetPlayer()
+                        self.resetPlayerLoseWinBackground()
+                        self.ball?.physicsBody?.isDynamic = true
+                        self.ball2?.physicsBody?.isDynamic = true
+                        self.bottomPlayerWinsRound = false
+                        self.topPlayerWinsRound = false
+                    })
+                }
+            }
+            
+            if ballInNorthGoal == true && ball2InSouthGoal == true && ball!.isHidden == true && ball2!.isHidden == false
+            {
+                ball?.isHidden = true
+                ball2?.isHidden = true
+
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ballInNorthGoal = false
+                ball2InSouthGoal = false
+                ball?.physicsBody?.isDynamic = false
+                ball2?.physicsBody?.isDynamic = false
+                updatePlayerLoseWinBackgroundsTieRound()
+                northPlayerScore += 1
+                clearPauseButton()
+                updateNorthPlayerScore()
+                topPlayerWinsRound = true
+                bottomPlayerWinsRound = true
+                clearPlayer()
+                roundScoreCounter = 0
+                if (northPlayerScore * 2) < numberRounds
+                {
+                    Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
+                        self.resetBallTieStart()
+                        self.ball?.isHidden = false
+                        self.ball2?.isHidden = false
+                        self.resetPauseButton()
+                        self.resetPlayer()
+                        self.resetPlayerLoseWinBackground()
+                        self.ball?.physicsBody?.isDynamic = true
+                        self.ball2?.physicsBody?.isDynamic = true
+                        self.topPlayerWinsRound = false
+                        self.bottomPlayerWinsRound = false
+                    })
+                }
+            }
+            
+            if ball2InNorthGoal == true && ballInSouthGoal == true && ball2!.isHidden == true && ball!.isHidden == false
+            {
+                ball?.isHidden = true
+                ball2?.isHidden = true
+
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ball2InNorthGoal = false
+                ballInSouthGoal = false
+                ball?.physicsBody?.isDynamic = false
+                ball2?.physicsBody?.isDynamic = false
+                updatePlayerLoseWinBackgroundsTieRound()
+                northPlayerScore += 1
+                clearPauseButton()
+                updateNorthPlayerScore()
+                topPlayerWinsRound = true
+                bottomPlayerWinsRound = true
+                clearPlayer()
+                roundScoreCounter = 0
+                if (northPlayerScore * 2) < numberRounds
+                {
+                    Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
+                        self.resetBallTieStart()
+                        self.ball?.isHidden = false
+                        self.ball2?.isHidden = false
+                        self.resetPauseButton()
+                        self.resetPlayer()
+                        self.resetPlayerLoseWinBackground()
+                        self.ball?.physicsBody?.isDynamic = true
+                        self.ball2?.physicsBody?.isDynamic = true
+                        self.topPlayerWinsRound = false
+                        self.bottomPlayerWinsRound = false
+                    })
+                }
+            }
+            
+            if ball2InNorthGoal == true && ballInSouthGoal == true && ball!.isHidden == true && ball2!.isHidden == false
+            {
+                ball?.isHidden = true
+                ball2?.isHidden = true
+                ball!.position = CGPoint(x: frame.width * 2, y: -frame.height)
+                ball2!.position = CGPoint(x: frame.width * 3, y: -frame.height)
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(goalSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(goalSound)}
+                ball2InNorthGoal = false
+                ballInSouthGoal = false
+                ball?.physicsBody?.isDynamic = false
+                ball2?.physicsBody?.isDynamic = false
+                updatePlayerLoseWinBackgroundsTieRound()
+                southPlayerScore += 1
+                clearPauseButton()
+                updateSouthPlayerScore()
+                bottomPlayerWinsRound = true
+                topPlayerWinsRound = true
+                clearPlayer()
+                roundScoreCounter = 0
+
+                if (southPlayerScore * 2) < numberRounds
+                {
+                    Timer.scheduledTimer(withTimeInterval: 1, repeats: false, block: { timer in
+                        self.resetBallTieStart()
+                        self.ball?.isHidden = false
+                        self.ball2?.isHidden = false
+                        self.resetPauseButton()
+                        self.resetPlayer()
+                        self.resetPlayerLoseWinBackground()
+                        self.ball?.physicsBody?.isDynamic = true
+                        self.ball2?.physicsBody?.isDynamic = true
+                        self.bottomPlayerWinsRound = false
+                        self.topPlayerWinsRound = false
+                    })
+                }
             }
         }
         
-        if ((southPlayerScore * 2 >= numberRounds) || botPlayerScore * 2 >= numberRounds) && (gameOver == false)
+        if ((southPlayerScore * 2 >= numberRounds) || northPlayerScore * 2 >= numberRounds) && (gameOver == false)
         {
             gameOver = true
             clearPauseButton()
@@ -1391,36 +2004,22 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     override func update(_ currentTime: TimeInterval)
     {
-        print(expectedBallXPos - botPlayer!.position.x)
-//        print(expectedBallXPos)
-//        print(botPlayer?.position.x)
-//        print(madeItToExpectedBallPos)
-        if botPlayer!.position.y > frame.height * 0.50 && GameIsPaused == false
-        {
-            botDefend()
-            botMirror()
-            botAttack()
-        }
-        else
-        {
-            botPlayer?.physicsBody?.velocity.dy = 0
-            botPlayer?.physicsBody?.velocity.dy += 1
-        }
-        
-        if ball!.physicsBody!.velocity.dy < 0
-        {
-            madeItToExpectedBallPos = false
-        }
-        
-        
-        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!)
+        print(roundScoreCounter)
+        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!) && ball!.isHidden != true
         {
             resetBallStart()
+        }
+        
+        if (ball2!.position.x <= frame.width * 0.2 || ball2!.position.x >= frame.width * 0.8) && isOffScreen(node: ball2!) && ball2!.isHidden != true
+        {
+            resetBall2Start()
         }
         
         if GameIsPaused == true
         {
             ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+            ball2?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+
         }
         
         if frame.height > 800 && frame.width < 500
@@ -1453,18 +2052,50 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             }
         }
         
+        if frame.height > 800 && frame.width < 500
+        {
+            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y > frame.height * 0.955)
+            {
+                ball2InNorthGoal = true
+            }
+        }
+        else
+        {
+            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y > frame.height)
+            {
+                ball2InNorthGoal = true
+            }
+        }
+            
+        if frame.height > 800 && frame.width < 500
+        {
+            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y < frame.height * 0.045)
+            {
+                ball2InSouthGoal = true
+            }
+        }
+        else
+        {
+            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y < 0)
+            {
+                ball2InSouthGoal = true
+            }
+        }
+        
         scoring()
         
+        //Limit Ball 1 Speed
         if sqrt(pow((ball?.physicsBody?.velocity.dx)!, 2) + pow((ball?.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxBallSpeed)
         {
             ball?.physicsBody?.velocity.dx = (ball?.physicsBody?.velocity.dx)! * (maxBallSpeed / (sqrt(pow((ball?.physicsBody?.velocity.dx)!, 2) + pow((ball?.physicsBody?.velocity.dy)!, 2))))
             ball?.physicsBody?.velocity.dy = (ball?.physicsBody?.velocity.dy)! * (maxBallSpeed / (sqrt(pow((ball?.physicsBody?.velocity.dx)!, 2) + pow((ball?.physicsBody?.velocity.dy)!, 2))))
         }
         
-        if sqrt(pow((botPlayer?.physicsBody?.velocity.dx)!, 2) + pow((botPlayer?.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxBallSpeed)
+        //Limit Ball 2 Speed
+        if sqrt(pow((ball2?.physicsBody?.velocity.dx)!, 2) + pow((ball2?.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxBallSpeed)
         {
-            botPlayer?.physicsBody?.velocity.dx = (botPlayer?.physicsBody?.velocity.dx)! * (maxBallSpeed / (sqrt(pow((botPlayer?.physicsBody?.velocity.dx)!, 2) + pow((botPlayer?.physicsBody?.velocity.dy)!, 2))))
-            botPlayer?.physicsBody?.velocity.dy = (botPlayer?.physicsBody?.velocity.dy)! * (maxBallSpeed / (sqrt(pow((botPlayer?.physicsBody?.velocity.dx)!, 2) + pow((botPlayer?.physicsBody?.velocity.dy)!, 2))))
+            ball2?.physicsBody?.velocity.dx = (ball2?.physicsBody?.velocity.dx)! * (maxBallSpeed / (sqrt(pow((ball2?.physicsBody?.velocity.dx)!, 2) + pow((ball2?.physicsBody?.velocity.dy)!, 2))))
+            ball2?.physicsBody?.velocity.dy = (ball2?.physicsBody?.velocity.dy)! * (maxBallSpeed / (sqrt(pow((ball2?.physicsBody?.velocity.dx)!, 2) + pow((ball2?.physicsBody?.velocity.dy)!, 2))))
         }
     }
         
@@ -1491,687 +2122,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 touchedSoundOff = true
             }
             
-        }
-    }
-    
-    func ballIsOnTarget() -> Bool
-    {
-        let ballVectorSlope = (ball!.physicsBody!.velocity.dy) / (ball!.physicsBody!.velocity.dx)
-        let goalHeight = frame.height * 0.90
-        let goalDifferenceFromBall = goalHeight - ball!.position.y
-        let changeOfX = goalDifferenceFromBall / ballVectorSlope
-        let goalLeftXBound = frame.width * 0.20
-        let goalRightXBound = frame.width * 0.80
-        expectedBallXPos = round(ball!.position.x + changeOfX)
-
-        if (expectedBallXPos >= goalLeftXBound) && (expectedBallXPos <= goalRightXBound) && (ball!.physicsBody!.velocity.dy > 0)
-        {
-            return true
-        }
-        else
-        {
-            return false
-        }
-    }
-    
-    func botDefend()
-    {
-        //If ball is above bot on bot's side, trigger defend mode
-        
-        if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y <= ball!.position.y || abs(botPlayer!.position.y - ball!.position.y) <= 15) && botDefendSwitch == false
-        {
-            botDefendSwitch = true
-            botAttackSwitch = false
-        }
-        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y <= ball!.position.y || abs(botPlayer!.position.y - ball!.position.y) <= 15) && botDefendSwitch == true
-        {
- 
-            if botPlayer!.physicsBody!.velocity.dy < 300
-            {
-                botPlayer!.physicsBody!.velocity.dy += 80
-            }
-        }
-        else if ball!.position.y > frame.height * 0.40 && (botPlayer!.position.y >= ball!.position.y)
-        {
-            if ballIsOnTarget() == false && ball!.physicsBody!.velocity.dy >= frame.height * 0.20
-            {
-                // returned to mirror Y zone
-                if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
-                {
-                    botPlayer!.physicsBody?.velocity.dy = 0
-                    
-                    //in playable mirror x zone .10 to .90
-                    if ((botPlayer!.position.x >= frame.width * 0.35 && botPlayer!.position.x <= frame.width * 0.65) || (ball!.position.x > frame.width * 0.35 && ball!.position.x < frame.width * 0.65))
-                    {
-                        if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx < 300
-                            {
-                                botPlayer!.physicsBody?.velocity.dx += 60
-                            }
-                        }
-                        else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx > -300
-                            {
-                                botPlayer!.physicsBody?.velocity.dx -= 60
-                            }
-                        }
-                        else if abs(botPlayer!.position.x - ball!.position.x) <= 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx += 10
-                            }
-                            else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                                botPlayer!.physicsBody?.velocity.dx += 1
-                            }
-                            if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx -= 10
-                            }
-                            else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                                botPlayer!.physicsBody?.velocity.dx -= 1
-                            }
-                        }
-                    }
-                    
-                    //in unplayable mirror x zone < frame.width * .20
-                    if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x >= frame.width * 0.35
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx <= 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 60
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx = 300
-
-                        }
-                    }
-                    else if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x < frame.width * 0.35
-                    {
-                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.35))
-                        botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
-                    }
-                    else if (botPlayer!.position.x == frame.width * 0.35) && ball!.position.x <= frame.width * 0.35
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 0
-                    }
-                    
-                    //in uplayable mirror x zone .70
-                    if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x <= frame.width * 0.65
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx >= -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 60
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx = -300
-
-                        }
-                    }
-                    else if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x > frame.width * 0.65
-                    {
-                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.65))
-                        botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
-                    }
-                    else if (botPlayer!.position.x == frame.width * 0.65) && ball!.position.x >= frame.width * 0.65
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 0
-                    }
-                }
-
-                //below mirroring y-zone for passive defending
-                else if botPlayer!.position.y < frame.height * 0.87
-                {
-                    botPlayer!.physicsBody?.velocity.dy = 300
-                    
-                    //in playable mirror x zone .10 to .90
-                    if ((botPlayer!.position.x >= frame.width * 0.35 && botPlayer!.position.x <= frame.width * 0.65) || (ball!.position.x > frame.width * 0.35 && ball!.position.x < frame.width * 0.65))
-                    {
-                        if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx < 300
-                            {
-                                botPlayer!.physicsBody?.velocity.dx += 60
-                            }
-                        }
-                        else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx > -300
-                            {
-                                botPlayer!.physicsBody?.velocity.dx -= 60
-                            }
-                        }
-                        else if abs(botPlayer!.position.x - ball!.position.x) <= 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx += 10
-                            }
-                            else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                                botPlayer!.physicsBody?.velocity.dx += 1
-                            }
-                            if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx -= 10
-                            }
-                            else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                                botPlayer!.physicsBody?.velocity.dx -= 1
-                            }
-                        }
-                    }
-                    
-                    //in unplayable mirror x zone < frame.width * .20
-                    if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x >= frame.width * 0.35
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx <= 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 60
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx = 300
-
-                        }
-                    }
-                    else if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x < frame.width * 0.35
-                    {
-                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.35))
-                        botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
-                    }
-                    else if (botPlayer!.position.x == frame.width * 0.35) && ball!.position.x <= frame.width * 0.35
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 0
-                    }
-                    
-                    //in uplayable mirror x zone .70
-                    if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x <= frame.width * 0.65
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx >= -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 60
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx = -300
-
-                        }
-                    }
-                    else if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x > frame.width * 0.65
-                    {
-                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.65))
-                        botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
-                    }
-                    else if (botPlayer!.position.x == frame.width * 0.65) && ball!.position.x >= frame.width * 0.65
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 0
-                    }
-                }
-
-                //above mirroring y-zone for passive defending
-                else if botPlayer!.position.y > frame.height * 0.90
-                {
-                    botPlayer!.physicsBody?.velocity.dy = -300
-                            
-                    //in playable mirror x zone .25 to .80
-                    if ((botPlayer!.position.x >= frame.width * 0.35 && botPlayer!.position.x <= frame.width * 0.65) || (ball!.position.x > frame.width * 0.35 && ball!.position.x < frame.width * 0.65))
-                    {
-                        if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx < 300
-                            {
-                                botPlayer!.physicsBody?.velocity.dx += 60
-                            }
-                        }
-                        else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx > -300
-                            {
-                                botPlayer!.physicsBody?.velocity.dx -= 60
-                            }
-                        }
-                        else if abs(botPlayer!.position.x - ball!.position.x) <= 10
-                        {
-                            if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx += 10
-                            }
-                            else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                                botPlayer!.physicsBody?.velocity.dx += 1
-                            }
-                            if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx -= 10
-                            }
-                            else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
-                            {
-                                botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                                botPlayer!.physicsBody?.velocity.dx -= 1
-                            }
-                        }
-                    }
-                    
-                    //in unplayable mirror x zone < frame.width * .20
-                    if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x >= frame.width * 0.35
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx <= 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx += 60
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx = 300
-
-                        }
-                    }
-                    else if (botPlayer!.position.x < frame.width * 0.35) && ball!.position.x < frame.width * 0.35
-                    {
-                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.35))
-                        botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
-                    }
-                    else if (botPlayer!.position.x == frame.width * 0.35) && ball!.position.x <= frame.width * 0.35
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 0
-                    }
-                    
-                    //in uplayable mirror x zone .70
-                    if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x <= frame.width * 0.65
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx >= -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx -= 60
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < -300
-                        {
-                            botPlayer?.physicsBody?.velocity.dx = -300
-
-                        }
-                    }
-                    else if (botPlayer!.position.x > frame.width * 0.65) && ball!.position.x > frame.width * 0.65
-                    {
-                        let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.70))
-                        botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
-                    }
-                    else if (botPlayer!.position.x == frame.width * 0.65) && ball!.position.x >= frame.width * 0.65
-                    {
-                        botPlayer!.physicsBody?.velocity.dx = 0
-                    }
-                }
-            }
-            
-            else if ballIsOnTarget() == true
-            {
-                // returned to mirror Y zone
-                if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90 && madeItToExpectedBallPos == false
-                {
-                    botPlayer!.physicsBody?.velocity.dy = 0
-                }
-                //below mirroring y-zone for passive defending
-                else if botPlayer!.position.y < frame.height * 0.87 && madeItToExpectedBallPos == false
-                {
-                    botPlayer!.physicsBody?.velocity.dy = 300
-                }
-                //above mirroring y-zone for passive defending
-                else if botPlayer!.position.y > frame.height * 0.90 && madeItToExpectedBallPos == false
-                {
-                    botPlayer!.physicsBody?.velocity.dy = -300
-                }
-                
-                if madeItToExpectedBallPos == false
-                {
-                    if (botPlayer!.position.x - expectedBallXPos < -10)
-                    {
-                        botPlayer?.physicsBody?.velocity.dx += (abs(botPlayer!.position.x - expectedBallXPos) / 3)
-                    }
-                    else if (botPlayer!.position.x - expectedBallXPos > 10)
-                    {
-                        botPlayer?.physicsBody?.velocity.dx -= abs((botPlayer!.position.x - expectedBallXPos) / 3)
-                    }
-                    else if (botPlayer!.position.x - expectedBallXPos >= -10) && (botPlayer!.position.x - expectedBallXPos <= 10) && (botPlayer!.position.y > ball!.position.y) && (botPlayer!.position.y) >= (frame.height * 0.87) && (ball!.physicsBody!.velocity.dy > 0)
-                    {
-                        botPlayer?.physicsBody?.velocity.dx = 0
-                        madeItToExpectedBallPos = true
-                        print("made it to switch")
-                    }
-                }
-                if madeItToExpectedBallPos == true
-                {
-                    let randScalar = Float.random(in: 0.50..<2.0)
-                    botPlayer?.physicsBody?.velocity = CGVector(dx: -ball!.physicsBody!.velocity.dx * CGFloat(randScalar), dy: -ball!.physicsBody!.velocity.dy * CGFloat(randScalar))
-                }
-            }
-        }
-        else
-        {
-            botDefendSwitch = false
-        }
-
-    }
-    
-    func botAttack()
-    {
-        //If bot is above ball on bot's side trigger attack mode. Consider the balls velocity vector while going for attack
-        if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botAttackSwitch == false
-        {
-            botDefendSwitch = false
-            botAttackSwitch = true
-        }
-        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botDefendSwitch == false && botAttackSwitch == true
-        {
-            if botPlayer!.position.x < ball!.position.x
-            {
-                botPlayer!.physicsBody?.velocity.dx += 10
-            }
-            if botPlayer!.position.x > ball!.position.x
-            {
-                botPlayer!.physicsBody?.velocity.dx -= 10
-            }
-            
-            if botPlayer!.position.y < ball!.position.y
-            {
-                botPlayer!.physicsBody?.velocity.dy += 10
-            }
-            if botPlayer!.position.y > ball!.position.y
-            {
-                botPlayer!.physicsBody?.velocity.dy -= 10
-            }
-        }
-    }
-    
-    func botMirror()
-    {
-        // If ball is on player's side, mirror the balls movement to prepare for defense and attack
-        
-        if (ball!.position.y) < frame.height * 0.5
-        {
-            // returned to mirror Y zone
-            if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
-            {
-                botPlayer!.physicsBody?.velocity.dy = 0
-                
-                //in playable mirror x zone .10 to .90
-                if ((botPlayer!.position.x >= frame.width * 0.30 && botPlayer!.position.x <= frame.width * 0.70) || (ball!.position.x > frame.width * 0.30 && ball!.position.x < frame.width * 0.70))
-                {
-                    if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 300
-                        {
-                            botPlayer!.physicsBody?.velocity.dx += 60
-                        }
-                    }
-                    else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > -300
-                        {
-                            botPlayer!.physicsBody?.velocity.dx -= 60
-                        }
-                    }
-                    else if abs(botPlayer!.position.x - ball!.position.x) <= 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx += 10
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer!.physicsBody?.velocity.dx += 1
-                        }
-                        if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx -= 10
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer!.physicsBody?.velocity.dx -= 1
-                        }
-                    }
-                }
-                
-                //in unplayable mirror x zone < frame.width * .20
-                if (botPlayer!.position.x < frame.width * 0.30) && ball!.position.x >= frame.width * 0.30
-                {
-                    if botPlayer!.physicsBody!.velocity.dx <= 300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx += 60
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx > 300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx = 300
-
-                    }
-                }
-                else if (botPlayer!.position.x < frame.width * 0.30) && ball!.position.x < frame.width * 0.30
-                {
-                    let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.30))
-                    botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
-                }
-                else if (botPlayer!.position.x == frame.width * 0.30) && ball!.position.x <= frame.width * 0.30
-                {
-                    botPlayer!.physicsBody?.velocity.dx = 0
-                }
-                
-                //in uplayable mirror x zone .70
-                if (botPlayer!.position.x > frame.width * 0.70) && ball!.position.x <= frame.width * 0.70
-                {
-                    if botPlayer!.physicsBody!.velocity.dx >= -300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx -= 60
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx < -300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx = -300
-
-                    }
-                }
-                else if (botPlayer!.position.x > frame.width * 0.70) && ball!.position.x > frame.width * 0.70
-                {
-                    let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.70))
-                    botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
-                }
-                else if (botPlayer!.position.x == frame.width * 0.70) && ball!.position.x >= frame.width * 0.70
-                {
-                    botPlayer!.physicsBody?.velocity.dx = 0
-                }
-            }
-
-            //below mirroring y-zone for passive defending
-            else if botPlayer!.position.y < frame.height * 0.87
-            {
-                botPlayer!.physicsBody?.velocity.dy = 300
-                
-                //in playable mirror x zone .10 to .90
-                if ((botPlayer!.position.x >= frame.width * 0.30 && botPlayer!.position.x <= frame.width * 0.70) || (ball!.position.x > frame.width * 0.30 && ball!.position.x < frame.width * 0.70))
-                {
-                    if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 300
-                        {
-                            botPlayer!.physicsBody?.velocity.dx += 60
-                        }
-                    }
-                    else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > -300
-                        {
-                            botPlayer!.physicsBody?.velocity.dx -= 60
-                        }
-                    }
-                    else if abs(botPlayer!.position.x - ball!.position.x) <= 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx += 10
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer!.physicsBody?.velocity.dx += 1
-                        }
-                        if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx -= 10
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer!.physicsBody?.velocity.dx -= 1
-                        }
-                    }
-                }
-                
-                //in unplayable mirror x zone < frame.width * .20
-                if (botPlayer!.position.x < frame.width * 0.30) && ball!.position.x >= frame.width * 0.30
-                {
-                    if botPlayer!.physicsBody!.velocity.dx <= 300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx += 60
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx > 300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx = 300
-
-                    }
-                }
-                else if (botPlayer!.position.x < frame.width * 0.30) && ball!.position.x < frame.width * 0.30
-                {
-                    let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.30))
-                    botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
-                }
-                else if (botPlayer!.position.x == frame.width * 0.30) && ball!.position.x <= frame.width * 0.30
-                {
-                    botPlayer!.physicsBody?.velocity.dx = 0
-                }
-                
-                //in uplayable mirror x zone .70
-                if (botPlayer!.position.x > frame.width * 0.70) && ball!.position.x <= frame.width * 0.70
-                {
-                    if botPlayer!.physicsBody!.velocity.dx >= -300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx -= 60
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx < -300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx = -300
-
-                    }
-                }
-                else if (botPlayer!.position.x > frame.width * 0.70) && ball!.position.x > frame.width * 0.70
-                {
-                    let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.70))
-                    botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
-                }
-                else if (botPlayer!.position.x == frame.width * 0.70) && ball!.position.x >= frame.width * 0.70
-                {
-                    botPlayer!.physicsBody?.velocity.dx = 0
-                }
-            }
-
-            //above mirroring y-zone for passive defending
-            else if botPlayer!.position.y > frame.height * 0.90
-            {
-                botPlayer!.physicsBody?.velocity.dy = -300
-                        
-                //in playable mirror x zone .25 to .80
-                if ((botPlayer!.position.x >= frame.width * 0.30 && botPlayer!.position.x <= frame.width * 0.70) || (ball!.position.x > frame.width * 0.30 && ball!.position.x < frame.width * 0.70))
-                {
-                    if botPlayer!.position.x < ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 300
-                        {
-                            botPlayer!.physicsBody?.velocity.dx += 60
-                        }
-                    }
-                    else if botPlayer!.position.x > ball!.position.x && abs(botPlayer!.position.x - ball!.position.x) > 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx > -300
-                        {
-                            botPlayer!.physicsBody?.velocity.dx -= 60
-                        }
-                    }
-                    else if abs(botPlayer!.position.x - ball!.position.x) <= 10
-                    {
-                        if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx += 10
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx < 0 && abs(botPlayer!.position.x - ball!.position.x) <= 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer!.physicsBody?.velocity.dx += 1
-                        }
-                        if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) > 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx -= 10
-                        }
-                        else if botPlayer!.physicsBody!.velocity.dx > 0 && abs(botPlayer!.position.x - ball!.position.x) >= 2
-                        {
-                            botPlayer!.physicsBody?.velocity.dx = round(botPlayer!.physicsBody!.velocity.dx)
-                            botPlayer!.physicsBody?.velocity.dx -= 1
-                        }
-                    }
-                }
-                
-                //in unplayable mirror x zone < frame.width * .20
-                if (botPlayer!.position.x < frame.width * 0.30) && ball!.position.x >= frame.width * 0.30
-                {
-                    if botPlayer!.physicsBody!.velocity.dx <= 300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx += 60
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx > 300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx = 300
-
-                    }
-                }
-                else if (botPlayer!.position.x < frame.width * 0.30) && ball!.position.x < frame.width * 0.30
-                {
-                    let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.30))
-                    botPlayer?.physicsBody?.velocity.dx = distanceOutOfBounds
-                }
-                else if (botPlayer!.position.x == frame.width * 0.30) && ball!.position.x <= frame.width * 0.30
-                {
-                    botPlayer!.physicsBody?.velocity.dx = 0
-                }
-                
-                //in uplayable mirror x zone .70
-                if (botPlayer!.position.x > frame.width * 0.70) && ball!.position.x <= frame.width * 0.70
-                {
-                    if botPlayer!.physicsBody!.velocity.dx >= -300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx -= 60
-                    }
-                    else if botPlayer!.physicsBody!.velocity.dx < -300
-                    {
-                        botPlayer?.physicsBody?.velocity.dx = -300
-
-                    }
-                }
-                else if (botPlayer!.position.x > frame.width * 0.70) && ball!.position.x > frame.width * 0.70
-                {
-                    let distanceOutOfBounds = abs(botPlayer!.position.x - (frame.width * 0.70))
-                    botPlayer?.physicsBody?.velocity.dx = -distanceOutOfBounds
-                }
-                else if (botPlayer!.position.x == frame.width * 0.70) && ball!.position.x >= frame.width * 0.70
-                {
-                    botPlayer!.physicsBody?.velocity.dx = 0
-                }
-            }
         }
     }
     

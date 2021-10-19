@@ -17,10 +17,19 @@ class StartScene: SKScene
     let gameModeLabel1 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let gameModeLabel2 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let storeButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var onePlayerButton = SKSpriteNode()
+    var twoPlayerButton = SKSpriteNode()
     var gameModeButton1 = SKSpriteNode()
     var gameModeButton2 = SKSpriteNode()
     var settingsButton = SKSpriteNode()
     var instructionsButton = SKSpriteNode()
+    
+    var onePlayerActiveSprite = SKSpriteNode()
+    var onePlayerLockedSprite = SKSpriteNode()
+    var onePlayerInactiveSprite = SKSpriteNode()
+    var twoPlayerActiveSprite = SKSpriteNode()
+    var twoPlayerInactiveSprite = SKSpriteNode()
+
     var playButton:SKSpriteNode!
     var storeButton:SKSpriteNode!
     var infoButton:SKSpriteNode!
@@ -29,6 +38,8 @@ class StartScene: SKScene
     var touchedPlay = false
     var touchedGameMode1 = false
     var touchedGameMode2 = false
+    var touched1Player = false
+    var touched2Player = false
     var touchedStore = false
     var touchedSettings = false
     var touchedInstructions = false
@@ -135,7 +146,7 @@ class StartScene: SKScene
         else
         {
             titleLabel.fontSize = frame.width/8
-            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.90)
+            titleLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.91)
         }
         titleLabel.fontName = "Futura"
         titleLabel.fontColor = SKColor.white
@@ -171,7 +182,7 @@ class StartScene: SKScene
         else
         {
             titleLabel2.fontSize = frame.width/8
-            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.80)
+            titleLabel2.position = CGPoint(x: frame.width/2, y: frame.height * 0.815)
         }
         titleLabel2.fontName = "Futura"
         titleLabel2.fontColor = SKColor.white
@@ -182,14 +193,14 @@ class StartScene: SKScene
         addChild(titleLabel2)
         
         gameModeButton1 = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
-        gameModeButton1.position = CGPoint(x: frame.width/2, y: frame.height * 0.60)
-        gameModeButton1.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
-        addChild(gameModeButton1)
+        gameModeButton1.position = CGPoint(x: frame.width/2, y: frame.height * 0.67)
+        gameModeButton1.scale(to: CGSize(width: frame.width * 0.65, height: frame.height * 0.085))
         
         gameModeButton2 = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
-        gameModeButton2.position = CGPoint(x: frame.width/2, y: frame.height * 0.48)
-        gameModeButton2.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
-        gameModeButton2.colorBlendFactor = 0.5
+        gameModeButton2.position = CGPoint(x: frame.width/2, y: frame.height * 0.57)
+        gameModeButton2.scale(to: CGSize(width: frame.width * 0.65, height: frame.height * 0.085))
+
+        
         if UserDefaults.standard.string(forKey: "GameType") == "GameMode2"
         {
             gameModeButton2.colorBlendFactor = 0.5
@@ -205,6 +216,7 @@ class StartScene: SKScene
             gameModeButton2.colorBlendFactor = 0.5
             gameModeButton1.colorBlendFactor = 0
         }
+        addChild(gameModeButton1)
         addChild(gameModeButton2)
         
         storeButton = SKSpriteNode(imageNamed: "AgedEmeraldRectangle.png")
@@ -213,14 +225,36 @@ class StartScene: SKScene
         storeButton.colorBlendFactor = 0
         addChild(storeButton)
         
+        playButton = SKSpriteNode(imageNamed: "IcyChillSquare.png")
+        playButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.415)
+        addChild(playButton)
+        
+        let playTriangleButton:SKSpriteNode!
+        playTriangleButton = SKSpriteNode(imageNamed: "whitePlayButton.png")
+        playTriangleButton.position = CGPoint(x: playButton.position.x, y: playButton.position.y)
+        playTriangleButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
+        playTriangleButton.zPosition = 2
+        addChild(playTriangleButton)
+        
+        if frame.width > 700
+        {
+            playButton.scale(to: CGSize(width: frame.width * 0.24, height: frame.width * 0.24))
+            playTriangleButton.scale(to: CGSize(width: frame.width * 0.16, height: frame.width * 0.16))
+        }
+        else
+        {
+            playButton.scale(to: CGSize(width: frame.width * 0.30, height: frame.width * 0.30))
+            playTriangleButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
+        }
+        
         settingsButton = SKSpriteNode(imageNamed: "RedRoundedSquare.png")
-        settingsButton.position = CGPoint(x: frame.width * 0.25, y: frame.height * 0.325)
+        settingsButton.position = CGPoint(x: frame.width * 0.42, y: frame.height * 0.2725)
         settingsButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
         settingsButton.colorBlendFactor = 0
         addChild(settingsButton)
         
         instructionsButton = SKSpriteNode(imageNamed: "RedRoundedSquare.png")
-        instructionsButton.position = CGPoint(x: frame.width * 0.75, y: frame.height * 0.325)
+        instructionsButton.position = CGPoint(x: frame.width * 0.58, y: frame.height * 0.2725)
         instructionsButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
         instructionsButton.colorBlendFactor = 0
         addChild(instructionsButton)
@@ -241,6 +275,99 @@ class StartScene: SKScene
         settingsSprite.zPosition = 1
         addChild(settingsSprite)
 
+        
+        onePlayerButton = SKSpriteNode(imageNamed: "IcyChillRoundedSquare.png")
+        onePlayerButton.position = CGPoint(x: frame.width * 0.2, y: playButton.position.y)
+        onePlayerButton.scale(to: CGSize(width: frame.width * 0.18, height: frame.width * 0.18))
+        onePlayerButton.colorBlendFactor = 0
+        addChild(onePlayerButton)
+        
+        twoPlayerButton = SKSpriteNode(imageNamed: "IcyChillRoundedSquare.png")
+        twoPlayerButton.position = CGPoint(x: frame.width * 0.8, y: playButton.position.y)
+        twoPlayerButton.scale(to: CGSize(width: frame.width * 0.18, height: frame.width * 0.18))
+        twoPlayerButton.colorBlendFactor = 0
+        addChild(twoPlayerButton)
+        
+        onePlayerActiveSprite = SKSpriteNode(imageNamed: "onePersonSelected.png")
+        onePlayerActiveSprite.position = CGPoint(x: onePlayerButton.position.x, y: onePlayerButton.position.y)
+        onePlayerActiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
+        onePlayerActiveSprite.colorBlendFactor = 0
+        onePlayerActiveSprite.zPosition = 1
+        
+        onePlayerInactiveSprite = SKSpriteNode(imageNamed: "onePerson.png")
+        onePlayerInactiveSprite.position = CGPoint(x: onePlayerButton.position.x, y: onePlayerButton.position.y)
+        onePlayerInactiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
+        onePlayerInactiveSprite.colorBlendFactor = 0
+        onePlayerInactiveSprite.zPosition = 1
+        
+        onePlayerLockedSprite = SKSpriteNode(imageNamed: "onePersonLocked.png")
+        onePlayerLockedSprite.position = CGPoint(x: onePlayerButton.position.x, y: onePlayerButton.position.y)
+        onePlayerLockedSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
+        onePlayerLockedSprite.colorBlendFactor = 0
+        onePlayerLockedSprite.zPosition = 1
+        
+        twoPlayerActiveSprite = SKSpriteNode(imageNamed: "twoPersonSelected.png")
+        twoPlayerActiveSprite.position = CGPoint(x: twoPlayerButton.position.x, y: twoPlayerButton.position.y)
+        twoPlayerActiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
+        twoPlayerActiveSprite.colorBlendFactor = 0
+        twoPlayerActiveSprite.zPosition = 1
+        
+        twoPlayerInactiveSprite = SKSpriteNode(imageNamed: "twoPerson.png")
+        twoPlayerInactiveSprite.position = CGPoint(x: twoPlayerButton.position.x, y: twoPlayerButton.position.y)
+        twoPlayerInactiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
+        twoPlayerInactiveSprite.colorBlendFactor = 0
+        twoPlayerInactiveSprite.zPosition = 1
+
+        if UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
+        {
+            onePlayerActiveSprite.isHidden = true
+            onePlayerInactiveSprite.isHidden = true
+            onePlayerLockedSprite.isHidden = false
+            twoPlayerActiveSprite.isHidden = false
+            twoPlayerInactiveSprite.isHidden = true
+            onePlayerButton.colorBlendFactor = 0
+            twoPlayerButton.colorBlendFactor = 0.50
+        }
+        else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey" && UserDefaults.standard.string(forKey: "PlayerMode") == "1Player"
+        {
+            onePlayerActiveSprite.isHidden = false
+            onePlayerInactiveSprite.isHidden = true
+            onePlayerLockedSprite.isHidden = true
+            twoPlayerActiveSprite.isHidden = true
+            twoPlayerInactiveSprite.isHidden = false
+            onePlayerButton.colorBlendFactor = 0.50
+            twoPlayerButton.colorBlendFactor = 0
+        }
+        else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey" && UserDefaults.standard.string(forKey: "PlayerMode") == "2Player"
+        {
+            onePlayerActiveSprite.isHidden = true
+            onePlayerInactiveSprite.isHidden = false
+            onePlayerLockedSprite.isHidden = true
+            twoPlayerActiveSprite.isHidden = false
+            twoPlayerInactiveSprite.isHidden = true
+            onePlayerButton.colorBlendFactor = 0
+            twoPlayerButton.colorBlendFactor = 0.50
+        }
+        else
+        {
+            onePlayerActiveSprite.isHidden = true
+            onePlayerInactiveSprite.isHidden = true
+            onePlayerLockedSprite.isHidden = false
+            twoPlayerActiveSprite.isHidden = false
+            twoPlayerInactiveSprite.isHidden = true
+            onePlayerButton.colorBlendFactor = 0
+            twoPlayerButton.colorBlendFactor = 0.50
+            let saveGameType = UserDefaults.standard
+            saveGameType.set("2Player", forKey: "PlayerMode")
+            saveGameType.synchronize()
+        }
+        
+        addChild(onePlayerActiveSprite)
+        addChild(onePlayerInactiveSprite)
+        addChild(onePlayerLockedSprite)
+        addChild(twoPlayerActiveSprite)
+        addChild(twoPlayerInactiveSprite)
+        
         
         let background = SKSpriteNode(imageNamed: "icyBackground3.png")
         background.blendMode = .replace
@@ -285,8 +412,16 @@ class StartScene: SKScene
         }
         else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey"
         {
-            gameModeLabel1.text = "1-Player Mode"
-            gameModeLabel2.text = "2-Player Mode"
+            if UserDefaults.standard.string(forKey: "PlayerMode") == "1Player"
+            {
+                gameModeLabel1.text = "Normal Bot"
+                gameModeLabel2.text = "Expert Bot"
+            }
+            else
+            {
+                gameModeLabel1.text = "1 Puck"
+                gameModeLabel2.text = "2 Pucks"
+            }
         }
         else
         {
@@ -295,28 +430,6 @@ class StartScene: SKScene
             saveGame.synchronize()
             gameModeLabel1.text = "Repulsion Mode"
             gameModeLabel2.text = "Standard Mode"
-        }
-       
-        playButton = SKSpriteNode(imageNamed: "IcyChillSquare.png")
-        playButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.325)
-        addChild(playButton)
-        
-        let playTriangleButton:SKSpriteNode!
-        playTriangleButton = SKSpriteNode(imageNamed: "whitePlayButton.png")
-        playTriangleButton.position = CGPoint(x: playButton.position.x, y: playButton.position.y)
-        playTriangleButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
-        playTriangleButton.zPosition = 2
-        addChild(playTriangleButton)
-        
-        if frame.width > 700
-        {
-            playButton.scale(to: CGSize(width: frame.width * 0.24, height: frame.width * 0.24))
-            playTriangleButton.scale(to: CGSize(width: frame.width * 0.16, height: frame.width * 0.16))
-        }
-        else
-        {
-            playButton.scale(to: CGSize(width: frame.width * 0.30, height: frame.width * 0.30))
-            playTriangleButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
         }
         
         magnetEmitter = SKEmitterNode()
@@ -345,12 +458,12 @@ class StartScene: SKScene
         addChild(forwardButton)
         
         pageDotOne = SKSpriteNode(imageNamed: "whiteDot.png")
-        pageDotOne.position = CGPoint(x: frame.width * 0.47, y: frame.height * 0.73)
+        pageDotOne.position = CGPoint(x: frame.width * 0.47, y: frame.height * 0.75)
         pageDotOne.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
         addChild(pageDotOne)
         
         pageDotTwo = SKSpriteNode(imageNamed: "whiteDot.png")
-        pageDotTwo.position = CGPoint(x: frame.width * 0.53, y: frame.height * 0.73)
+        pageDotTwo.position = CGPoint(x: frame.width * 0.53, y: frame.height * 0.75)
         pageDotTwo.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
         addChild(pageDotTwo)
         
@@ -402,6 +515,24 @@ class StartScene: SKScene
     {
         gameModeButton1.colorBlendFactor = 0
         let scene = AirHockey2P(size: (view?.bounds.size)!)
+            
+        // Configure the view.
+        let skView = self.view!
+        skView.isMultipleTouchEnabled = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .resizeFill
+        let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
+        skView.presentScene(scene, transition: transition)
+    }
+    
+    func playAirHockey2PMultiPuck()
+    {
+        gameModeButton2.colorBlendFactor = 0
+        let scene = AirHockey2PMultiPuck(size: (view?.bounds.size)!)
             
         // Configure the view.
         let skView = self.view!
@@ -470,6 +601,32 @@ class StartScene: SKScene
                 }
                 touchedGameMode2 = true
             }
+            
+            else if nodesArray.contains(onePlayerButton) && UserDefaults.standard.string(forKey: "Game") != "Magnet Hockey"
+            {
+                if onePlayerButton.colorBlendFactor > 0
+                {
+                    onePlayerButton.colorBlendFactor = 0
+                }
+                else
+                {
+                    onePlayerButton.colorBlendFactor = 0.5
+                }
+                touched1Player = true
+            }
+            
+            else if nodesArray.contains(twoPlayerButton)
+            {
+                if twoPlayerButton.colorBlendFactor > 0
+                {
+                    twoPlayerButton.colorBlendFactor = 0
+                }
+                else
+                {
+                    twoPlayerButton.colorBlendFactor = 0.5
+                }
+                touched2Player = true
+            }
                 
             else if nodesArray.contains(storeButton)
             {
@@ -530,7 +687,7 @@ class StartScene: SKScene
                     playButton.colorBlendFactor = 0
                     playMagnetHockey()
                 }
-                if gameModeButton1.colorBlendFactor > 0 && gameModeButton2.colorBlendFactor == 0 && titleLabel.text == "AIR"
+                if onePlayerButton.colorBlendFactor > 0 && twoPlayerButton.colorBlendFactor == 0 && titleLabel.text == "AIR"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -540,7 +697,7 @@ class StartScene: SKScene
                     playButton.colorBlendFactor = 0
                     playAirHockey1P()
                 }
-                else if gameModeButton2.colorBlendFactor > 0 && gameModeButton1.colorBlendFactor == 0 && titleLabel.text == "AIR"
+                else if twoPlayerButton.colorBlendFactor > 0 && onePlayerButton.colorBlendFactor == 0 && titleLabel.text == "AIR" && UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
                 {
                     SKTAudio.sharedInstance().pauseBackgroundMusic()
                     if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
@@ -549,6 +706,16 @@ class StartScene: SKScene
                     touchedPlay = false
                     playButton.colorBlendFactor = 0
                     playAirHockey2P()
+                }
+                else if twoPlayerButton.colorBlendFactor > 0 && onePlayerButton.colorBlendFactor == 0 && titleLabel.text == "AIR" && UserDefaults.standard.string(forKey: "GameType") == "GameMode2"
+                {
+                    SKTAudio.sharedInstance().pauseBackgroundMusic()
+                    if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                    else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                    else{run(buttonSound)}
+                    touchedPlay = false
+                    playButton.colorBlendFactor = 0
+                    playAirHockey2PMultiPuck()
                 }
                 else
                 {
@@ -582,6 +749,80 @@ class StartScene: SKScene
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
+            }
+            
+            else if nodesArray.contains(onePlayerButton) && touched1Player == true && UserDefaults.standard.string(forKey: "Game") != "Magnet Hockey"
+            {
+                let saveGameType = UserDefaults.standard
+                saveGameType.set("1Player", forKey: "PlayerMode")
+                saveGameType.synchronize()
+                touched1Player = false
+                onePlayerButton.colorBlendFactor = 0.5
+                twoPlayerButton.colorBlendFactor = 0
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                onePlayerActiveSprite.isHidden = false
+                onePlayerInactiveSprite.isHidden = true
+                onePlayerLockedSprite.isHidden = true
+                twoPlayerActiveSprite.isHidden = true
+                twoPlayerInactiveSprite.isHidden = false
+                if UserDefaults.standard.string(forKey: "PlayerMode") == "1Player"
+                {
+                    gameModeLabel1.text = "Normal Bot"
+                    gameModeLabel2.text = "Expert Bot"
+                }
+                else
+                {
+                    gameModeLabel1.text = "1 Puck"
+                    gameModeLabel2.text = "2 Pucks"
+                }
+            }
+            
+            else if nodesArray.contains(twoPlayerButton) && touched2Player == true && UserDefaults.standard.string(forKey: "Game") != "Magnet Hockey"
+            {
+                let saveGameType = UserDefaults.standard
+                saveGameType.set("2Player", forKey: "PlayerMode")
+                saveGameType.synchronize()
+                touched2Player = false
+                onePlayerButton.colorBlendFactor = 0
+                twoPlayerButton.colorBlendFactor = 0.5
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                onePlayerActiveSprite.isHidden = true
+                onePlayerInactiveSprite.isHidden = false
+                onePlayerLockedSprite.isHidden = true
+                twoPlayerActiveSprite.isHidden = false
+                twoPlayerInactiveSprite.isHidden = true
+                if UserDefaults.standard.string(forKey: "PlayerMode") == "1Player"
+                {
+                    gameModeLabel1.text = "Normal Bot"
+                    gameModeLabel2.text = "Expert Bot"
+                }
+                else
+                {
+                    gameModeLabel1.text = "1 Puck"
+                    gameModeLabel2.text = "2 Pucks"
+                }
+            }
+            
+            else if nodesArray.contains(twoPlayerButton) && touched2Player == true && UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
+            {
+                let saveGameType = UserDefaults.standard
+                saveGameType.set("2Player", forKey: "PlayerMode")
+                saveGameType.synchronize()
+                touched2Player = false
+                onePlayerButton.colorBlendFactor = 0
+                twoPlayerButton.colorBlendFactor = 0.5
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                onePlayerActiveSprite.isHidden = true
+                onePlayerInactiveSprite.isHidden = true
+                onePlayerLockedSprite.isHidden = false
+                twoPlayerActiveSprite.isHidden = false
+                twoPlayerInactiveSprite.isHidden = true
             }
                 
             else if nodesArray.contains(storeButton) && touchedStore == true
@@ -668,6 +909,16 @@ class StartScene: SKScene
                 let saveGame = UserDefaults.standard
                 saveGame.set("Magnet Hockey", forKey: "Game")
                 saveGame.synchronize()
+                let savePlayerMode = UserDefaults.standard
+                savePlayerMode.set("2Player", forKey: "PlayerMode")
+                savePlayerMode.synchronize()
+                onePlayerActiveSprite.isHidden = true
+                onePlayerInactiveSprite.isHidden = true
+                onePlayerLockedSprite.isHidden = false
+                twoPlayerActiveSprite.isHidden = false
+                twoPlayerInactiveSprite.isHidden = true
+                onePlayerButton.colorBlendFactor = 0.0
+                twoPlayerButton.colorBlendFactor = 0.5
             }
             
             else if nodesArray.contains(forwardButton) && touchedForwardButton == true && arrowPressCounter == 0
@@ -681,12 +932,30 @@ class StartScene: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 titleLabel.text = "AIR"
-                gameModeLabel1.text = "1-Player Mode"
-                gameModeLabel2.text = "2-Player Mode"
+                if UserDefaults.standard.string(forKey: "PlayerMode") == "1Player"
+                {
+                    gameModeLabel1.text = "Normal Bot"
+                    gameModeLabel2.text = "Expert Bot"
+                }
+                else
+                {
+                    gameModeLabel1.text = "1 Puck"
+                    gameModeLabel2.text = "2 Pucks"
+                }
                 arrowPressCounter += 1
                 let saveGame = UserDefaults.standard
                 saveGame.set("Air Hockey", forKey: "Game")
                 saveGame.synchronize()
+                let savePlayerMode = UserDefaults.standard
+                savePlayerMode.set("2Player", forKey: "PlayerMode")
+                savePlayerMode.synchronize()
+                onePlayerActiveSprite.isHidden = true
+                onePlayerInactiveSprite.isHidden = false
+                onePlayerLockedSprite.isHidden = true
+                twoPlayerActiveSprite.isHidden = false
+                twoPlayerInactiveSprite.isHidden = true
+                onePlayerButton.colorBlendFactor = 0.0
+                twoPlayerButton.colorBlendFactor = 0.5
             }
             
             else
@@ -724,6 +993,37 @@ class StartScene: SKScene
                         gameModeButton1.colorBlendFactor = 0
                     }
                 }
+                
+                if touched1Player == true
+                {
+                    touched1Player = false
+                    if onePlayerButton.colorBlendFactor > 0 && twoPlayerButton.colorBlendFactor > 0
+                    {
+                        twoPlayerButton.colorBlendFactor = 0.5
+                        onePlayerButton.colorBlendFactor = 0
+                    }
+                    else
+                    {
+                        twoPlayerButton.colorBlendFactor = 0
+                        onePlayerButton.colorBlendFactor = 0.5
+                    }
+                }
+                
+                if touched2Player == true
+                {
+                    touched2Player = false
+                    if twoPlayerButton.colorBlendFactor > 0 && onePlayerButton.colorBlendFactor > 0
+                    {
+                        twoPlayerButton.colorBlendFactor = 0
+                        onePlayerButton.colorBlendFactor = 0.5
+                    }
+                    else
+                    {
+                        twoPlayerButton.colorBlendFactor = 0.5
+                        onePlayerButton.colorBlendFactor = 0
+                    }
+                }
+                
                 if touchedStore == true
                 {
                     touchedStore = false

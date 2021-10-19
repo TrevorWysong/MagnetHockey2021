@@ -334,6 +334,23 @@ class GameOverScene: SKScene
         skView.presentScene(scene, transition: transition)
     }
     
+    func gameSceneAirHockey2PMultiPuck()
+    {
+        let scene = AirHockey2PMultiPuck(size: (view?.bounds.size)!)
+            
+        // Configure the view.
+        let skView = self.view!
+        skView.isMultipleTouchEnabled = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .resizeFill
+        let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
+        skView.presentScene(scene, transition: transition)
+    }
+    
     func gameSceneAirHockey1P()
     {
         let scene = AirHockey1P(size: (view?.bounds.size)!)
@@ -394,13 +411,20 @@ class GameOverScene: SKScene
                 else{run(buttonSound)}
                 touchedPlay = false
                 playButton.colorBlendFactor = 0
-                if UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
+                if UserDefaults.standard.string(forKey: "PlayerMode") == "1Player"
                 {
                     gameSceneAirHockey1P()
                 }
-                else if UserDefaults.standard.string(forKey: "GameType") == "GameMode2"
+                else if UserDefaults.standard.string(forKey: "PlayerMode") == "2Player"
                 {
-                    gameSceneAirHockey2P()
+                    if UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
+                    {
+                        gameSceneAirHockey2P()
+                    }
+                    else if UserDefaults.standard.string(forKey: "GameType") == "GameMode2"
+                    {
+                        gameSceneAirHockey2PMultiPuck()
+                    }
                 }
                 else
                 {

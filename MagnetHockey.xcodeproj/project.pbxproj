@@ -39,6 +39,7 @@
 		C3683A5F26EA9ECE00852BAB /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */; };
 		C3B9BE202710C57600A1673A /* AirHockey1P.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9BE1F2710C57500A1673A /* AirHockey1P.swift */; };
 		C3B9BE222710C66300A1673A /* BotPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9BE212710C66300A1673A /* BotPlayer.swift */; };
+		C3B9BE24271D1AD300A1673A /* AirHockey2PMultiPuck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9BE23271D1AD100A1673A /* AirHockey2PMultiPuck.swift */; };
 		C3E2C3B525AB604300CD2CC0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C3E2C3B425AB604300CD2CC0 /* Main.storyboard */; };
 		C3E697E627028EA7000DE0AE /* AirHockey2P.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3E697E527028EA7000DE0AE /* AirHockey2P.swift */; };
 /* End PBXBuildFile section */
@@ -103,6 +104,7 @@
 		C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainWrapper.swift; path = "../../SwiftKeychainWrapper-develop/SwiftKeychainWrapper/KeychainWrapper.swift"; sourceTree = "<group>"; };
 		C3B9BE1F2710C57500A1673A /* AirHockey1P.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHockey1P.swift; sourceTree = "<group>"; };
 		C3B9BE212710C66300A1673A /* BotPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotPlayer.swift; sourceTree = "<group>"; };
+		C3B9BE23271D1AD100A1673A /* AirHockey2PMultiPuck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHockey2PMultiPuck.swift; sourceTree = "<group>"; };
 		C3E2C3B425AB604300CD2CC0 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		C3E697E527028EA7000DE0AE /* AirHockey2P.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHockey2P.swift; sourceTree = "<group>"; };
 		EDBB9D8084BC352C6FFBD103 /* Pods-MagnetHockeyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockeyTests.release.xcconfig"; path = "Target Support Files/Pods-MagnetHockeyTests/Pods-MagnetHockeyTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				C33AD580245CCBEC0015F392 /* ReviewService.swift */,
 				C311E8012458CDB700D0CEC6 /* MagnetHockey.swift */,
 				C3E697E527028EA7000DE0AE /* AirHockey2P.swift */,
+				C3B9BE23271D1AD100A1673A /* AirHockey2PMultiPuck.swift */,
 				C3B9BE1F2710C57500A1673A /* AirHockey1P.swift */,
 				C358B5A22480401B002C6B2D /* NorthPlayer.swift */,
 				C3B9BE212710C66300A1673A /* BotPlayer.swift */,
@@ -480,6 +483,7 @@
 				C358B5A32480401B002C6B2D /* NorthPlayer.swift in Sources */,
 				C311E9752458CDF100D0CEC6 /* AppDelegate.swift in Sources */,
 				C311E96F2458CDF100D0CEC6 /* GameViewController.swift in Sources */,
+				C3B9BE24271D1AD300A1673A /* AirHockey2PMultiPuck.swift in Sources */,
 				C33AD55B245B2B850015F392 /* IAPService.swift in Sources */,
 				C30208C32539F1B7004B9258 /* InfoScene.swift in Sources */,
 				C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */,

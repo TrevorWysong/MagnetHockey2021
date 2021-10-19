@@ -33,13 +33,23 @@ extension SKNode {
     }
 }
 
+
+
 class GameViewController: UIViewController
 {    
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        // This is not part of the newly created project:
-
+        
+        if UIDevice.current.model == "iPad"
+        {
+            
+        }
+        else if UIDevice.current.model == "iPhone" || UIDevice.current.model == "iPad"
+        {
+            
+        }
+        
         if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             let ads = GADMobileAds.sharedInstance()

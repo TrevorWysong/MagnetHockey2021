@@ -15,6 +15,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     var frameCounter = 0
     var ball : SKShapeNode?
     var ballRadius = CGFloat(0.0)
+    var playerRadius = CGFloat(0.0)
     var maxBallSpeed = CGFloat(0.0)
     var centerCircle = SKSpriteNode()
     var semiCircleBottom = SKSpriteNode()
@@ -116,6 +117,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         southPlayer?.physicsBody?.fieldBitMask = 45
         southPlayer?.physicsBody?.usesPreciseCollisionDetection = true
         northPlayer?.physicsBody?.usesPreciseCollisionDetection = true
+        playerRadius = southPlayer!.radius
     }
     
     func bottomPlayer(at position: CGPoint, boundary:CGRect) -> BottomPlayer
@@ -769,6 +771,16 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         {
             centerLine = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width, height: frame.width/82))
         }
+        //setup physics for this edge
+        centerLine.physicsBody = SKPhysicsBody(rectangleOf: centerLine.size)
+        centerLine.physicsBody!.isDynamic = false
+        centerLine.physicsBody?.mass = 10000000
+        centerLine.physicsBody?.categoryBitMask = 4
+        centerLine.physicsBody?.collisionBitMask = 256
+        centerLine.physicsBody?.restitution = 0.0
+        centerLine.physicsBody?.friction = 0.0
+        centerLine.physicsBody?.linearDamping = 0.0
+        centerLine.physicsBody?.angularDamping = 0.0
         centerLine.position = CGPoint(x: size.width/2, y: size.height/2)
         centerLine.colorBlendFactor = 0.75;
         centerLine.zPosition = -2
@@ -937,7 +949,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     func didBegin(_ contact: SKPhysicsContact)
     {
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
 //            let vball = ball!.physicsBody!.velocity
@@ -963,7 +975,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
                 })
             }
         }
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -975,7 +987,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             }
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
             let vball = CGVector(dx: 0, dy: 0)
@@ -1001,7 +1013,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             }
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1013,7 +1025,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             }
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
             let vball = CGVector(dx: 0, dy: 0)
@@ -1038,7 +1050,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
                 })
             }
         }
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1050,7 +1062,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             }
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
             let vball = CGVector(dx: 0, dy: 0)
@@ -1075,7 +1087,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
                 })
             }
         }
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == false && (northPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1172,11 +1184,13 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             {
                 SKTAudio.sharedInstance().playBackgroundMusic2("MenuSong3.mp3")
             }
-            
+
             let scene = GameOverScene(size: (view?.bounds.size)!)
 
             // Configure the view.
             let skView = self.view!
+            skView.isMultipleTouchEnabled = false
+
 
             /* Sprite Kit applies additional optimizations to improve rendering performance */
             skView.ignoresSiblingOrder = true
@@ -1203,7 +1217,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         
         // Configure the view.
         let skView = self.view!
-
+        skView.isMultipleTouchEnabled = false
 
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
@@ -1234,6 +1248,8 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
 
                 // Configure the view.
                 let skView = self.view!
+                skView.isMultipleTouchEnabled = false
+
 
                 /* Sprite Kit applies additional optimizations to improve rendering performance */
                 skView.ignoresSiblingOrder = true
@@ -1266,6 +1282,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
 
                 // Configure the view.
                 let skView = self.view!
+                skView.isMultipleTouchEnabled = false
 
                 /* Sprite Kit applies additional optimizations to improve rendering performance */
                 skView.ignoresSiblingOrder = true

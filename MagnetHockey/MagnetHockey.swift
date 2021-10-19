@@ -16,6 +16,7 @@ enum BodyType:UInt32
     case sideWalls = 2
     case topBottomWalls = 128
     case ball = 512
+    case ball2 = 514
     case goals = 4
     case playerForceField = 8
     case leftMagnet = 16
@@ -1114,7 +1115,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         createSpringFieldBottomGoal()
         createSpringFieldPlayer()
         createPlayerLoseWinBackgrounds()
-        if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
+        if UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
         {
             createElectricFieldPlayer()
             repulsionMode = true
@@ -2002,6 +2003,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
 
             // Configure the view.
             let skView = self.view!
+            skView.isMultipleTouchEnabled = false
 
             /* Sprite Kit applies additional optimizations to improve rendering performance */
             skView.ignoresSiblingOrder = true
@@ -2028,7 +2030,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         
         // Configure the view.
         let skView = self.view!
-
+        skView.isMultipleTouchEnabled = false
 
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
@@ -2059,6 +2061,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
 
                 // Configure the view.
                 let skView = self.view!
+                skView.isMultipleTouchEnabled = false
 
                 /* Sprite Kit applies additional optimizations to improve rendering performance */
                 skView.ignoresSiblingOrder = true
@@ -2091,6 +2094,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
 
                 // Configure the view.
                 let skView = self.view!
+                skView.isMultipleTouchEnabled = false
 
                 /* Sprite Kit applies additional optimizations to improve rendering performance */
                 skView.ignoresSiblingOrder = true
