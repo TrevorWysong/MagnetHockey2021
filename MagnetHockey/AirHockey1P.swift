@@ -960,7 +960,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     func didBegin(_ contact: SKPhysicsContact)
     {
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && ((southPlayer!.position.y < (frame.height * 0.5) - playerRadius) || (ball!.position.y <= southPlayer!.position.y))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
 //            let vball = ball!.physicsBody!.velocity
@@ -987,7 +987,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             }
             madeItToExpectedBallPos = false
         }
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && ((southPlayer!.position.y < (frame.height * 0.5) - playerRadius) || (ball!.position.y <= southPlayer!.position.y))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1000,7 +1000,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             madeItToExpectedBallPos = false
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && ((southPlayer!.position.y < (frame.height * 0.5) - playerRadius) || (ball!.position.y <= southPlayer!.position.y))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
             let vball = CGVector(dx: 0, dy: 0)
@@ -1027,7 +1027,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             madeItToExpectedBallPos = false
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && (southPlayer!.position.y < ((frame.height * 0.5) - playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.player.rawValue && contact.bodyB.categoryBitMask == BodyType.ball.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == false && ((southPlayer!.position.y < (frame.height * 0.5) - playerRadius) || (ball!.position.y <= southPlayer!.position.y))
         {
             if ballSoundControl == true && topPlayerWinsRound == false && bottomPlayerWinsRound == false
             {
@@ -1040,7 +1040,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             madeItToExpectedBallPos = false
         }
         
-        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && (botPlayer!.position.y > ((frame.height * 0.5) + playerRadius))
+        if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 75 || contact.bodyB.contactTestBitMask == 75) && northTouchForCollision == true && ((botPlayer!.position.y > (frame.height * 0.5) + playerRadius) || (ball!.position.y >= botPlayer!.position.y))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "NorthForceDY")))
             let vball = CGVector(dx: 0, dy: 0)
