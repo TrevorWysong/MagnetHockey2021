@@ -70,6 +70,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var numberGames = 0
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
     var tempBotVelocity = CGVector(dx: 0, dy: 0)
+    var tempResetBallPosition = CGPoint(x: 0, y: 0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
@@ -1391,10 +1392,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     override func update(_ currentTime: TimeInterval)
     {
-        print(expectedBallXPos - botPlayer!.position.x)
-//        print(expectedBallXPos)
-//        print(botPlayer?.position.x)
-//        print(madeItToExpectedBallPos)
         if botPlayer!.position.y > frame.height * 0.50 && GameIsPaused == false
         {
             botDefend()
@@ -1413,9 +1410,13 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         }
         
         
-        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!)
+        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!) && (bottomPlayerWinsRound != true && topPlayerWinsRound != true)
         {
-            resetBallStart()
+            ball?.position = tempResetBallPosition
+        }
+        else
+        {
+            tempResetBallPosition = ball!.position
         }
         
         if GameIsPaused == true

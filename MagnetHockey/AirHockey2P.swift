@@ -66,6 +66,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     var numberRounds = 0
     var numberGames = 0
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
+    var tempResetBallPosition = CGPoint(x: 0, y: 0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
@@ -310,13 +311,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         topGoalEdge.physicsBody?.linearDamping = 0.0
         topGoalEdge.physicsBody?.angularDamping = 0.0
         addChild(topGoalEdge)
-        
-//        let roundedRectangle = SKShapeNode(rect: CGRect(x: frame.width * 0.01, y: frame.height * 0.005, width: frame.width * 0.98, height: frame.height * 0.99), cornerRadius: 50)
-//        roundedRectangle.lineWidth = frame.width * 0.03
-//        roundedRectangle.zPosition = -25
-//        roundedRectangle.strokeColor = .darkGray
-//        roundedRectangle.blendMode = .replace
-//        addChild(roundedRectangle)
     }
     
     func createCenterCircle()
@@ -1374,9 +1368,13 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     override func update(_ currentTime: TimeInterval)
     {
-        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!)
+        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!) && (bottomPlayerWinsRound != true && topPlayerWinsRound != true)
         {
-            resetBallStart()
+            ball?.position = tempResetBallPosition
+        }
+        else
+        {
+            tempResetBallPosition = ball!.position
         }
         
         if GameIsPaused == true

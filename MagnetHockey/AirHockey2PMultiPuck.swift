@@ -73,6 +73,8 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
     var numberGames = 0
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
     var tempBallVelocity2 = CGVector(dx: 0, dy: 0)
+    var tempResetBallPosition = CGPoint(x: 0, y: 0)
+    var tempResetBall2Position = CGPoint(x: 0, y: 0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
@@ -2018,14 +2020,22 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
     
     override func update(_ currentTime: TimeInterval)
     {
-        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!) && ball!.isHidden != true
+        if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!) && (bottomPlayerWinsRound != true && topPlayerWinsRound != true) && ball!.isHidden != true
         {
-            resetBallStart()
+            ball?.position = tempResetBallPosition
+        }
+        else if ball?.isHidden != true
+        {
+            tempResetBallPosition = ball!.position
         }
         
-        if (ball2!.position.x <= frame.width * 0.2 || ball2!.position.x >= frame.width * 0.8) && isOffScreen(node: ball2!) && ball2!.isHidden != true
+        if (ball2!.position.x <= frame.width * 0.2 || ball2!.position.x >= frame.width * 0.8) && isOffScreen(node: ball2!) && (bottomPlayerWinsRound != true && topPlayerWinsRound != true) && ball2!.isHidden != true
         {
-            resetBall2Start()
+            ball2?.position = tempResetBall2Position
+        }
+        else if ball2?.isHidden != true
+        {
+            tempResetBallPosition = ball2!.position
         }
         
         if GameIsPaused == true

@@ -30,12 +30,18 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
 {
     var frameCounter = 0
     var ball : SKShapeNode?
+    var leftMagnetGlow = SKShapeNode()
+    var centerMagnetGlow = SKShapeNode()
+    var rightMagnetGlow = SKShapeNode()
     var ballRadius = CGFloat(0.0)
     var maxBallSpeed = CGFloat(0.0)
     var maxMagnetSpeed = CGFloat(0.0)
     var leftMagnet = SKShapeNode()
     var rightMagnet = SKShapeNode()
     var centerMagnet = SKShapeNode()
+    var leftMagnetHolder = SKSpriteNode()
+    var centerMagnetHolder = SKSpriteNode()
+    var rightMagnetHolder = SKSpriteNode()
     var southLeftMagnetX = SKSpriteNode()
     var southCenterMagnetX = SKSpriteNode()
     var southRightMagnetX = SKSpriteNode()
@@ -46,6 +52,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var playerLosesBackground = SKSpriteNode()
     var playerWinsBackground = SKSpriteNode()
     var pauseBackground = SKSpriteNode()
+    var tutorialBackground = SKSpriteNode()
+    var blockGameTouchesSprite = SKSpriteNode()
     var xMark = SKSpriteNode()
     var checkMark = SKSpriteNode()
     var ballInSouthGoal = false
@@ -67,11 +75,14 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var pauseTitleBackground2 = SKSpriteNode()
     var soundButton = SKSpriteNode()
     var soundButtonSprite = SKSpriteNode()
+    var tutorialButton = SKSpriteNode()
+    var tutorialButtonSprite = SKSpriteNode()
     var soundButtonOffSprite = SKSpriteNode()
     var playButtonSprite = SKSpriteNode()
     var touchedPauseButton = false
     var touchedBackToMenuButton = false
     var touchedSoundOff = false
+    var touchedTutorial = false
     var GameIsPaused = false
     var southPlayer : BottomPlayer?
     var northPlayer : NorthPlayer?
@@ -87,6 +98,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var northPlayerMagnetCount = 0
     var southPlayerScore = 0
     var northPlayerScore = 0
+    var tempResetBallPosition = CGPoint(x: 0, y: 0)
     var bottomPlayerForceForCollision = CGVector()
     var northPlayerForceForCollision = CGVector()
     let northPlayerScoreText = SKLabelNode(fontNamed: "Helvetica Neue UltraLight")
@@ -101,9 +113,13 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var centerMagnetJustHitGoal = false
     var rightMagnetJustHitGoal = false
     var gameOver = false
+    var tutorialModeIsActive = false
     var bottomTouchForCollision = false
     var northTouchForCollision = false
     var repulsionMode = false
+    var downSwitchLeftMagnet = false
+    var downSwitchCenterMagnet = false
+    var downSwitchRightMagnet = false
     var numberRounds = 0
     var numberGames = 0
     var tempLeftMagnetVelocity = CGVector(dx: 0, dy: 0)
@@ -457,10 +473,40 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         addChild(backToMenuButtonLabel)
     }
     
-    func createSoundButton()
+    func createSoundAndTutorialButton()
     {
+        tutorialButton = SKSpriteNode(imageNamed: "SquareBlueButton.png")
+        tutorialButton.position = CGPoint(x: frame.width * 0.65, y: frame.height * 0.35)
+        tutorialButton.zPosition = 125
+        if frame.height > 800 && frame.width < 600
+        {
+            tutorialButton.scale(to: CGSize(width: frame.width * 0.25, height: frame.width * 0.25))
+        }
+        else
+        {
+            tutorialButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
+        }
+        tutorialButton.colorBlendFactor = 0
+        tutorialButton.isHidden = true
+        addChild(tutorialButton)
+        
+        tutorialButtonSprite = SKSpriteNode(imageNamed: "questionMark.png")
+        tutorialButtonSprite.position = CGPoint(x: tutorialButton.position.x, y: tutorialButton.position.y)
+        tutorialButtonSprite.zPosition = 126
+        if frame.height > 800 && frame.width < 600
+        {
+            tutorialButtonSprite.scale(to: CGSize(width: frame.width * 0.14, height: frame.width * 0.14))
+        }
+        else
+        {
+            tutorialButtonSprite.scale(to: CGSize(width: frame.width * 0.11, height: frame.width * 0.11))
+        }
+        tutorialButtonSprite.colorBlendFactor = 0
+        tutorialButtonSprite.isHidden = true
+        addChild(tutorialButtonSprite)
+        
         soundButton = SKSpriteNode(imageNamed: "SquareBlueButton.png")
-        soundButton.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.35)
+        soundButton.position = CGPoint(x: frame.width * 0.35, y: frame.height * 0.35)
         soundButton.zPosition = 125
         if frame.height > 800 && frame.width < 600
         {
@@ -510,6 +556,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         backToMenuButton.isHidden = false
         backToMenuButtonLabel.isHidden = false
         soundButton.isHidden = false
+        tutorialButton.isHidden = false
+        tutorialButtonSprite.isHidden = false
         pauseTitleBackground1.isHidden = false
         pauseTitleBackground2.isHidden = false
         pauseTitleLabel1.isHidden = false
@@ -542,6 +590,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         soundButton.isHidden = true
         soundButtonSprite.isHidden = true
         soundButtonOffSprite.isHidden = true
+        tutorialButton.isHidden = true
+        tutorialButtonSprite.isHidden = true
         pauseTitleBackground1.isHidden = true
         pauseTitleBackground2.isHidden = true
         pauseTitleLabel1.isHidden = true
@@ -827,9 +877,9 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func createMagnetHolders()
     {
-        let leftMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
-        let rightMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
-        let centerMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
+        leftMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
+        rightMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
+        centerMagnetHolder = SKSpriteNode(imageNamed: "magnetSpots.png")
         leftMagnetHolder.position = CGPoint(x: frame.width * (1.5/5), y: frame.height/2)
         centerMagnetHolder.position = CGPoint(x: frame.width/2, y: frame.height/2)
         rightMagnetHolder.position = CGPoint(x: frame.width*(3.5/5), y: frame.height/2)
@@ -1106,7 +1156,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         createPauseBackground()
         createPauseGameTitle()
         createBackToMenuButton()
-        createSoundButton()
+        createSoundAndTutorialButton()
         createNorthPlayerScore()
         createSouthPlayerScore()
         createEdges()
@@ -1120,6 +1170,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             createElectricFieldPlayer()
             repulsionMode = true
         }
+        createTutorialInterface()
     }
     
     func drawCenterLine()
@@ -1233,6 +1284,143 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     {
         ball!.position = CGPoint(x: -200, y: -200)
         ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+    }
+    
+    func createTutorialInterface()
+    {
+        tutorialModeIsActive = false
+        tutorialBackground = SKSpriteNode(imageNamed: "black.png")
+        tutorialBackground.scale(to: CGSize(width: frame.width, height: frame.height))
+        tutorialBackground.zPosition = -50
+        tutorialBackground.colorBlendFactor = 0.15
+        tutorialBackground.position = CGPoint(x: -4000, y: -4000)
+        tutorialBackground.isHidden = true
+        addChild(tutorialBackground)
+        
+        blockGameTouchesSprite = SKSpriteNode(imageNamed: "black.png")
+        blockGameTouchesSprite.scale(to: CGSize(width: frame.width, height: frame.height))
+        blockGameTouchesSprite.zPosition = 225
+        blockGameTouchesSprite.colorBlendFactor = 1
+        blockGameTouchesSprite.position = CGPoint(x: -4000, y: -4000)
+        blockGameTouchesSprite.isHidden = true
+        addChild(blockGameTouchesSprite)
+        
+        leftMagnetGlow = SKShapeNode()
+        centerMagnetGlow = SKShapeNode()
+        rightMagnetGlow = SKShapeNode()
+        createGlow(glowName: leftMagnetGlow, glowSize: leftMagnet)
+        createGlow(glowName: centerMagnetGlow, glowSize: centerMagnet)
+        createGlow(glowName: rightMagnetGlow, glowSize: rightMagnet)
+    }
+    
+    func displayTutorial()
+    {
+        tutorialBackground.position = CGPoint(x: frame.width/2, y: frame.height/2)
+        blockGameTouchesSprite.position = CGPoint(x: frame.width/2, y: frame.height/2)
+        tutorialBackground.isHidden = false
+        blockGameTouchesSprite.isHidden = false
+        leftMagnetGlow.isHidden = false
+        centerMagnetGlow.isHidden = false
+        rightMagnetGlow.isHidden = false
+
+        topGoal.zPosition = -100
+        bottomGoal.zPosition = -100
+        topGoalPlus.zPosition = -99
+        bottomGoalPlus.zPosition = -99
+        northPlayerScoreText.zPosition = -100
+        southPlayerScoreText.zPosition = -100
+        southPlayer?.zPosition = -98
+        northPlayer?.zPosition = -98
+        ball?.zPosition = -97
+        leftMagnetHolder.zPosition = -100
+        centerMagnetHolder.zPosition = -100
+        rightMagnetHolder.zPosition = -100
+        northLeftMagnetX.zPosition = -100
+        northCenterMagnetX.zPosition = -100
+        northRightMagnetX.zPosition = -100
+        southLeftMagnetX.zPosition = -100
+        southCenterMagnetX.zPosition = -100
+        southRightMagnetX.zPosition = -100
+    }
+    
+    func clearTutorial()
+    {
+        tutorialBackground.position = CGPoint(x: -4000, y: -4000)
+        tutorialBackground.isHidden = true
+        blockGameTouchesSprite.position = CGPoint(x: -4000, y: -4000)
+        blockGameTouchesSprite.isHidden = true
+        leftMagnetGlow.isHidden = true
+        centerMagnetGlow.isHidden = true
+        rightMagnetGlow.isHidden = true
+       
+        southPlayer?.zPosition = 3
+        northPlayer?.zPosition = 3
+        topGoal.zPosition = 1
+        bottomGoal.zPosition = 1
+        topGoalPlus.zPosition = 4
+        bottomGoalPlus.zPosition = 4
+        northPlayerScoreText.zPosition = 5
+        southPlayerScoreText.zPosition = 5
+        leftMagnetHolder.zPosition = 0
+        centerMagnetHolder.zPosition = 0
+        rightMagnetHolder.zPosition = 0
+        northLeftMagnetX.zPosition = 0
+        northCenterMagnetX.zPosition = 0
+        northRightMagnetX.zPosition = 0
+        southLeftMagnetX.zPosition = 0
+        southCenterMagnetX.zPosition = 0
+        southRightMagnetX.zPosition = 0
+        ball?.zPosition = 3
+        leftMagnet.zPosition = 3
+        centerMagnet.zPosition = 3
+        rightMagnet.zPosition = 3
+    }
+    
+    func createGlow(glowName: SKShapeNode, glowSize: SKShapeNode)
+    {
+        //draw left magnet
+        let spriteGlowPath = CGMutablePath()
+        let π = CGFloat.pi
+        var spriteGlowRadius = CGFloat(0.0)
+        spriteGlowRadius = glowSize.frame.size.width * 0.55
+        
+        spriteGlowPath.addArc(center: CGPoint(x: 0, y:0), radius: spriteGlowRadius, startAngle: 0, endAngle: π*2, clockwise: true)
+        glowName.path = spriteGlowPath
+        glowName.lineWidth = 0
+        glowName.fillColor = UIColor.clear
+        glowName.zPosition = -10
+        glowName.lineWidth = 1
+        glowName.strokeColor = UIColor.red
+        glowName.glowWidth = 8
+        glowName.isHidden = true
+        addChild(glowName)
+    }
+    
+    func glowFlash(glow:SKShapeNode, downSwitch: Bool) -> (Bool)
+    {
+        if glow.glowWidth >= 8
+        {
+            glow.glowWidth -= 0.25
+            return true
+        }
+        else if glow.glowWidth < 8 && glow.glowWidth > 0 && downSwitch == true
+        {
+            glow.glowWidth -= 0.25
+            return true
+        }
+        else if glow.glowWidth < 8 && glow.glowWidth <= 0 && downSwitch == true
+        {
+            return false
+        }
+        else if glow.glowWidth < 8 && downSwitch == false
+        {
+            glow.glowWidth += 0.25
+            return false
+        }
+        else
+        {
+            return false
+        }
     }
     
     func resetBallTopPlayerBallStart()
@@ -2258,11 +2446,32 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         }
     }
     
+    func glowFollow(glowName: SKShapeNode, SKShapeToFollow: SKShapeNode)
+    {
+        if glowName.isHidden != true && SKShapeToFollow.isHidden != true
+        {
+            glowName.position = SKShapeToFollow.position
+        }
+    }
+    
     override func update(_ currentTime: TimeInterval)
     {
-        if  isOffScreen(node: ball!)
+        if isOffScreen(node: ball!) && (bottomPlayerWinsRound != true && topPlayerWinsRound != true)
         {
-            resetBallStart()
+            ball?.position = tempResetBallPosition
+        }
+        else
+        {
+            tempResetBallPosition = ball!.position
+        }
+        
+        if tutorialModeIsActive == true
+        {
+            downSwitchLeftMagnet = glowFlash(glow: leftMagnetGlow, downSwitch: downSwitchLeftMagnet)
+            
+            downSwitchCenterMagnet = glowFlash(glow: centerMagnetGlow, downSwitch: downSwitchCenterMagnet)
+            
+            downSwitchRightMagnet = glowFlash(glow: rightMagnetGlow, downSwitch: downSwitchRightMagnet)
         }
         
         if GameIsPaused == true
@@ -2282,6 +2491,11 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         }
         placeMagnetXMarks()
         scoring()
+
+        glowFollow(glowName: leftMagnetGlow, SKShapeToFollow: leftMagnet)
+        glowFollow(glowName: centerMagnetGlow, SKShapeToFollow: centerMagnet)
+        glowFollow(glowName: rightMagnetGlow, SKShapeToFollow: rightMagnet)
+
         
         if sqrt(pow((ball?.physicsBody?.velocity.dx)!, 2) + pow((ball?.physicsBody?.velocity.dy)!, 2)) > CGFloat(maxBallSpeed)
         {
@@ -2329,6 +2543,11 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
                 soundButton.colorBlendFactor = 0.5
                 touchedSoundOff = true
             }
+            else if nodesArray.contains(tutorialButton)
+            {
+                tutorialButton.colorBlendFactor = 0.5
+                touchedTutorial = true
+            }
             
         }
     }
@@ -2361,6 +2580,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
                 let skView = self.view!
                 skView.isMultipleTouchEnabled = false
                 GameIsPaused = true
+                tutorialModeIsActive = false
+                clearTutorial()
             }
             else if nodesArray.contains(pauseButton) && touchedPauseButton == true && GameIsPaused == true
             {
@@ -2435,6 +2656,26 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
             }
+            else if nodesArray.contains(tutorialButton) && touchedTutorial == true
+            {
+                touchedTutorial = false
+                tutorialButton.colorBlendFactor = 0
+                if UserDefaults.standard.string(forKey: "Sound") == "On"
+                {
+                    run(buttonSound)
+                }
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                resetPauseBackground()
+                pauseButtonSprite.isHidden = false
+                playButtonSprite.isHidden = true
+                hidePauseMenuButtons()
+                SKTAudio.sharedInstance().pauseBackgroundMusic()
+                // Configure the view.
+                GameIsPaused = false
+                tutorialModeIsActive = true
+                displayTutorial()
+            }
             else
             {
                 if touchedPauseButton == true
@@ -2451,6 +2692,11 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
                 {
                     touchedSoundOff = false
                     soundButton.colorBlendFactor = 0
+                }
+                if touchedTutorial == true
+                {
+                    touchedTutorial = false
+                    tutorialButton.colorBlendFactor = 0
                 }
             }
         }
