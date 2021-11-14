@@ -53,7 +53,22 @@ class GameOverScene: SKScene
     
     override func didMove(to view: SKView)
     {
-        DBHelper.shared.listGames(game: "MagnetHockey")
+        if UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
+        {
+            DBHelper.shared.listGames(game: "MagnetHockey")
+        }
+        else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey"
+        {
+            if UserDefaults.standard.string(forKey: "PlayerMode") == "1Player"
+            {
+                DBHelper.shared.listGames(game: "AirHockey1P")
+            }
+            else if UserDefaults.standard.string(forKey: "PlayerMode") == "2Player"
+            {
+                DBHelper.shared.listGames(game: "AirHockey2P")
+            }
+        }
+        
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?

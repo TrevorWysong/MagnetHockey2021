@@ -2012,6 +2012,9 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
         {
             gameOver = true
             clearPauseButton()
+            DBHelper.shared.createDatabase()
+            DBHelper.shared.createTable(game: "AirHockey2P")
+            DBHelper.shared.insertGame(game: "AirHockey2P", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetWinsGame: 0, goalWinsGame: 0)
             Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                 self.gameOverIsTrue()
             })

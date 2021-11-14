@@ -16,16 +16,31 @@ class StatisticsScene: SKScene
     var statsEmitter2:SKEmitterNode!
     let gameModeLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let statsTypeLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let showResultsButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var showResultsButton = SKSpriteNode()
+    let clearDataButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var clearDataButton = SKSpriteNode()
     var backButtonGameMode = SKSpriteNode()
     var forwardButtonGameMode = SKSpriteNode()
     var backButtonStatsType = SKSpriteNode()
     var forwardButtonStatsType = SKSpriteNode()
+    var backButtonSpriteGameMode = SKSpriteNode()
+    var backButtonSpriteStatsType = SKSpriteNode()
+    var forwardButtonSpriteGameMode = SKSpriteNode()
+    var forwardButtonSpriteStatsType = SKSpriteNode()
     var touchedBackButtonGameMode = false
     var touchedForwardButtonGameMode = false
     var touchedBackButtonStatsType = false
     var touchedForwardButtonStatsType = false
     var touchedMenu = false
+    var touchedShowResults = false
+    var touchedClearData = false
+    var clearDataModeIsActive = false
     let backToMenuButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    var statisticsBackgroundSprite = SKSpriteNode()
+    var statisticsSprite = SKSpriteNode()
+    var gameModeButton = SKSpriteNode()
+    var statsTypeButton = SKSpriteNode()
     var backToMenuButton = SKSpriteNode()
     var arrowPressCounterGameMode = 0
     var arrowPressCounterStatsType = 0
@@ -49,7 +64,6 @@ class StatisticsScene: SKScene
     
     func createSceneTitleSprites()
     {
-        let statisticsBackgroundSprite:SKSpriteNode!
         statisticsBackgroundSprite = SKSpriteNode(imageNamed: "RedCircle.png")
         statisticsBackgroundSprite.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.80)
         if frame.width < 500
@@ -64,7 +78,6 @@ class StatisticsScene: SKScene
         statisticsBackgroundSprite.zPosition = 0
         addChild(statisticsBackgroundSprite)
         
-        let statisticsSprite:SKSpriteNode!
         statisticsSprite = SKSpriteNode(imageNamed: "crown.png")
         statisticsSprite.position = CGPoint(x: statisticsBackgroundSprite.position.x, y: statisticsBackgroundSprite.position.y)
         if frame.width < 500
@@ -80,16 +93,13 @@ class StatisticsScene: SKScene
         addChild(statisticsSprite)
     }
     
-    func createArrowButtons(backButtonName: SKSpriteNode, forwardButtonName: SKSpriteNode, backButtonPosition: CGPoint, forwardButtonPosition: CGPoint)
+    func createArrowButtons(backButtonName: SKSpriteNode, forwardButtonName: SKSpriteNode, backButtonPosition: CGPoint, forwardButtonPosition: CGPoint, backButtonSprite: SKSpriteNode, forwardButtonSprite: SKSpriteNode)
     {
         backButtonName.position = backButtonPosition
         backButtonName.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
         backButtonName.colorBlendFactor = 0.5
         addChild(backButtonName)
-
         
-        let backButtonSprite:SKSpriteNode!
-        backButtonSprite = SKSpriteNode(imageNamed: "arrowLeft.png")
         backButtonSprite.position = CGPoint(x: backButtonName.position.x, y: backButtonName.position.y)
         backButtonSprite.scale(to: CGSize(width: frame.width * 0.08, height: frame.width * 0.08))
         backButtonSprite.colorBlendFactor = 0
@@ -101,8 +111,6 @@ class StatisticsScene: SKScene
         forwardButtonName.colorBlendFactor = 0
         addChild(forwardButtonName)
         
-        let forwardButtonSprite:SKSpriteNode!
-        forwardButtonSprite = SKSpriteNode(imageNamed: "arrowRight.png")
         forwardButtonSprite.position = CGPoint(x: forwardButtonName.position.x, y: forwardButtonName.position.y)
         forwardButtonSprite.scale(to: CGSize(width: frame.width * 0.08, height: frame.width * 0.08))
         forwardButtonSprite.colorBlendFactor = 0
@@ -118,12 +126,11 @@ class StatisticsScene: SKScene
     
     func createGameModeButton()
     {
-        let gameModeButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
-        gameModeButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.60)
-        gameModeButton.scale(to: CGSize(width: frame.width * 0.60, height: frame.height * 0.09))
+        gameModeButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
+        gameModeButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.50)
+        gameModeButton.scale(to: CGSize(width: frame.width * 0.615, height: frame.height * 0.09))
         addChild(gameModeButton)
 
-        
         // set size, color, position and text of the tapStartLabel
         gameModeLabel.fontSize = frame.width/20
         gameModeLabel.fontColor = SKColor.white
@@ -134,8 +141,8 @@ class StatisticsScene: SKScene
         gameModeLabel.text = "All Modes"
         addChild(gameModeLabel)
         
-        let statsTypeButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
-        statsTypeButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.50)
+        statsTypeButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png")
+        statsTypeButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.40)
         statsTypeButton.scale(to: CGSize(width: frame.width * 0.60, height: frame.height * 0.09))
         addChild(statsTypeButton)
         
@@ -181,11 +188,138 @@ class StatisticsScene: SKScene
         }
     }
     
+    func createShowResultsButton()
+    {
+        showResultsButton = SKSpriteNode(imageNamed: "IcyChillLongOval.png")
+        showResultsButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.28)
+        showResultsButton.scale(to: CGSize(width: frame.width * 0.545, height: frame.height * 0.08))
+        showResultsButton.colorBlendFactor = 0
+        addChild(showResultsButton)
+        
+        // set size, color, position and text of the tapStartLabel
+        showResultsButtonLabel.fontSize = frame.width/17.5
+        showResultsButtonLabel.fontColor = SKColor.white
+        showResultsButtonLabel.horizontalAlignmentMode = .center
+        showResultsButtonLabel.verticalAlignmentMode = .center
+        showResultsButtonLabel.position = CGPoint(x: showResultsButton.position.x, y: showResultsButton.position.y)
+        showResultsButtonLabel.zPosition = 1
+        showResultsButtonLabel.text = "Show Results"
+        addChild(showResultsButtonLabel)
+    }
+    
+    func createClearDataButton()
+    {
+        clearDataButton = SKSpriteNode(imageNamed: "redRoundedOval.png")
+        clearDataButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.62)
+        clearDataButton.scale(to: CGSize(width: frame.width * 0.45, height: frame.height * 0.08))
+        clearDataButton.colorBlendFactor = 0
+        addChild(clearDataButton)
+        
+        // set size, color, position and text of the tapStartLabel
+        clearDataButtonLabel.fontSize = frame.width/17.5
+        clearDataButtonLabel.fontColor = SKColor.white
+        clearDataButtonLabel.horizontalAlignmentMode = .center
+        clearDataButtonLabel.verticalAlignmentMode = .center
+        clearDataButtonLabel.position = CGPoint(x: clearDataButton.position.x, y: clearDataButton.position.y)
+        clearDataButtonLabel.zPosition = 1
+        clearDataButtonLabel.text = "Clear Data"
+        addChild(clearDataButtonLabel)
+    }
+    
+    func UIBehaviorAfterPressingClearData()
+    {
+        clearDataModeIsActive = true
+        clearDataButton.colorBlendFactor = 0.5
+        
+        gameModeButton.isHidden = true
+        gameModeLabel.isHidden = true
+        statsTypeButton.isHidden = true
+        statsTypeLabel.isHidden = true
+        showResultsButton.isHidden = true
+        showResultsButtonLabel.isHidden = true
+        backButtonStatsType.isHidden = true
+        backButtonGameMode.isHidden = true
+        forwardButtonStatsType.isHidden = true
+        forwardButtonGameMode.isHidden = true
+        backButtonSpriteGameMode.isHidden = true
+        backButtonSpriteStatsType.isHidden = true
+        forwardButtonSpriteGameMode.isHidden = true
+        forwardButtonSpriteStatsType.isHidden = true
+    }
+    
+    func UIBehaviorBeforeShowingResult()
+    {
+        clearDataButton.isHidden = false
+        clearDataButtonLabel.isHidden = false
+        gameModeButton.isHidden = false
+        gameModeLabel.isHidden = false
+        statsTypeButton.isHidden = false
+        statsTypeLabel.isHidden = false
+        showResultsButton.isHidden = false
+        showResultsButtonLabel.isHidden = false
+        backButtonStatsType.isHidden = false
+        backButtonGameMode.isHidden = false
+        forwardButtonStatsType.isHidden = false
+        forwardButtonGameMode.isHidden = false
+        backButtonSpriteGameMode.isHidden = false
+        backButtonSpriteStatsType.isHidden = false
+        forwardButtonSpriteGameMode.isHidden = false
+        forwardButtonSpriteStatsType.isHidden = false
+        
+        statisticsBackgroundSprite.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.80)
+        statisticsSprite.position = CGPoint(x: statisticsBackgroundSprite.position.x, y: statisticsBackgroundSprite.position.y)
+        if frame.width < 500
+        {
+            statisticsBackgroundSprite.scale(to: CGSize(width: frame.width * 0.33, height: frame.width * 0.33))
+            statisticsSprite.scale(to: CGSize(width: frame.width * 0.24, height: frame.width * 0.24))
+        }
+        else
+        {
+            statisticsBackgroundSprite.scale(to: CGSize(width: frame.width * 0.25, height: frame.width * 0.25))
+            statisticsSprite.scale(to: CGSize(width: frame.width * 0.18, height: frame.width * 0.18))
+        }
+    }
+    
+    func UIBehaviorAfterShowingResult()
+    {
+        clearDataButton.isHidden = true
+        clearDataButtonLabel.isHidden = true
+        gameModeButton.isHidden = true
+        gameModeLabel.isHidden = true
+        statsTypeButton.isHidden = true
+        statsTypeLabel.isHidden = true
+        showResultsButton.isHidden = true
+        showResultsButtonLabel.isHidden = true
+        backButtonStatsType.isHidden = true
+        backButtonGameMode.isHidden = true
+        forwardButtonStatsType.isHidden = true
+        forwardButtonGameMode.isHidden = true
+        backButtonSpriteGameMode.isHidden = true
+        backButtonSpriteStatsType.isHidden = true
+        forwardButtonSpriteGameMode.isHidden = true
+        forwardButtonSpriteStatsType.isHidden = true
+        
+        statisticsBackgroundSprite.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.90)
+        statisticsSprite.position = CGPoint(x: statisticsBackgroundSprite.position.x, y: statisticsBackgroundSprite.position.y)
+        if frame.width < 500
+        {
+            statisticsBackgroundSprite.scale(to: CGSize(width: frame.width * 0.25, height: frame.width * 0.25))
+            statisticsSprite.scale(to: CGSize(width: frame.width * 0.18, height: frame.width * 0.18))
+        }
+        else
+        {
+            statisticsBackgroundSprite.scale(to: CGSize(width: frame.width * 0.18, height: frame.width * 0.18))
+            statisticsSprite.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
+        }
+    }
+    
     override func didMove(to view: SKView)
     {
         handleAds()
         createEdges()
         createBackToMenuButton()
+        createShowResultsButton()
+        createClearDataButton()
         createSceneTitleSprites()
         createBackground()
         
@@ -193,8 +327,14 @@ class StatisticsScene: SKScene
         forwardButtonGameMode = SKSpriteNode(imageNamed: "GreySquare.png")
         backButtonStatsType = SKSpriteNode(imageNamed: "GreySquare.png")
         forwardButtonStatsType = SKSpriteNode(imageNamed: "GreySquare.png")
-        createArrowButtons(backButtonName: backButtonGameMode, forwardButtonName: forwardButtonGameMode, backButtonPosition: CGPoint(x: frame.width * 0.12, y: frame.height * 0.60), forwardButtonPosition: CGPoint(x: frame.width * 0.88, y: frame.height * 0.60))
-        createArrowButtons(backButtonName: backButtonStatsType, forwardButtonName: forwardButtonStatsType, backButtonPosition: CGPoint(x: frame.width * 0.12, y: frame.height * 0.50), forwardButtonPosition: CGPoint(x: frame.width * 0.88, y: frame.height * 0.50))
+        backButtonSpriteGameMode = SKSpriteNode(imageNamed: "arrowLeft.png")
+        backButtonSpriteStatsType = SKSpriteNode(imageNamed: "arrowLeft.png")
+        forwardButtonSpriteGameMode = SKSpriteNode(imageNamed: "arrowRight.png")
+        forwardButtonSpriteStatsType = SKSpriteNode(imageNamed: "arrowRight.png")
+
+
+        createArrowButtons(backButtonName: backButtonGameMode, forwardButtonName: forwardButtonGameMode, backButtonPosition: CGPoint(x: frame.width * 0.12, y: frame.height * 0.50), forwardButtonPosition: CGPoint(x: frame.width * 0.88, y: frame.height * 0.50), backButtonSprite: backButtonSpriteGameMode, forwardButtonSprite: forwardButtonSpriteGameMode)
+        createArrowButtons(backButtonName: backButtonStatsType, forwardButtonName: forwardButtonStatsType, backButtonPosition: CGPoint(x: frame.width * 0.12, y: frame.height * 0.40), forwardButtonPosition: CGPoint(x: frame.width * 0.88, y: frame.height * 0.40), backButtonSprite: backButtonSpriteStatsType, forwardButtonSprite: forwardButtonSpriteStatsType)
         
         createBackgroundEmitters()
         createGameModeButton()
@@ -250,7 +390,16 @@ class StatisticsScene: SKScene
                 backToMenuButton.colorBlendFactor = 0.5
                 touchedMenu = true
             }
-            
+            else if nodesArray.contains(showResultsButton)
+            {
+                showResultsButton.colorBlendFactor = 0.5
+                touchedShowResults = true
+            }
+            else if nodesArray.contains(clearDataButton) && clearDataModeIsActive == false
+            {
+                clearDataButton.colorBlendFactor = 0.5
+                touchedClearData = true
+            }
             else if nodesArray.contains(backButtonGameMode) && arrowPressCounterGameMode > 0
             {
                 backButtonGameMode.colorBlendFactor = 0.5
@@ -309,6 +458,26 @@ class StatisticsScene: SKScene
                 scene.scaleMode = .resizeFill
                 let transition = SKTransition.crossFade(withDuration: 0.35)
                 skView.presentScene(scene, transition: transition)
+            }
+            
+            else if nodesArray.contains(showResultsButton) && touchedShowResults == true
+            {
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                showResultsButton.colorBlendFactor = 0
+                touchedShowResults = false
+                UIBehaviorAfterShowingResult()
+            }
+            
+            else if nodesArray.contains(clearDataButton) && touchedClearData == true && clearDataModeIsActive == false
+            {
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                clearDataButton.colorBlendFactor = 0
+                touchedClearData = false
+                UIBehaviorAfterPressingClearData()
             }
             
             else if nodesArray.contains(backButtonGameMode) && touchedBackButtonGameMode == true && arrowPressCounterGameMode > 1
@@ -381,6 +550,16 @@ class StatisticsScene: SKScene
                 {
                     backToMenuButton.colorBlendFactor = 0
                     touchedMenu = false
+                }
+                if touchedShowResults == true
+                {
+                    showResultsButton.colorBlendFactor = 0
+                    touchedShowResults = false
+                }
+                if touchedClearData == true
+                {
+                    clearDataButton.colorBlendFactor = 0
+                    touchedClearData = false
                 }
                 if touchedBackButtonGameMode == true
                 {
