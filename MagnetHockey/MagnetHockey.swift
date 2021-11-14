@@ -119,6 +119,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var northPlayerMagnetCount = 0
     var southPlayerScore = 0
     var northPlayerScore = 0
+    var northMagnetScoreCount = 0
+    var northGoalScoreCount = 0
+    var southMagnetScoreCount = 0
+    var southGoalScoreCount = 0
     var tempResetBallPosition = CGPoint(x: 0, y: 0)
     var bottomPlayerForceForCollision = CGVector()
     var northPlayerForceForCollision = CGVector()
@@ -312,11 +316,6 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         topEdge.blendMode = .replace
         addChild(topEdge)
     }
-    
-//    func createDB()
-//    {
-//        DBHelper.shared.openDataBase(dataBaseName: "MagnetHockey2P")
-//    }
     
     func createSpringFieldPlayer()
     {
@@ -2875,6 +2874,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         if ballInSouthGoal == true
         {
             ballInSouthGoal = false
+            northGoalScoreCount += 1
             northPlayerScore += 1
             ball?.physicsBody?.isDynamic = false
             ball?.position = CGPoint(x: bottomGoal.position.x, y: bottomGoal.position.y)
@@ -2906,6 +2906,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             
         else if ballInNorthGoal == true
         {
+            southGoalScoreCount += 1
             ballInNorthGoal = false
             ball?.physicsBody?.isDynamic = false
             ball?.position = CGPoint(x: topGoal.position.x, y: topGoal.position.y)
@@ -2939,6 +2940,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         if southPlayerMagnetCount >= 2
         {
             updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
+            northMagnetScoreCount += 1
             northPlayerScore += 1
             updateNorthPlayerScore()
             topPlayerWinsRound = true
@@ -2973,6 +2975,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         else if northPlayerMagnetCount >= 2
         {
             updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
+            southMagnetScoreCount += 1
             southPlayerScore += 1
             updateSouthPlayerScore()
             bottomPlayerWinsRound = true
@@ -3007,6 +3010,9 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         if ((southPlayerScore * 2 >= numberRounds) || northPlayerScore * 2 >= numberRounds) && (gameOver == false)
         {
             gameOver = true
+            DBHelper.shared.createDatabase()
+            DBHelper.shared.createTable(game: "MagnetHockey")
+            DBHelper.shared.insertGame(game: "MagnetHockey", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetWinsGame: northMagnetScoreCount, goalWinsGame: northGoalScoreCount)
             clearPauseButton()
             Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                 self.gameOverIsTrue()
