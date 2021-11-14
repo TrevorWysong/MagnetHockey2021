@@ -130,19 +130,8 @@ class Settings: SKScene
         addChild(settingsSprite)
         
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        backToMenuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.175)
-        backToMenuButton.scale(to: CGSize(width: frame.width * 0.60, height: frame.height * 0.1))
-        addChild(backToMenuButton)
-        
-        // set size, color, position and text of the tapStartLabel
-        backToMenuButtonLabel.fontSize = frame.width/17.5
-        backToMenuButtonLabel.fontColor = SKColor.white
-        backToMenuButtonLabel.horizontalAlignmentMode = .center
-        backToMenuButtonLabel.verticalAlignmentMode = .center
-        backToMenuButtonLabel.position = CGPoint(x: backToMenuButton.position.x, y: backToMenuButton.position.y)
-        backToMenuButtonLabel.zPosition = 1
-        backToMenuButtonLabel.text = "Back to Menu"
-        addChild(backToMenuButtonLabel)
+        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
+        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
         
         roundsButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png.png")
         roundsButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.60)
@@ -258,43 +247,19 @@ class Settings: SKScene
         }
         addChild(ballColorButtonLabel)
         
-        let background = SKSpriteNode(imageNamed: "icyBackground3.jpg")
-        background.blendMode = .replace
-        background.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        background.scale(to: CGSize(width: frame.width, height: frame.height))
-        background.colorBlendFactor = 0
-        background.zPosition = -100
+        let background = MenuHelper.shared.createBackground(frame: frame)
         addChild(background)
         
+        createBackgroundEmitters()
+    }
+    
+    
+    func createBackgroundEmitters()
+    {
         settingsEmitter1 = SKEmitterNode()
-        settingsEmitter1.particleTexture = SKTexture(imageNamed: "settings.png")
-        settingsEmitter1.particlePositionRange = CGVector(dx: frame.width * 7/8, dy: 0)
-        settingsEmitter1.particleScale = 0.15
-        settingsEmitter1.particlePosition = CGPoint(x: frame.width/2, y: -2/50 * frame.height)
-        settingsEmitter1.particleLifetime = 6
-        settingsEmitter1.particleBirthRate = 0.65
-        settingsEmitter1.particleSpeed = 30
-        settingsEmitter1.yAcceleration = 60
-        settingsEmitter1.zPosition = -6
-        settingsEmitter1.particleColorBlendFactor = 0.50
-        settingsEmitter1.particleColorBlendFactorSpeed = 0.20
-        settingsEmitter1.advanceSimulationTime(1.5)
-        addChild(settingsEmitter1)
-        
         settingsEmitter2 = SKEmitterNode()
-        settingsEmitter2.particleTexture = SKTexture(imageNamed: "settings.png")
-        settingsEmitter2.particlePositionRange = CGVector(dx: frame.width * 7/8, dy: 0)
-        settingsEmitter2.particleScale = 0.15
-        settingsEmitter2.particlePosition = CGPoint(x: frame.width/2, y: 51/50 * frame.height)
-        settingsEmitter2.particleLifetime = 6
-        settingsEmitter2.particleBirthRate = 0.65
-        settingsEmitter2.particleSpeed = 30
-        settingsEmitter2.yAcceleration = -60
-        settingsEmitter2.zPosition = -6
-        settingsEmitter2.particleColorBlendFactor = 0.50
-        settingsEmitter2.particleColorBlendFactorSpeed = 0.20
-        settingsEmitter2.advanceSimulationTime(1.5)
-        addChild(settingsEmitter2)
+        addChild(MenuHelper.shared.createTopBackgroundEmitter(frame: frame, emitter: settingsEmitter1, scale: 0.15, image: SKTexture(imageNamed: "settings")))
+        addChild(MenuHelper.shared.createBottomBackgroundEmitter(frame: frame, emitter: settingsEmitter2, scale: 0.15, image: SKTexture(imageNamed: "settings")))
     }
     
     func roundsButtonPressed()

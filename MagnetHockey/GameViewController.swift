@@ -6,7 +6,6 @@
 // Black Ball: TrevorWysong.MagnetHockey.BlackBallNonConsumable
 // Remove Ads: TrevorWysong.MagnetHockey.RemoveAds
 
-import UIKit
 import SpriteKit
 import GoogleMobileAds
 
@@ -33,10 +32,8 @@ extension SKNode {
     }
 }
 
-
-
 class GameViewController: UIViewController
-{    
+{
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -138,7 +135,6 @@ class GameViewController: UIViewController
         }
         startScene()
     }
-
 
     func startScene()
     {

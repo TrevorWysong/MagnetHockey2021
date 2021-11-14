@@ -23,7 +23,7 @@ class StartScene: SKScene
     var gameModeButton2 = SKSpriteNode()
     var settingsButton = SKSpriteNode()
     var instructionsButton = SKSpriteNode()
-    
+    var statisticsButton = SKSpriteNode()
     var onePlayerActiveSprite = SKSpriteNode()
     var onePlayerLockedSprite = SKSpriteNode()
     var onePlayerInactiveSprite = SKSpriteNode()
@@ -43,6 +43,7 @@ class StartScene: SKScene
     var touchedStore = false
     var touchedSettings = false
     var touchedInstructions = false
+    var touchedStatistics = false
     var backButton = SKSpriteNode()
     var forwardButton = SKSpriteNode()
     var pageDotOne = SKSpriteNode()
@@ -50,44 +51,6 @@ class StartScene: SKScene
     var touchedBackButton = false
     var touchedForwardButton = false
     var arrowPressCounter = 0
-    
-    func createEdges()
-    {
-        let leftEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(533/10000 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
-        leftEdge.zPosition = 100
-        addChild(leftEdge)
-        
-        //copy the left edge and position it as the right edge
-        let rightEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(20/75 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        rightEdge.position = CGPoint(x: size.width + (6.85/65 * (frame.width)), y: frame.height/2)
-        rightEdge.zPosition = 100
-        addChild(rightEdge)
-        
-        let bottomEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
-        if frame.height > 800 && frame.width < 500
-        {
-            bottomEdge.position = CGPoint(x: 0, y: -1 * frame.height/10)
-        }
-        else
-        {
-            bottomEdge.position = CGPoint(x: 0, y: 0 - (frame.width * 6.50/20))
-        }
-        bottomEdge.zPosition = -5
-        addChild(bottomEdge)
-        
-        let topEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.00/100) * frame.width))
-        if frame.height > 800 && frame.width < 500
-        {
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2/30 * frame.height))
-        }
-        else
-        {
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.2/37.5) * frame.width))
-        }
-        topEdge.zPosition = -5
-        addChild(topEdge)
-    }
     
     func leftArrowPressed()
     {
@@ -99,7 +62,17 @@ class StartScene: SKScene
         arrowPressCounter += 1
     }
     
-    override func didMove(to view: SKView)
+    func createEdges()
+    {
+        var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
+        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
+        addChild(leftEdge)
+        addChild(rightEdge)
+        addChild(bottomEdge)
+        addChild(topEdge)
+    }
+    
+    func handleIAPandAds()
     {
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
@@ -121,12 +94,14 @@ class StartScene: SKScene
             bannerViewSettingsScene?.isHidden = true
         }
         
-        UserDefaults.standard.set(false, forKey: "RestoredRemoveAds")
-        UserDefaults.standard.synchronize()
+        let _: Bool = KeychainWrapper.standard.set(false, forKey: "RestoredRemoveAds")
         
-        UserDefaults.standard.set(false, forKey: "RestoredColorPack")
-        UserDefaults.standard.synchronize()
-        
+        let _: Bool = KeychainWrapper.standard.set(false, forKey: "RestoredColorPack")
+    }
+    
+    override func didMove(to view: SKView)
+    {
+        handleIAPandAds()
         createEdges()
         
         if UserDefaults.standard.string(forKey: "GameType") == "GameMode1" || UserDefaults.standard.string(forKey: "GameType") == "GameMode2" {}
@@ -248,13 +223,13 @@ class StartScene: SKScene
         }
         
         settingsButton = SKSpriteNode(imageNamed: "RedRoundedSquare.png")
-        settingsButton.position = CGPoint(x: frame.width * 0.42, y: frame.height * 0.2725)
+        settingsButton.position = CGPoint(x: frame.width * 0.34, y: frame.height * 0.2725)
         settingsButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
         settingsButton.colorBlendFactor = 0
         addChild(settingsButton)
         
         instructionsButton = SKSpriteNode(imageNamed: "RedRoundedSquare.png")
-        instructionsButton.position = CGPoint(x: frame.width * 0.58, y: frame.height * 0.2725)
+        instructionsButton.position = CGPoint(x: frame.width * 0.66, y: frame.height * 0.2725)
         instructionsButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
         instructionsButton.colorBlendFactor = 0
         addChild(instructionsButton)
@@ -274,6 +249,20 @@ class StartScene: SKScene
         settingsSprite.colorBlendFactor = 0
         settingsSprite.zPosition = 1
         addChild(settingsSprite)
+        
+        statisticsButton = SKSpriteNode(imageNamed: "RedRoundedSquare.png")
+        statisticsButton.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.2725)
+        statisticsButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
+        statisticsButton.colorBlendFactor = 0
+        addChild(statisticsButton)
+        
+        let statisticsSprite:SKSpriteNode!
+        statisticsSprite = SKSpriteNode(imageNamed: "crown.png")
+        statisticsSprite.position = CGPoint(x: statisticsButton.position.x, y: statisticsButton.position.y)
+        statisticsSprite.scale(to: CGSize(width: frame.width * 0.09, height: frame.width * 0.09))
+        statisticsSprite.colorBlendFactor = 0
+        statisticsSprite.zPosition = 1
+        addChild(statisticsSprite)
 
         
         onePlayerButton = SKSpriteNode(imageNamed: "IcyChillRoundedSquare.png")
@@ -368,13 +357,7 @@ class StartScene: SKScene
         addChild(twoPlayerActiveSprite)
         addChild(twoPlayerInactiveSprite)
         
-        
-        let background = SKSpriteNode(imageNamed: "icyBackground3.png")
-        background.blendMode = .replace
-        background.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        background.scale(to: CGSize(width: frame.width, height: frame.height))
-        background.colorBlendFactor = 0
-        background.zPosition = -100
+        let background = MenuHelper.shared.createBackground(frame: frame)
         addChild(background)
 
         // set size, color, position and text of the tapStartLabel
@@ -643,13 +626,16 @@ class StartScene: SKScene
                 instructionsButton.colorBlendFactor = 0.5
                 touchedInstructions = true
             }
-            
+            else if nodesArray.contains(statisticsButton)
+            {
+                statisticsButton.colorBlendFactor = 0.5
+                touchedStatistics = true
+            }
             else if nodesArray.contains(backButton) && arrowPressCounter > 0
             {
                 backButton.colorBlendFactor = 0.5
                 touchedBackButton = true
             }
-
             else if nodesArray.contains(forwardButton) && arrowPressCounter < 1
             {
                 forwardButton.colorBlendFactor = 0.5
@@ -892,6 +878,28 @@ class StartScene: SKScene
                 skView.presentScene(scene, transition: transition)
             }
             
+            else if nodesArray.contains(statisticsButton) && touchedStatistics == true
+            {
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                touchedStatistics = false
+                statisticsButton.colorBlendFactor = 0
+                let scene = StatisticsScene(size: (view?.bounds.size)!)
+                    
+                // Configure the view.
+                let skView = self.view!
+                skView.isMultipleTouchEnabled = false
+
+                /* Sprite Kit applies additional optimizations to improve rendering performance */
+                skView.ignoresSiblingOrder = true
+
+                /* Set the scale mode to scale to fit the window */
+                scene.scaleMode = .resizeFill
+                let transition = SKTransition.crossFade(withDuration: 0.35)
+                skView.presentScene(scene, transition: transition)
+            }
+            
             else if nodesArray.contains(backButton) && touchedBackButton == true && arrowPressCounter == 1
             {
                 touchedBackButton = false
@@ -1038,6 +1046,11 @@ class StartScene: SKScene
                 {
                     touchedInstructions = false
                     instructionsButton.colorBlendFactor = 0
+                }
+                if touchedStatistics == true
+                {
+                    touchedStatistics = false
+                    statisticsButton.colorBlendFactor = 0
                 }
                 if touchedBackButton == true
                 {

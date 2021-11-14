@@ -7,10 +7,6 @@ target 'MagnetHockey' do
 
   # Pods for MagnetHockey
   pod 'Google-Mobile-Ads-SDK'
-  
-  pod 'KeychainAccess'
-  
-  pod 'SwiftKeychainWrapper'
 	
   target 'MagnetHockeyTests' do
     inherit! :search_paths

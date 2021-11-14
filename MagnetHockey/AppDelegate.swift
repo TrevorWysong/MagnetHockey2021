@@ -1,4 +1,3 @@
-import UIKit
 import GoogleMobileAds
 
 @UIApplicationMain

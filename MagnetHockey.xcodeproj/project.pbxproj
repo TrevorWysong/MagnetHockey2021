@@ -16,6 +16,11 @@
 		C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */; };
 		C311E96F2458CDF100D0CEC6 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E88B2458CDE100D0CEC6 /* GameViewController.swift */; };
 		C311E9752458CDF100D0CEC6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C311E8912458CDE200D0CEC6 /* AppDelegate.swift */; };
+		C31682F2272B08D300D0C09D /* TutorialSong.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C31682F1272B08D300D0C09D /* TutorialSong.mp3 */; };
+		C31682F42738C71D00D0C09D /* StatisticsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31682F32738C71D00D0C09D /* StatisticsScene.swift */; };
+		C31682F7273C3FC600D0C09D /* DBHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31682F6273C3FC600D0C09D /* DBHelper.swift */; };
+		C31682F9273CB7F600D0C09D /* MenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31682F8273CB7F600D0C09D /* MenuHelper.swift */; };
+		C31A0BB82740513F00BBF57C /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = C31A0BB72740513F00BBF57C /* SQLite */; };
 		C334C9CB26DC6EF50088D46B /* ballHitMagnet.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */; };
 		C334C9D526DC6F140088D46B /* ChangeRounds.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CC26DC6F130088D46B /* ChangeRounds.mp3 */; };
 		C334C9D626DC6F140088D46B /* ballHitsWall.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C334C9CD26DC6F130088D46B /* ballHitsWall.mp3 */; };
@@ -61,6 +66,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C31A0BB527404CC600BBF57C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		27D9D5E257ACBE49E1F7C47A /* Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig"; path = "Target Support Files/Pods-MagnetHockey-MagnetHockeyUITests/Pods-MagnetHockey-MagnetHockeyUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		451BDE27D8AD9386C537DBF3 /* Pods-MagnetHockey.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockey.debug.xcconfig"; path = "Target Support Files/Pods-MagnetHockey/Pods-MagnetHockey.debug.xcconfig"; sourceTree = "<group>"; };
@@ -80,6 +98,10 @@
 		C311E8722458CDCD00D0CEC6 /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		C311E88B2458CDE100D0CEC6 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		C311E8912458CDE200D0CEC6 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		C31682F1272B08D300D0C09D /* TutorialSong.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = TutorialSong.mp3; path = ../../../TutorialSong.mp3; sourceTree = "<group>"; };
+		C31682F32738C71D00D0C09D /* StatisticsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsScene.swift; sourceTree = "<group>"; };
+		C31682F6273C3FC600D0C09D /* DBHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBHelper.swift; sourceTree = "<group>"; };
+		C31682F8273CB7F600D0C09D /* MenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuHelper.swift; sourceTree = "<group>"; };
 		C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ballHitMagnet.mp3; sourceTree = "<group>"; };
 		C334C9CC26DC6F130088D46B /* ChangeRounds.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ChangeRounds.mp3; sourceTree = "<group>"; };
 		C334C9CD26DC6F130088D46B /* ballHitsWall.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ballHitsWall.mp3; sourceTree = "<group>"; };
@@ -115,6 +137,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C31A0BB82740513F00BBF57C /* SQLite in Frameworks */,
 				254DF563FA41078A7BA93D9A /* Pods_MagnetHockey.framework in Frameworks */,
 				C33AD54F245A3A780015F392 /* StoreKit.framework in Frameworks */,
 			);
@@ -194,7 +217,10 @@
 				C365D44125B22B4E00FD37C4 /* StartScene.swift */,
 				C365D44925B22B6C00FD37C4 /* StoreScene.swift */,
 				C30208C22539F1B7004B9258 /* InfoScene.swift */,
+				C31682F32738C71D00D0C09D /* StatisticsScene.swift */,
+				C31682F6273C3FC600D0C09D /* DBHelper.swift */,
 				C33AD55A245B2B850015F392 /* IAPService.swift */,
+				C31682F8273CB7F600D0C09D /* MenuHelper.swift */,
 				C33AD558245B2A310015F392 /* IAPProducts.swift */,
 				C33AD580245CCBEC0015F392 /* ReviewService.swift */,
 				C311E8012458CDB700D0CEC6 /* MagnetHockey.swift */,
@@ -224,6 +250,7 @@
 				C334C9D326DC6F140088D46B /* MagnetInGoal.mp3 */,
 				C334C9D226DC6F140088D46B /* MenuSong2.mp3 */,
 				C334C9D426DC6F140088D46B /* MenuSong3.mp3 */,
+				C31682F1272B08D300D0C09D /* TutorialSong.mp3 */,
 				C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */,
 			);
 			path = "Sound Effects";
@@ -241,12 +268,16 @@
 				C311E7B12458CD6A00D0CEC6 /* Frameworks */,
 				C311E7B22458CD6A00D0CEC6 /* Resources */,
 				0E3EF5A41F9D8559269555EE /* [CP] Embed Pods Frameworks */,
+				C31A0BB527404CC600BBF57C /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = MagnetHockey;
+			packageProductDependencies = (
+				C31A0BB72740513F00BBF57C /* SQLite */,
+			);
 			productName = MagnetHockey;
 			productReference = C311E7B42458CD6A00D0CEC6 /* Magnet Hockey.app */;
 			productType = "com.apple.product-type.application";
@@ -323,6 +354,9 @@
 				Base,
 			);
 			mainGroup = C311E7AB2458CD6A00D0CEC6;
+			packageReferences = (
+				C31A0BB62740513F00BBF57C /* XCRemoteSwiftPackageReference "SQLite" */,
+			);
 			productRefGroup = C311E7B52458CD6A00D0CEC6 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -342,6 +376,7 @@
 				C334C9D926DC6F140088D46B /* Magnet Click.mp3 in Resources */,
 				C334C9DB26DC6F140088D46B /* MenuSong2.mp3 in Resources */,
 				C334C9D826DC6F140088D46B /* ballHitsWall2.mp3 in Resources */,
+				C31682F2272B08D300D0C09D /* TutorialSong.mp3 in Resources */,
 				C311E8DA2458CDF100D0CEC6 /* Assets.xcassets in Resources */,
 				C334C9DA26DC6F140088D46B /* magnetHitsWallFinal.mp3 in Resources */,
 				C311E9282458CDF100D0CEC6 /* LaunchScreen.xib in Resources */,
@@ -489,7 +524,9 @@
 				C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */,
 				C311E8E52458CDF100D0CEC6 /* MagnetHockey.swift in Sources */,
 				C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */,
+				C31682F42738C71D00D0C09D /* StatisticsScene.swift in Sources */,
 				C3B9BE222710C66300A1673A /* BotPlayer.swift in Sources */,
+				C31682F9273CB7F600D0C09D /* MenuHelper.swift in Sources */,
 				C3683A5F26EA9ECE00852BAB /* KeychainWrapper.swift in Sources */,
 				C365D43A25B22B2B00FD37C4 /* Settings.swift in Sources */,
 				C311E9262458CDF100D0CEC6 /* BottomPlayer.swift in Sources */,
@@ -498,6 +535,7 @@
 				C3683A5E26EA9ECE00852BAB /* KeychainItemAccessibility.swift in Sources */,
 				C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */,
 				C365D44225B22B4E00FD37C4 /* StartScene.swift in Sources */,
+				C31682F7273C3FC600D0C09D /* DBHelper.swift in Sources */,
 				C3E697E627028EA7000DE0AE /* AirHockey2P.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -658,6 +696,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.6;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = R5WK65WM35;
 				INFOPLIST_FILE = MagnetHockey/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -683,6 +722,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.6;
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = R5WK65WM35;
 				INFOPLIST_FILE = MagnetHockey/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -827,6 +867,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C31A0BB62740513F00BBF57C /* XCRemoteSwiftPackageReference "SQLite" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C31A0BB72740513F00BBF57C /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C31A0BB62740513F00BBF57C /* XCRemoteSwiftPackageReference "SQLite" */;
+			productName = SQLite;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C311E7AC2458CD6A00D0CEC6 /* Project object */;
 }

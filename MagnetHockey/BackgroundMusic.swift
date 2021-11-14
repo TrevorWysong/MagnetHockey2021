@@ -35,7 +35,7 @@ public class SKTAudio {
     }
     if let player = backgroundMusicPlayer
     {
-        player.volume = 0.03
+        player.volume = 0.06
         player.numberOfLoops = -1
         
         player.prepareToPlay()

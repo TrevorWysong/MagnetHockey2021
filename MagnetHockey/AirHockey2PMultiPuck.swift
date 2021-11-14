@@ -2035,7 +2035,7 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
         }
         else if ball2?.isHidden != true
         {
-            tempResetBallPosition = ball2!.position
+            tempResetBall2Position = ball2!.position
         }
         
         if GameIsPaused == true

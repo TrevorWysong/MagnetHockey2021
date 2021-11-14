@@ -43,39 +43,11 @@ class GameOverScene: SKScene
     
     func createEdges()
     {
-        let leftEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(533/10000 * frame.width), height: size.height + ((35/40) * frame.height)))
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
-        leftEdge.zPosition = 100
+        var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
+        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
         addChild(leftEdge)
-        
-        //copy the left edge and position it as the right edge
-        let rightEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(20/75 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        rightEdge.position = CGPoint(x: size.width + (6.85/65 * (frame.width)), y: frame.height/2)
-        rightEdge.zPosition = 100
         addChild(rightEdge)
-        
-        let bottomEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
-        if frame.height > 800 && frame.width < 500
-        {
-            bottomEdge.position = CGPoint(x: 0, y: -1 * frame.height/10)
-        }
-        else
-        {
-            bottomEdge.position = CGPoint(x: 0, y: 0 - (frame.width * 6.50/20))
-        }
-        bottomEdge.zPosition = -5
         addChild(bottomEdge)
-        
-        let topEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.0/100) * frame.width))
-        if frame.height > 800 && frame.width < 500
-        {
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2/30 * frame.height))
-        }
-        else
-        {
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.2/37.5) * frame.width))
-        }
-        topEdge.zPosition = -5
         addChild(topEdge)
     }
     
@@ -106,21 +78,12 @@ class GameOverScene: SKScene
 
         createEdges()
         
-        let background = SKSpriteNode(imageNamed: "icyBackground3.jpg")
-        background.blendMode = .replace
-        background.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        background.scale(to: CGSize(width: frame.width, height: frame.height))
-        background.zPosition = -100
+        let background = MenuHelper.shared.createBackground(frame: frame)
         addChild(background)
         
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        backToMenuButton.blendMode = .replace
-        backToMenuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.20)
-        backToMenuButton.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
-        backToMenuButton.colorBlendFactor = 0
-        addChild(backToMenuButton)
-        
-        backToMenuButtonLabel = createText(textName: backToMenuButtonLabel, text: "Back to Menu", position: CGPoint(x: backToMenuButton.position.x, y: backToMenuButton.position.y), iPhoneFontSize: frame.width/17.5, iPadFontSize: frame.width/17.5, color: SKColor.white, zPos: 2)
+        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
+        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
         
         if let gameWinner = self.userData?.value(forKey: "gameWinner")
         {
@@ -196,7 +159,6 @@ class GameOverScene: SKScene
         gameWinnerLabelOutlineEast = createText(textName: gameWinnerLabelOutlineEast, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x + 2, y: topGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
         gameWinnerLabelOutlineSouth = createText(textName: gameWinnerLabelOutlineSouth, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x, y: topGameWinnerBackground.position.y - 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
         gameWinnerLabelOutlineNorth = createText(textName: gameWinnerLabelOutlineNorth, text: gameWinnerForLabel, position: CGPoint(x: topGameWinnerBackground.position.x, y: topGameWinnerBackground.position.y + 2), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
-        
         gameWinnerLabelMiddle = createText(textName: gameWinnerLabelMiddle, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x, y: bottomGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.white, zPos: 2)
         gameWinnerLabelMiddleOutlineWest = createText(textName: gameWinnerLabelMiddleOutlineWest, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x - 2, y: bottomGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
         gameWinnerLabelMiddleOutlineEast = createText(textName: gameWinnerLabelMiddleOutlineEast, text: "WINS!", position: CGPoint(x: bottomGameWinnerBackground.position.x + 2, y: bottomGameWinnerBackground.position.y), iPhoneFontSize: frame.width/6.5, iPadFontSize: frame.width/8, color: SKColor.black, zPos: 1)
@@ -212,7 +174,6 @@ class GameOverScene: SKScene
         if frame.height > 800 && frame.width < 600
         {
             playButton.scale(to: CGSize(width: frame.width * 0.40, height: frame.width * 0.40))
-
         }
         else
         {

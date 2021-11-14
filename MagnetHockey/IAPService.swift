@@ -72,7 +72,7 @@ extension IAPService: SKPaymentTransactionObserver
             }
             case .restored: if (transaction.payment.productIdentifier == "com.TrevorWysong.MagnetHockeyGame.PurchaseBlackBall")
             {
-                let _: Bool = KeychainWrapper.standard.set(true, forKey: "PurchaseBlackBall")
+                let _: Bool = KeychainWrapper.standard.set(true, forKey: "RestoredBlackBall")
                 
                 let _: Bool = KeychainWrapper.standard.set(true, forKey: "RestoredColorPack")
             }

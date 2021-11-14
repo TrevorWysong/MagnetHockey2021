@@ -35,53 +35,15 @@ class InfoScene: SKScene
     
     func createEdges()
     {
-        let leftEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(533/10000 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
-        leftEdge.zPosition = 100
+        var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
+        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
         addChild(leftEdge)
-        
-        //copy the left edge and position it as the right edge
-        let rightEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(20/75 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        rightEdge.position = CGPoint(x: size.width + (6.85/65 * (frame.width)), y: frame.height/2)
-        rightEdge.zPosition = 100
         addChild(rightEdge)
-        
-        let bottomEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
-        if frame.height > 800 && frame.width < 500
-        {
-            bottomEdge.position = CGPoint(x: 0, y: -1 * frame.height/10)
-        }
-        else
-        {
-            bottomEdge.position = CGPoint(x: 0, y: 0 - (frame.width * 6.50/20))
-        }
-        bottomEdge.zPosition = -5
         addChild(bottomEdge)
-        
-        let topEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.00/100) * frame.width))
-        if frame.height > 800 && frame.width < 500
-        {
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2/30 * frame.height))
-        }
-        else
-        {
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.2/37.5) * frame.width))
-        }
-        topEdge.zPosition = -5
         addChild(topEdge)
     }
     
-    func leftArrowPressed()
-    {
-        arrowPressCounter -= 1
-    }
-    
-    func rightArrowPressed()
-    {
-        arrowPressCounter += 1
-    }
-    
-    override func didMove(to view: SKView)
+    func handleAds()
     {
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
@@ -102,12 +64,13 @@ class InfoScene: SKScene
             bannerViewInfoScene?.isHidden = true
             bannerViewSettingsScene?.isHidden = true
         }
-        
-        createEdges()
+    }
+    
+    override func didMove(to view: SKView)
+    {
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        backToMenuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.175)
-        backToMenuButton.scale(to: CGSize(width: frame.width * 0.60, height: frame.height * 0.1))
-        addChild(backToMenuButton)
+        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
+        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
         
         let infoBackgroundSprite:SKSpriteNode!
         infoBackgroundSprite = SKSpriteNode(imageNamed: "RedCircle.png")
@@ -138,16 +101,6 @@ class InfoScene: SKScene
         infoSprite.colorBlendFactor = 0
         infoSprite.zPosition = 1
         addChild(infoSprite)
-        
-        // set size, color, position and text of the tapStartLabel
-        backToMenuButtonLabel.fontSize = frame.width/17.5
-        backToMenuButtonLabel.fontColor = SKColor.white
-        backToMenuButtonLabel.horizontalAlignmentMode = .center
-        backToMenuButtonLabel.verticalAlignmentMode = .center
-        backToMenuButtonLabel.position = CGPoint(x: backToMenuButton.position.x, y: backToMenuButton.position.y)
-        backToMenuButtonLabel.zPosition = 1
-        backToMenuButtonLabel.text = "Back to Menu"
-        addChild(backToMenuButtonLabel)
         
         let descriptionSprite:SKSpriteNode!
         descriptionSprite = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
@@ -187,14 +140,6 @@ class InfoScene: SKScene
         descriptionLabel3.text = ""
         addChild(descriptionLabel3)
         
-        let background = SKSpriteNode(imageNamed: "icyBackground3.jpg")
-        background.blendMode = .replace
-        background.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        background.scale(to: CGSize(width: frame.width, height: frame.height))
-        background.colorBlendFactor = 0
-        background.zPosition = -100
-        addChild(background)
-        
         backButton = SKSpriteNode(imageNamed: "GreySquare.png")
         backButton.position = CGPoint(x: frame.width * 0.4, y: frame.height * 0.325)
         backButton.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
@@ -223,6 +168,16 @@ class InfoScene: SKScene
         forwardButtonSprite.zPosition = 1
         addChild(forwardButtonSprite)
         
+        handleAds()
+        let background = MenuHelper.shared.createBackground(frame: frame)
+        addChild(background)
+        createEdges()
+        createPageDots()
+        createBackgroundEmitters()
+    }
+    
+    func createPageDots()
+    {
         pageDotOne = SKSpriteNode(imageNamed: "whiteDot.png")
         pageDotOne.position = CGPoint(x: frame.width * 0.40, y: frame.height * 0.425)
         pageDotOne.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
@@ -252,37 +207,17 @@ class InfoScene: SKScene
         pageDotFive.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
         pageDotFive.colorBlendFactor = 0.75
         addChild(pageDotFive)
-
-        infoEmitter1 = SKEmitterNode()
-        infoEmitter1.particleTexture = SKTexture(imageNamed: "vector_info.png")
-        infoEmitter1.particlePositionRange = CGVector(dx: frame.width * 7/8, dy: 0)
-        infoEmitter1.particleScale = 0.10
-        infoEmitter1.particlePosition = CGPoint(x: frame.width/2, y: -2/50 * frame.height)
-        infoEmitter1.particleLifetime = 6
-        infoEmitter1.particleBirthRate = 0.65
-        infoEmitter1.particleSpeed = 30
-        infoEmitter1.yAcceleration = 60
-        infoEmitter1.zPosition = -6
-        infoEmitter1.particleColorBlendFactor = 0.50
-        infoEmitter1.particleColorBlendFactorSpeed = 0.20
-        infoEmitter1.advanceSimulationTime(1.5)
-        addChild(infoEmitter1)
         
-        infoEmitter2 = SKEmitterNode()
-        infoEmitter2.particleTexture = SKTexture(imageNamed: "vector_info.png")
-        infoEmitter2.particlePositionRange = CGVector(dx: frame.width * 7/8, dy: 0)
-        infoEmitter2.particleScale = 0.10
-        infoEmitter2.particlePosition = CGPoint(x: frame.width/2, y: 51/50 * frame.height)
-        infoEmitter2.particleLifetime = 6
-        infoEmitter2.particleBirthRate = 0.65
-        infoEmitter2.particleSpeed = 30
-        infoEmitter2.yAcceleration = -60
-        infoEmitter2.zPosition = -6
-        infoEmitter2.particleColorBlendFactor = 0.50
-        infoEmitter2.particleColorBlendFactorSpeed = 0.20
-        infoEmitter2.advanceSimulationTime(1.5)
-        addChild(infoEmitter2)
     }
+    
+    func createBackgroundEmitters()
+    {
+        infoEmitter1 = SKEmitterNode()
+        infoEmitter2 = SKEmitterNode()
+        addChild(MenuHelper.shared.createTopBackgroundEmitter(frame: frame, emitter: infoEmitter1, scale: 0.10, image: SKTexture(imageNamed: "vector_info")))
+        addChild(MenuHelper.shared.createBottomBackgroundEmitter(frame: frame, emitter: infoEmitter2, scale: 0.10, image: SKTexture(imageNamed: "vector_info")))
+    }
+    
     override func update(_ currentTime: TimeInterval)
     {
         if arrowPressCounter == 0

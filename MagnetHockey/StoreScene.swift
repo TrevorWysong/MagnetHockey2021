@@ -53,39 +53,11 @@ class StoreScene: SKScene
     
     func createEdges()
     {
-        let leftEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(533/10000 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
-        leftEdge.zPosition = 100
+        var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
+        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
         addChild(leftEdge)
-        
-        //copy the left edge and position it as the right edge
-        let rightEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(20/75 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        rightEdge.position = CGPoint(x: size.width + (6.85/65 * (frame.width)), y: frame.height/2)
-        rightEdge.zPosition = 100
         addChild(rightEdge)
-        
-        let bottomEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
-        if frame.height > 800 && frame.width < 500
-        {
-            bottomEdge.position = CGPoint(x: 0, y: -1 * frame.height/10)
-        }
-        else
-        {
-            bottomEdge.position = CGPoint(x: 0, y: 0 - (frame.width * 6.50/20))
-        }
-        bottomEdge.zPosition = -5
         addChild(bottomEdge)
-        
-        let topEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.00/100) * frame.width))
-        if frame.height > 800 && frame.width < 500
-        {
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2/30 * frame.height))
-        }
-        else
-        {
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.2/37.5) * frame.width))
-        }
-        topEdge.zPosition = -5
         addChild(topEdge)
     }
     
@@ -113,12 +85,7 @@ class StoreScene: SKScene
         bannerViewSettingsScene?.isHidden = true
 
         
-        let background = SKSpriteNode(imageNamed: "icyBackground3.jpg")
-        background.blendMode = .replace
-        background.position = CGPoint(x: frame.width/2, y: frame.height/2)
-        background.scale(to: CGSize(width: frame.width, height: frame.height))
-        background.colorBlendFactor = 0
-        background.zPosition = -100
+        let background = MenuHelper.shared.createBackground(frame: frame)
         addChild(background)
         
         let titleBackgroundSprite:SKSpriteNode!
@@ -151,11 +118,10 @@ class StoreScene: SKScene
         settingsSprite.colorBlendFactor = 0
         settingsSprite.zPosition = 1
         addChild(settingsSprite)
-        
+
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        backToMenuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.175)
-        backToMenuButton.scale(to: CGSize(width: frame.width * 0.60, height: frame.height * 0.1))
-        addChild(backToMenuButton)
+        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
+        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
         
         purchaseNoAdsBackgroundButton = SKSpriteNode(imageNamed: "AgedEmeraldSquare.png")
         purchaseNoAdsBackgroundButton.position = CGPoint(x: frame.width * 0.30, y: frame.height * 0.34)
@@ -165,15 +131,6 @@ class StoreScene: SKScene
         purchaseBallPackBackgroundButton.position = CGPoint(x: frame.width * 0.70, y: frame.height * 0.34)
         addChild(purchaseBallPackBackgroundButton)
 
-        // set size, color, position and text of the tapStartLabel
-        backToMenuButtonLabel.fontSize = frame.width/17.5
-        backToMenuButtonLabel.fontColor = SKColor.white
-        backToMenuButtonLabel.horizontalAlignmentMode = .center
-        backToMenuButtonLabel.verticalAlignmentMode = .center
-        backToMenuButtonLabel.position = CGPoint(x: backToMenuButton.position.x, y: backToMenuButton.position.y)
-        backToMenuButtonLabel.zPosition = 1
-        backToMenuButtonLabel.text = "Back to Menu"
-        addChild(backToMenuButtonLabel)
         
         let purchaseBlackBallButton:SKSpriteNode!
         purchaseBlackBallButton = SKSpriteNode(imageNamed: "ColorWheel4.png")
@@ -256,35 +213,15 @@ class StoreScene: SKScene
         ballPackLabelButton.scale(to: CGSize(width: frame.width * 0.35, height: frame.width * 0.1))
         addChild(ballPackLabelButton)
         
+        createBackgroundEmitters()
+    }
+    
+    func createBackgroundEmitters()
+    {
         cartEmitter1 = SKEmitterNode()
-        cartEmitter1.particleTexture = SKTexture(imageNamed: "vector_cart.png")
-        cartEmitter1.particlePositionRange = CGVector(dx: frame.width * 7/8, dy: 0)
-        cartEmitter1.particleScale = 0.10
-        cartEmitter1.particlePosition = CGPoint(x: frame.width/2, y: -2/50 * frame.height)
-        cartEmitter1.particleLifetime = 6
-        cartEmitter1.particleBirthRate = 0.65
-        cartEmitter1.particleSpeed = 30
-        cartEmitter1.yAcceleration = 60
-        cartEmitter1.zPosition = -6
-        cartEmitter1.particleColorBlendFactor = 0.50
-        cartEmitter1.particleColorBlendFactorSpeed = 0.20
-        cartEmitter1.advanceSimulationTime(1.5)
-        addChild(cartEmitter1)
-        
         cartEmitter2 = SKEmitterNode()
-        cartEmitter2.particleTexture = SKTexture(imageNamed: "vector_cart.png")
-        cartEmitter2.particlePositionRange = CGVector(dx: frame.width * 7/8, dy: 0)
-        cartEmitter2.particleScale = 0.10
-        cartEmitter2.particlePosition = CGPoint(x: frame.width/2, y: 51/50 * frame.height)
-        cartEmitter2.particleLifetime = 6
-        cartEmitter2.particleBirthRate = 0.65
-        cartEmitter2.particleSpeed = 30
-        cartEmitter2.yAcceleration = -60
-        cartEmitter2.zPosition = -6
-        cartEmitter2.particleColorBlendFactor = 0.50
-        cartEmitter2.particleColorBlendFactorSpeed = 0.20
-        cartEmitter2.advanceSimulationTime(1.5)
-        addChild(cartEmitter2)
+        addChild(MenuHelper.shared.createTopBackgroundEmitter(frame: frame, emitter: cartEmitter1, scale: 0.10, image: SKTexture(imageNamed: "vector_cart")))
+        addChild(MenuHelper.shared.createBottomBackgroundEmitter(frame: frame, emitter: cartEmitter2, scale: 0.10, image: SKTexture(imageNamed: "vector_cart")))
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
