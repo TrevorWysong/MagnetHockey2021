@@ -957,6 +957,12 @@ class StartScene: SKScene
                 let savePlayerMode = UserDefaults.standard
                 savePlayerMode.set("2Player", forKey: "PlayerMode")
                 savePlayerMode.synchronize()
+                if UserDefaults.standard.string(forKey: "GameType") != "GameMode2" && UserDefaults.standard.string(forKey: "GameType") != "GameMode1"
+                {
+                    let saveGameMode = UserDefaults.standard
+                    saveGameMode.set("GameMode2", forKey: "GameType")
+                    saveGameMode.synchronize()
+                }
                 onePlayerActiveSprite.isHidden = true
                 onePlayerInactiveSprite.isHidden = false
                 onePlayerLockedSprite.isHidden = true

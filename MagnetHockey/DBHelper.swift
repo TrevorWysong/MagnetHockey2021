@@ -13,8 +13,18 @@ class DBHelper
 
     let topScore = Expression<Int>("topScore")
     let bottomScore = Expression<Int>("bottomScore")
-    let magnetWins = Expression<Int>("magnetPoints")
-    let goalWins = Expression<Int>("goalPoints")
+    let magnetGoalsOrderTop = Expression<Int>("magnetGoalsOrderTop")
+    let magnetGoalsOrderBottom = Expression<Int>("magnetGoalsOrderBottom")
+
+    
+    // 2 dimensional array of arrays of Ints
+    var allArr: [[Int]] = []
+    var magnetHockeyArr: [[Int]] = []
+    var airHockey1PArr: [[Int]] = []
+    var airHockey2PArr: [[Int]] = []
+
+    
+    
     // ? allows expression to be optional i.e. <Int?>
     
     func createDatabase()
@@ -39,8 +49,8 @@ class DBHelper
             let createTable = self.magnetHockeyTable.create { table in
                 table.column(self.topScore)
                 table.column(self.bottomScore)
-                table.column(self.magnetWins)
-                table.column(self.goalWins)
+                table.column(self.magnetGoalsOrderTop)
+                table.column(self.magnetGoalsOrderBottom)
             }
             do
             {
@@ -86,6 +96,8 @@ class DBHelper
             let createTable = self.allTable.create { table in
                 table.column(self.topScore)
                 table.column(self.bottomScore)
+                table.column(self.magnetGoalsOrderTop)
+                table.column(self.magnetGoalsOrderBottom)
             }
             do
             {
@@ -98,11 +110,11 @@ class DBHelper
         }
     }
     
-    func insertGame(game: String, topScoreGame: Int, bottomScoreGame: Int, magnetWinsGame: Int, goalWinsGame: Int)
+    func insertGame(game: String, topScoreGame: Int, bottomScoreGame: Int, magnetGoalsOrderGameTop: Int, magnetGoalsOrderGameBottom: Int)
     {
         if game == "MagnetHockey"
         {
-            let insertGame = self.magnetHockeyTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame, magnetWins <- magnetWinsGame, goalWins <- goalWinsGame)
+            let insertGame = self.magnetHockeyTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame, magnetGoalsOrderTop <- magnetGoalsOrderGameTop, magnetGoalsOrderBottom <- magnetGoalsOrderGameBottom)
             do
             {
                 try self.database.run(insertGame)
@@ -159,7 +171,7 @@ class DBHelper
                 let games = try self.database.prepare(self.magnetHockeyTable)
                 for game in games
                 {
-                    print("topScore: \(game[self.topScore]), bottomScore: \(game[self.bottomScore]), magnetPoints: \(game[self.magnetWins])")
+                    magnetHockeyArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
                 }
             }
             catch
@@ -174,7 +186,7 @@ class DBHelper
                 let games = try self.database.prepare(self.airHockey1PTable)
                 for game in games
                 {
-                    print("topScore: \(game[self.topScore]), bottomScore: \(game[self.bottomScore])")
+                    airHockey1PArr.append([game[self.topScore], game[self.bottomScore]])
                 }
             }
             catch
@@ -189,7 +201,7 @@ class DBHelper
                 let games = try self.database.prepare(self.airHockey2PTable)
                 for game in games
                 {
-                    print("topScore: \(game[self.topScore]), bottomScore: \(game[self.bottomScore])")
+                    airHockey2PArr.append([game[self.topScore], game[self.bottomScore]])
                 }
             }
             catch
@@ -204,7 +216,7 @@ class DBHelper
                 let games = try self.database.prepare(self.allTable)
                 for game in games
                 {
-                    print("topScore: \(game[self.topScore]), bottomScore: \(game[self.bottomScore])")
+                    allArr.append([game[self.topScore], game[self.bottomScore]])
                 }
             }
             catch
@@ -220,6 +232,7 @@ class DBHelper
         let deleteMagnetHockeyTable = self.magnetHockeyTable.delete()
         do
         {
+
             try self.database.run(deleteMagnetHockeyTable)
         }
         catch

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "IcyChillRoundedSquare.png",
+      "filename" : "IcyChillCircle.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "IcyChillRoundedSquare-1.png",
+      "filename" : "IcyChillCircle-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "IcyChillRoundedSquare-2.png",
+      "filename" : "IcyChillCircle-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
