@@ -19,6 +19,11 @@ class StatisticsScene: SKScene
     let result3Label = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let result4Label = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let result5Label = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let result1Score = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let result2Score = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let result3Score = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let result4Score = SKLabelNode(fontNamed: "STHeitiTC-Medium")
+    let result5Score = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let gameModeLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let statsTypeLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let showResultsButtonLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
@@ -461,20 +466,19 @@ class StatisticsScene: SKScene
         secondResultNum = 2
         arrowPressCounterPages = 0
         oneResultPage = false
+        backButtonPages.colorBlendFactor = 0.5
         result1Label.isHidden = true
         result2Label.isHidden = true
         result3Label.isHidden = true
         result4Label.isHidden = true
         result5Label.isHidden = true
-        result1Label.text = ""
-        result2Label.text = ""
-        result3Label.text = ""
-        result4Label.text = ""
-        result5Label.text = ""
-//        currentTopScore = 0
-//        currentBottomScore = 0
-//        currentTopScoreOrder = 0
-//        currentBottomScoreOrder = 0
+        result1Score.isHidden = true
+        result2Score.isHidden = true
+        result3Score.isHidden = true
+        result4Score.isHidden = true
+        result5Score.isHidden = true
+        resetResultLabels()
+
         
         statisticsBackgroundSprite.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.80)
         statisticsSprite.position = CGPoint(x: statisticsBackgroundSprite.position.x, y: statisticsBackgroundSprite.position.y)
@@ -490,9 +494,29 @@ class StatisticsScene: SKScene
         }
     }
     
+    func formatResultPageNumbersAfterPressingShowResults()
+    {
+        backButtonSpritePages.colorBlendFactor = 0
+        forwardButtonSpritePages.colorBlendFactor = 0
+        
+        if numGames <= 5
+        {
+            resultsPagesLabel.text = String(firstResultNum) + " to " + String(numGames)
+            forwardButtonPages.colorBlendFactor = 0.5
+            secondResultNum = numGames
+            oneResultPage = true
+        }
+        else
+        {
+            firstResultNum = 1
+            secondResultNum = 5
+            resultsPagesLabel.text = String(firstResultNum) + " to " + String(secondResultNum)
+            forwardButtonPages.colorBlendFactor = 0
+        }
+    }
+    
     func UIBehaviorAfterShowingResult()
     {
-        getResults()
         blurryStatsBackground.isHidden = false
         backToSelectionButton.isHidden = false
         backToSelectionButtonSprite.isHidden = false
@@ -501,8 +525,6 @@ class StatisticsScene: SKScene
         backButtonSpritePages.isHidden = false
         forwardButtonSpritePages.isHidden = false
         resultsPagesLabel.isHidden = false
-        backButtonSpritePages.colorBlendFactor = 0
-        forwardButtonSpritePages.colorBlendFactor = 0
         
         clearDataButton.isHidden = true
         clearDataButtonLabel.isHidden = true
@@ -525,6 +547,11 @@ class StatisticsScene: SKScene
         result3Label.isHidden = false
         result4Label.isHidden = false
         result5Label.isHidden = false
+        result1Score.isHidden = false
+        result2Score.isHidden = false
+        result3Score.isHidden = false
+        result4Score.isHidden = false
+        result5Score.isHidden = false
         
         statisticsBackgroundSprite.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.88)
         statisticsSprite.position = CGPoint(x: statisticsBackgroundSprite.position.x, y: statisticsBackgroundSprite.position.y)
@@ -538,23 +565,6 @@ class StatisticsScene: SKScene
             statisticsBackgroundSprite.scale(to: CGSize(width: frame.width * 0.18, height: frame.width * 0.18))
             statisticsSprite.scale(to: CGSize(width: frame.width * 0.13, height: frame.width * 0.13))
         }
-        
-        if numGames <= 5
-        {
-            resultsPagesLabel.text = String(firstResultNum) + " to " + String(numGames)
-            forwardButtonPages.colorBlendFactor = 0.5
-            secondResultNum = numGames
-            oneResultPage = true
-        }
-        else
-        {
-            firstResultNum = 1
-            secondResultNum = 5
-            resultsPagesLabel.text = String(firstResultNum) + " to " + String(secondResultNum)
-            forwardButtonPages.colorBlendFactor = 0
-        }
-        showPageResults(game: gameModeLabel.text!)
-
     }
     
     func createPagesLabel()
@@ -595,6 +605,31 @@ class StatisticsScene: SKScene
             getNumPages(arrayCount: DBHelper.shared.magnetHockeyArr.count)
             numGames = DBHelper.shared.magnetHockeyArr.count
         }
+        else if gameModeLabel.text == "Air Hockey: 1P"
+        {
+            DBHelper.shared.airHockey1PArr.removeAll()
+            DBHelper.shared.listGames(game: "AirHockey1P")
+            print(DBHelper.shared.airHockey1PArr)
+            getNumPages(arrayCount: DBHelper.shared.airHockey1PArr.count)
+            numGames = DBHelper.shared.airHockey1PArr.count
+        }
+        else if gameModeLabel.text == "Air Hockey: 2P"
+        {
+            DBHelper.shared.airHockey2PArr.removeAll()
+            DBHelper.shared.listGames(game: "AirHockey2P")
+            print(DBHelper.shared.airHockey2PArr)
+            getNumPages(arrayCount: DBHelper.shared.airHockey2PArr.count)
+            numGames = DBHelper.shared.airHockey2PArr.count
+        }
+        else
+        {
+            gameModeLabel.text = "All Modes"
+            DBHelper.shared.allArr.removeAll()
+            DBHelper.shared.listGames(game: "All")
+            print(DBHelper.shared.allArr)
+            getNumPages(arrayCount: DBHelper.shared.allArr.count)
+            numGames = DBHelper.shared.allArr.count
+        }
     
         
         //for goal/magnet order:
@@ -611,46 +646,135 @@ class StatisticsScene: SKScene
         
     }
     
+    func formatResultLabels(resultText: SKLabelNode, resultScore: SKLabelNode)
+    {
+        resultText.text = "Top                         Bottom"
+        resultText.isHidden = false
+        resultScore.text = String(currentTopScore) + " - " + String(currentBottomScore)
+        resultScore.isHidden = false
+    }
+    
+    func iterateResultsForLoop(i: Int)
+    {
+        if i == firstResultNum - 1
+        {
+            formatResultLabels(resultText: result1Label, resultScore: result1Score)
+        }
+        else if i == firstResultNum
+        {
+            formatResultLabels(resultText: result2Label, resultScore: result2Score)
+        }
+        else if i == firstResultNum + 1
+        {
+            formatResultLabels(resultText: result3Label, resultScore: result3Score)
+        }
+        else if i == firstResultNum + 2
+        {
+            formatResultLabels(resultText: result4Label, resultScore: result4Score)
+        }
+        else if i == firstResultNum + 3
+        {
+            formatResultLabels(resultText: result5Label, resultScore: result5Score)
+        }
+    }
+    
     func showPageResults(game: String)
     {
         if game == "Magnet Hockey"
         {
-            if DBHelper.shared.magnetHockeyArr.count != 0
+            if numGames != 0
             {
+                UIBehaviorAfterShowingResult()
+
                 //show firstResultNum to secondResultNum games
                 for i in firstResultNum - 1...secondResultNum - 1
                 {
-                    currentTopScore = DBHelper.shared.magnetHockeyArr[i][0]
-                    currentBottomScore = DBHelper.shared.magnetHockeyArr[i][1]
-                    currentTopScoreOrder = DBHelper.shared.magnetHockeyArr[i][2]
-                    currentBottomScoreOrder =  DBHelper.shared.magnetHockeyArr[i][3]
-                    if i == firstResultNum - 1
-                    {
-                        result1Label.text = "Top Score   " + String(currentTopScore) + " - " + String(currentBottomScore) + "   Bottom Score"
-                        result1Label.isHidden = false
-                    }
-                    else if i == firstResultNum
-                    {
-                        result2Label.text = "Top Score   " + String(currentTopScore) + " - " + String(currentBottomScore) + "   Bottom Score"
-                        result2Label.isHidden = false
-                    }
+                    let arrayCount = DBHelper.shared.magnetHockeyArr.count - 1
+                    currentTopScore = DBHelper.shared.magnetHockeyArr[arrayCount - i][0]
+                    currentBottomScore = DBHelper.shared.magnetHockeyArr[arrayCount - i][1]
+                    currentTopScoreOrder = DBHelper.shared.magnetHockeyArr[arrayCount - i][2]
+                    currentBottomScoreOrder =  DBHelper.shared.magnetHockeyArr[arrayCount - i][3]
+                    
+                    iterateResultsForLoop(i: i)
                 }
             }
+            else
+            {
+                showResultsButtonLabel.text = "No Results"
+                oneResultPage = false
+            }
         }
-        else if game == "AirHockey1P"
+        else if game == "Air Hockey: 1P"
         {
-            
+            if numGames != 0
+            {
+                UIBehaviorAfterShowingResult()
+
+                //show firstResultNum to secondResultNum games
+                for i in firstResultNum - 1...secondResultNum - 1
+                {
+                    let arrayCount = DBHelper.shared.airHockey1PArr.count - 1
+                    currentTopScore = DBHelper.shared.airHockey1PArr[arrayCount - i][0]
+                    currentBottomScore = DBHelper.shared.airHockey1PArr[arrayCount - i][1]
+                    
+                    iterateResultsForLoop(i: i)
+                }
+            }
+            else
+            {
+                showResultsButtonLabel.text = "No Results"
+                oneResultPage = false
+            }
         }
-        else if game == "AirHockey2P"
+        else if game == "Air Hockey: 2P"
         {
-            
+            if numGames != 0
+            {
+                UIBehaviorAfterShowingResult()
+
+                //show firstResultNum to secondResultNum games
+                for i in firstResultNum - 1...secondResultNum - 1
+                {
+                    let arrayCount = DBHelper.shared.airHockey2PArr.count - 1
+                    currentTopScore = DBHelper.shared.airHockey2PArr[arrayCount - i][0]
+                    currentBottomScore = DBHelper.shared.airHockey2PArr[arrayCount - i][1]
+                    
+                    iterateResultsForLoop(i: i)
+                }
+            }
+            else
+            {
+                showResultsButtonLabel.text = "No Results"
+                oneResultPage = false
+            }
         }
         else
         {
-            //All results
-            
+            //All Results
+            if numGames != 0
+            {
+                UIBehaviorAfterShowingResult()
+
+                //show firstResultNum to secondResultNum games
+                for i in firstResultNum - 1...secondResultNum - 1
+                {
+                    let arrayCount = DBHelper.shared.allArr.count - 1
+                    currentTopScore = DBHelper.shared.allArr[arrayCount - i][0]
+                    currentBottomScore = DBHelper.shared.allArr[arrayCount - i][1]
+                    currentTopScoreOrder = DBHelper.shared.allArr[arrayCount - i][2]
+                    currentBottomScoreOrder =  DBHelper.shared.allArr[arrayCount - i][3]
+                    
+                    iterateResultsForLoop(i: i)
+                }
+            }
+            else
+            {
+                showResultsButtonLabel.text = "No Results"
+                oneResultPage = false
+            }
         }
     }
+    
     
     func getNumPages(arrayCount: Int)
     {
@@ -669,8 +793,23 @@ class StatisticsScene: SKScene
     
     func createResultLabels()
     {
-        createLabel(labelName: result1Label, text: "", position: CGPoint(x: frame.height * 0.275, y: frame.height * 0.75))
-        createLabel(labelName: result2Label, text: "", position: CGPoint(x: frame.height * 0.275, y: frame.height * 0.65))
+        createLabel(labelName: result1Label, text: "", position: CGPoint(x: frame.width * 0.25,  y: frame.height * 0.75))
+        createLabel(labelName: result2Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.67))
+        createLabel(labelName: result3Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.59))
+        createLabel(labelName: result4Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.51))
+        createLabel(labelName: result5Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.43))
+        result1Label.horizontalAlignmentMode = .left
+        result2Label.horizontalAlignmentMode = .left
+        result3Label.horizontalAlignmentMode = .left
+        result4Label.horizontalAlignmentMode = .left
+        result5Label.horizontalAlignmentMode = .left
+
+        
+        createLabel(labelName: result1Score, text: "", position: CGPoint(x: frame.width * 0.50,  y: frame.height * 0.75))
+        createLabel(labelName: result2Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.67))
+        createLabel(labelName: result3Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.59))
+        createLabel(labelName: result4Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.51))
+        createLabel(labelName: result5Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.43))
     }
     
     override func didMove(to view: SKView)
@@ -722,18 +861,26 @@ class StatisticsScene: SKScene
         if arrowPressCounterGameMode == 0
         {
             gameModeLabel.text = "All Modes"
+            numGames = 0
+            getResults()
         }
         else if arrowPressCounterGameMode == 1
         {
             gameModeLabel.text = "Magnet Hockey"
+            numGames = 0
+            getResults()
         }
         else if arrowPressCounterGameMode == 2
         {
             gameModeLabel.text = "Air Hockey: 1P"
+            numGames = 0
+            getResults()
         }
         else if arrowPressCounterGameMode == 3
         {
             gameModeLabel.text = "Air Hockey: 2P"
+            numGames = 0
+            getResults()
         }
     }
     
@@ -749,12 +896,18 @@ class StatisticsScene: SKScene
         }
     }
     
-
-    
-    override func update(_ currentTime: TimeInterval)
+    func resetResultLabels()
     {
-        handleGameModeArrowPress()
-        handleStatsTypeArrowPress()
+        result1Label.text = ""
+        result2Label.text = ""
+        result3Label.text = ""
+        result4Label.text = ""
+        result5Label.text = ""
+        result1Score.text = ""
+        result2Score.text = ""
+        result3Score.text = ""
+        result4Score.text = ""
+        result5Score.text = ""
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)
@@ -873,7 +1026,8 @@ class StatisticsScene: SKScene
                 else{run(buttonSound)}
                 showResultsButton.colorBlendFactor = 0
                 touchedShowResults = false
-                UIBehaviorAfterShowingResult()
+                formatResultPageNumbersAfterPressingShowResults()
+                showPageResults(game: gameModeLabel.text!)
             }
             
             else if nodesArray.contains(clearDataButton) && touchedClearData == true && clearDataModeIsActive == false
@@ -915,10 +1069,12 @@ class StatisticsScene: SKScene
                 backToSelectionButton.colorBlendFactor = 0
                 touchedBackToSelectionButton = false
                 UIBehaviorBeforeShowingResult()
+                handleGameModeArrowPress()
             }
             
             else if nodesArray.contains(backButtonGameMode) && touchedBackButtonGameMode == true && arrowPressCounterGameMode > 1
             {
+                showResultsButtonLabel.text = "Show Results"
                 touchedBackButtonGameMode = false
                 backButtonGameMode.colorBlendFactor = 0
                 forwardButtonGameMode.colorBlendFactor = 0
@@ -926,10 +1082,12 @@ class StatisticsScene: SKScene
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
+                handleGameModeArrowPress()
             }
             
             else if nodesArray.contains(backButtonGameMode) && touchedBackButtonGameMode == true && arrowPressCounterGameMode == 1
             {
+                showResultsButtonLabel.text = "Show Results"
                 touchedBackButtonGameMode = false
                 backButtonGameMode.colorBlendFactor = 0.5
                 forwardButtonGameMode.colorBlendFactor = 0
@@ -937,10 +1095,12 @@ class StatisticsScene: SKScene
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
+                handleGameModeArrowPress()
             }
             
             else if nodesArray.contains(forwardButtonGameMode) && touchedForwardButtonGameMode == true && arrowPressCounterGameMode < 2
             {
+                showResultsButtonLabel.text = "Show Results"
                 touchedForwardButtonGameMode = false
                 forwardButtonGameMode.colorBlendFactor = 0
                 backButtonGameMode.colorBlendFactor = 0
@@ -948,15 +1108,18 @@ class StatisticsScene: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 arrowPressCounterGameMode += 1
+                handleGameModeArrowPress()
             }
             else if nodesArray.contains(forwardButtonGameMode) && touchedForwardButtonGameMode == true && arrowPressCounterGameMode == 2
             {
+                showResultsButtonLabel.text = "Show Results"
                 touchedForwardButtonGameMode = false
                 forwardButtonGameMode.colorBlendFactor = 0.5
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 arrowPressCounterGameMode += 1
+                handleGameModeArrowPress()
             }
             
             else if nodesArray.contains(backButtonStatsType) && touchedBackButtonStatsType == true && arrowPressCounterStatsType > 0
@@ -968,6 +1131,7 @@ class StatisticsScene: SKScene
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
+                handleStatsTypeArrowPress()
             }
             
             else if nodesArray.contains(forwardButtonStatsType) && touchedForwardButtonStatsType == true && arrowPressCounterStatsType == 0
@@ -979,6 +1143,7 @@ class StatisticsScene: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 arrowPressCounterStatsType += 1
+                handleStatsTypeArrowPress()
             }
             
             else if nodesArray.contains(backButtonPages) && touchedBackButtonPages == true && arrowPressCounterPages > 0
@@ -986,7 +1151,9 @@ class StatisticsScene: SKScene
                 touchedBackButtonPages = false
                 backButtonPages.colorBlendFactor = 0.50
                 forwardButtonPages.colorBlendFactor = 0
+                resetResultLabels()
                 arrowPressCounterPages -= 1
+                resetResultLabels()
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -1023,6 +1190,7 @@ class StatisticsScene: SKScene
             {
                 touchedForwardButtonPages = false
                 backButtonPages.colorBlendFactor = 0
+                resetResultLabels()
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
