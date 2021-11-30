@@ -724,121 +724,125 @@ class StatisticsScene: SKScene
     
     func iterateBottomScoreOrder(yPointForScoreSprite: CGFloat)
     {
-        for i in 0...String(currentBottomScore).count - 1
+        if currentBottomScore > 0
         {
-            var spriteName = String()
-            (spriteName, currentBottomScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentBottomScoreOrder)
-            if spriteName.contains("magnet")
+            for i in 0...String(currentBottomScoreOrder).count - 1
             {
-                spriteName += String(magnetSprite.children.count + 1)
-            }
-            else
-            {
-                spriteName += String(goalSprite.children.count + 1)
-            }
-            
-            if i == 0
-            {
-                let xPointForScoreSprite = frame.width * 0.54
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                var spriteName = String()
+                (spriteName, currentBottomScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentBottomScoreOrder)
+                if spriteName.contains("magnet")
+                {
+                    spriteName += String(magnetSprite.children.count + 1)
+                }
+                else
+                {
+                    spriteName += String(goalSprite.children.count + 1)
+                }
                 
+                if i == 0
+                {
+                    let xPointForScoreSprite = frame.width * 0.54
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                    
+                }
+                else if i == 1
+                {
+                    let xPointForScoreSprite = frame.width * 0.58
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 2
+                {
+                    let xPointForScoreSprite = frame.width * 0.62
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 3
+                {
+                    let xPointForScoreSprite = frame.width * 0.66
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 4
+                {
+                    let xPointForScoreSprite = frame.width * 0.70
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 5
+                {
+                    let xPointForScoreSprite = frame.width * 0.74
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 6
+                {
+                    let xPointForScoreSprite = frame.width * 0.78
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 7
+                {
+                    let xPointForScoreSprite = frame.width * 0.82
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
             }
-            else if i == 1
-            {
-                let xPointForScoreSprite = frame.width * 0.58
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 2
-            {
-                let xPointForScoreSprite = frame.width * 0.62
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 3
-            {
-                let xPointForScoreSprite = frame.width * 0.66
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 4
-            {
-                let xPointForScoreSprite = frame.width * 0.70
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 5
-            {
-                let xPointForScoreSprite = frame.width * 0.74
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 6
-            {
-                let xPointForScoreSprite = frame.width * 0.78
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 7
-            {
-                let xPointForScoreSprite = frame.width * 0.82
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-    
         }
     }
     
     func iterateTopScoreOrder(yPointForScoreSprite: CGFloat)
     {
-        for i in 0...String(currentTopScore).count - 1
+        if currentTopScore > 0
         {
-            var spriteName = String()
-            (spriteName, currentTopScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentTopScoreOrder)
-            if spriteName.contains("magnet")
+            for i in 0...String(currentTopScoreOrder).count - 1
             {
-                spriteName += String(magnetSprite.children.count + 1)
-            }
-            else
-            {
-                spriteName += String(goalSprite.children.count + 1)
-            }
-            
-            if i == 0
-            {
-                let xPointForScoreSprite = frame.width * 0.18
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                var spriteName = String()
+                (spriteName, currentTopScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentTopScoreOrder)
+                if spriteName.contains("magnet")
+                {
+                    spriteName += String(magnetSprite.children.count + 1)
+                }
+                else
+                {
+                    spriteName += String(goalSprite.children.count + 1)
+                }
                 
+                if i == 0
+                {
+                    let xPointForScoreSprite = frame.width * 0.18
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                    
+                }
+                else if i == 1
+                {
+                    let xPointForScoreSprite = frame.width * 0.22
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 2
+                {
+                    let xPointForScoreSprite = frame.width * 0.26
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 3
+                {
+                    let xPointForScoreSprite = frame.width * 0.30
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 4
+                {
+                    let xPointForScoreSprite = frame.width * 0.34
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 5
+                {
+                    let xPointForScoreSprite = frame.width * 0.38
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 6
+                {
+                    let xPointForScoreSprite = frame.width * 0.42
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
+                else if i == 7
+                {
+                    let xPointForScoreSprite = frame.width * 0.46
+                    createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                }
             }
-            else if i == 1
-            {
-                let xPointForScoreSprite = frame.width * 0.22
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 2
-            {
-                let xPointForScoreSprite = frame.width * 0.26
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 3
-            {
-                let xPointForScoreSprite = frame.width * 0.30
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 4
-            {
-                let xPointForScoreSprite = frame.width * 0.34
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 5
-            {
-                let xPointForScoreSprite = frame.width * 0.38
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 6
-            {
-                let xPointForScoreSprite = frame.width * 0.42
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-            else if i == 7
-            {
-                let xPointForScoreSprite = frame.width * 0.46
-                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-            }
-    
         }
     }
     
