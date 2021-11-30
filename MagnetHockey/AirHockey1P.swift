@@ -1386,7 +1386,9 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             clearPauseButton()
             DBHelper.shared.createDatabase()
             DBHelper.shared.createTable(game: "AirHockey1P")
+            DBHelper.shared.createTable(game: "All")
             DBHelper.shared.insertGame(game: "AirHockey1P", topScoreGame: botPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: 0)
+            DBHelper.shared.insertGame(game: "All", topScoreGame: botPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: 0)
             Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                 self.gameOverIsTrue()
             })

@@ -150,7 +150,7 @@ class DBHelper
         }
         else if game == "All"
         {
-            let insertGame = self.allTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame)
+            let insertGame = self.allTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame, magnetGoalsOrderTop <- magnetGoalsOrderGameTop, magnetGoalsOrderBottom <- magnetGoalsOrderGameBottom)
             do
             {
                 try self.database.run(insertGame)
@@ -216,7 +216,7 @@ class DBHelper
                 let games = try self.database.prepare(self.allTable)
                 for game in games
                 {
-                    allArr.append([game[self.topScore], game[self.bottomScore]])
+                    allArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
                 }
             }
             catch

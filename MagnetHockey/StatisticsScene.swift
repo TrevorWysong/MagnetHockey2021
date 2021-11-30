@@ -53,6 +53,10 @@ class StatisticsScene: SKScene
     var backButtonSpriteStatsType = SKSpriteNode()
     var forwardButtonSpriteGameMode = SKSpriteNode()
     var forwardButtonSpriteStatsType = SKSpriteNode()
+    
+    var magnetSprite = SKSpriteNode()
+    var goalSprite = SKSpriteNode()
+
     var touchedBackButtonGameMode = false
     var touchedForwardButtonGameMode = false
     var touchedBackButtonStatsType = false
@@ -78,6 +82,7 @@ class StatisticsScene: SKScene
     var numPages = 0
     var resultsPerPage = 5
     var numGames = 0
+    var currentResultPageTotalScoresCount = 0
     var firstResultNum = 1
     var secondResultNum = 0
     var oneResultPage = false
@@ -85,6 +90,7 @@ class StatisticsScene: SKScene
     var currentBottomScore = 0
     var currentTopScoreOrder = 0
     var currentBottomScoreOrder = 0
+    var numScoreSprites = 0
 
 
     func createEdges()
@@ -313,6 +319,25 @@ class StatisticsScene: SKScene
         blurryStatsBackground.isHidden = true
         blurryStatsBackground.zPosition = -1
         addChild(blurryStatsBackground)
+    }
+    
+    func createMagnetAndGoalSprits()
+    {
+        magnetSprite = SKSpriteNode(imageNamed: "magnetStatistics.png")
+        magnetSprite.position = CGPoint(x: -frame.width/2, y: -frame.height * 0.56)
+        magnetSprite.scale(to: CGSize(width: frame.width * 0.06, height: frame.width * 0.06))
+        magnetSprite.colorBlendFactor = 0
+        magnetSprite.isHidden = false
+        magnetSprite.zPosition = 5
+        addChild(magnetSprite)
+        
+        goalSprite = SKSpriteNode(imageNamed: "ballInGoalStatistics.png")
+        goalSprite.position = CGPoint(x: -frame.width/2, y: -frame.height * 0.56)
+        goalSprite.scale(to: CGSize(width: frame.width * 0.06, height: frame.width * 0.06))
+        goalSprite.colorBlendFactor = 0
+        goalSprite.isHidden = false
+        goalSprite.zPosition = 2
+        addChild(goalSprite)
     }
     
     func handleAds()
@@ -654,15 +679,182 @@ class StatisticsScene: SKScene
         resultScore.isHidden = false
     }
     
+    func createScoreSpriteChildren(spritePosition: CGPoint, spriteName: String)
+    {
+        if spriteName.contains("magnet")
+        {
+            numScoreSprites += 1
+            var magnetSpriteCopy = SKSpriteNode(imageNamed: "magnetStatistics.png")
+            magnetSpriteCopy = magnetSprite.copy() as! SKSpriteNode
+            magnetSpriteCopy.position = spritePosition
+            magnetSpriteCopy.name = spriteName + String(numScoreSprites)
+            addChild(magnetSpriteCopy)
+        }
+        else if spriteName.contains("goal")
+        {
+            numScoreSprites += 1
+            var goalSpriteCopy = SKSpriteNode(imageNamed: "ballInGoalStatistics.png")
+            goalSpriteCopy = goalSprite.copy() as! SKSpriteNode
+            goalSpriteCopy.position = spritePosition
+            goalSpriteCopy.name = spriteName + String(numScoreSprites)
+            addChild(goalSpriteCopy)
+        }
+    }
+    
+    func removeScoreSprites()
+    {
+        if self.children.count > 0
+        {
+            //or try
+            for child in self.children
+            {
+                if ((child.name?.contains("goal")) != nil)
+                {
+                    child.removeFromParent()
+                    print("here1")
+                }
+                else if ((child.name?.contains("magnet")) != nil)
+                {
+                    child.removeFromParent()
+                    print("here2")
+                }
+            }
+        }
+    }
+    
+    func iterateBottomScoreOrder(yPointForScoreSprite: CGFloat)
+    {
+        for i in 0...String(currentBottomScore).count - 1
+        {
+            var spriteName = String()
+            (spriteName, currentBottomScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentBottomScoreOrder)
+            if spriteName.contains("magnet")
+            {
+                spriteName += String(magnetSprite.children.count + 1)
+            }
+            else
+            {
+                spriteName += String(goalSprite.children.count + 1)
+            }
+            
+            if i == 0
+            {
+                let xPointForScoreSprite = frame.width * 0.54
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                
+            }
+            else if i == 1
+            {
+                let xPointForScoreSprite = frame.width * 0.58
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 2
+            {
+                let xPointForScoreSprite = frame.width * 0.62
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 3
+            {
+                let xPointForScoreSprite = frame.width * 0.66
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 4
+            {
+                let xPointForScoreSprite = frame.width * 0.70
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 5
+            {
+                let xPointForScoreSprite = frame.width * 0.74
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 6
+            {
+                let xPointForScoreSprite = frame.width * 0.78
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 7
+            {
+                let xPointForScoreSprite = frame.width * 0.82
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+    
+        }
+    }
+    
+    func iterateTopScoreOrder(yPointForScoreSprite: CGFloat)
+    {
+        for i in 0...String(currentTopScore).count - 1
+        {
+            var spriteName = String()
+            (spriteName, currentTopScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentTopScoreOrder)
+            if spriteName.contains("magnet")
+            {
+                spriteName += String(magnetSprite.children.count + 1)
+            }
+            else
+            {
+                spriteName += String(goalSprite.children.count + 1)
+            }
+            
+            if i == 0
+            {
+                let xPointForScoreSprite = frame.width * 0.18
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+                
+            }
+            else if i == 1
+            {
+                let xPointForScoreSprite = frame.width * 0.22
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 2
+            {
+                let xPointForScoreSprite = frame.width * 0.26
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 3
+            {
+                let xPointForScoreSprite = frame.width * 0.30
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 4
+            {
+                let xPointForScoreSprite = frame.width * 0.34
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 5
+            {
+                let xPointForScoreSprite = frame.width * 0.38
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 6
+            {
+                let xPointForScoreSprite = frame.width * 0.42
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+            else if i == 7
+            {
+                let xPointForScoreSprite = frame.width * 0.46
+                createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
+            }
+    
+        }
+    }
+    
     func iterateResultsForLoop(i: Int)
     {
         if i == firstResultNum - 1
         {
             formatResultLabels(resultText: result1Label, resultScore: result1Score)
+            iterateTopScoreOrder(yPointForScoreSprite: frame.height * 0.73)
+            iterateBottomScoreOrder(yPointForScoreSprite: frame.height * 0.73)
         }
         else if i == firstResultNum
         {
             formatResultLabels(resultText: result2Label, resultScore: result2Score)
+            iterateTopScoreOrder(yPointForScoreSprite: frame.height * 0.64)
+            iterateBottomScoreOrder(yPointForScoreSprite: frame.height * 0.64)
         }
         else if i == firstResultNum + 1
         {
@@ -676,6 +868,37 @@ class StatisticsScene: SKScene
         {
             formatResultLabels(resultText: result5Label, resultScore: result5Score)
         }
+    }
+    
+    func spriteOrderAlgorithm(scoreOrder: Int) -> (String, Int)
+    {
+        //for goal/magnet order:
+        //consider binary int to get order of goal and magnet goals...
+        //for ex. int: 10111 % 2 != 0, then divide by 10 and take floor..
+        // ... 10 mod 10 = 0, therefore other..
+        if scoreOrder >= 10
+        {
+            if scoreOrder % 2 == 0
+            {
+                return ("goal", Int(floor(Float(scoreOrder / 10))))
+            }
+            else
+            {
+                return ("magnet", Int(floor(Float(scoreOrder / 10))))
+            }
+        }
+        else if scoreOrder < 10
+        {
+            if scoreOrder % 2 == 0
+            {
+                return ("goal", -1)
+            }
+            else
+            {
+                return ("magnet", -1)
+            }
+        }
+        return ("error", -2)
     }
     
     func showPageResults(game: String)
@@ -694,8 +917,9 @@ class StatisticsScene: SKScene
                     currentBottomScore = DBHelper.shared.magnetHockeyArr[arrayCount - i][1]
                     currentTopScoreOrder = DBHelper.shared.magnetHockeyArr[arrayCount - i][2]
                     currentBottomScoreOrder =  DBHelper.shared.magnetHockeyArr[arrayCount - i][3]
-                    
+                    currentResultPageTotalScoresCount += currentTopScore + currentBottomScore
                     iterateResultsForLoop(i: i)
+                    
                 }
             }
             else
@@ -716,6 +940,7 @@ class StatisticsScene: SKScene
                     let arrayCount = DBHelper.shared.airHockey1PArr.count - 1
                     currentTopScore = DBHelper.shared.airHockey1PArr[arrayCount - i][0]
                     currentBottomScore = DBHelper.shared.airHockey1PArr[arrayCount - i][1]
+                    currentResultPageTotalScoresCount += currentTopScore + currentBottomScore
                     
                     iterateResultsForLoop(i: i)
                 }
@@ -738,6 +963,7 @@ class StatisticsScene: SKScene
                     let arrayCount = DBHelper.shared.airHockey2PArr.count - 1
                     currentTopScore = DBHelper.shared.airHockey2PArr[arrayCount - i][0]
                     currentBottomScore = DBHelper.shared.airHockey2PArr[arrayCount - i][1]
+                    currentResultPageTotalScoresCount += currentTopScore + currentBottomScore
                     
                     iterateResultsForLoop(i: i)
                 }
@@ -763,6 +989,7 @@ class StatisticsScene: SKScene
                     currentBottomScore = DBHelper.shared.allArr[arrayCount - i][1]
                     currentTopScoreOrder = DBHelper.shared.allArr[arrayCount - i][2]
                     currentBottomScoreOrder =  DBHelper.shared.allArr[arrayCount - i][3]
+                    currentResultPageTotalScoresCount += currentTopScore + currentBottomScore
                     
                     iterateResultsForLoop(i: i)
                 }
@@ -793,11 +1020,11 @@ class StatisticsScene: SKScene
     
     func createResultLabels()
     {
-        createLabel(labelName: result1Label, text: "", position: CGPoint(x: frame.width * 0.25,  y: frame.height * 0.75))
-        createLabel(labelName: result2Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.67))
+        createLabel(labelName: result1Label, text: "", position: CGPoint(x: frame.width * 0.25,  y: frame.height * 0.77))
+        createLabel(labelName: result2Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.68))
         createLabel(labelName: result3Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.59))
-        createLabel(labelName: result4Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.51))
-        createLabel(labelName: result5Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.43))
+        createLabel(labelName: result4Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.50))
+        createLabel(labelName: result5Label, text: "", position: CGPoint(x: frame.width * 0.25, y: frame.height * 0.41))
         result1Label.horizontalAlignmentMode = .left
         result2Label.horizontalAlignmentMode = .left
         result3Label.horizontalAlignmentMode = .left
@@ -805,11 +1032,11 @@ class StatisticsScene: SKScene
         result5Label.horizontalAlignmentMode = .left
 
         
-        createLabel(labelName: result1Score, text: "", position: CGPoint(x: frame.width * 0.50,  y: frame.height * 0.75))
-        createLabel(labelName: result2Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.67))
+        createLabel(labelName: result1Score, text: "", position: CGPoint(x: frame.width * 0.50,  y: frame.height * 0.77))
+        createLabel(labelName: result2Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.68))
         createLabel(labelName: result3Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.59))
-        createLabel(labelName: result4Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.51))
-        createLabel(labelName: result5Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.43))
+        createLabel(labelName: result4Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.50))
+        createLabel(labelName: result5Score, text: "", position: CGPoint(x: frame.width * 0.50, y: frame.height * 0.41))
     }
     
     override func didMove(to view: SKView)
@@ -826,6 +1053,7 @@ class StatisticsScene: SKScene
         createBackToSelectionButton()
         createPagesLabel()
         createResultLabels()
+        createMagnetAndGoalSprits()
         DBHelper.shared.createDatabase()
         
         backButtonGameMode = SKSpriteNode(imageNamed: "GreySquare.png")
@@ -1019,7 +1247,7 @@ class StatisticsScene: SKScene
                 skView.presentScene(scene, transition: transition)
             }
             
-            else if nodesArray.contains(showResultsButton) && touchedShowResults == true
+            else if nodesArray.contains(showResultsButton) && touchedShowResults == true && statsTypeLabel.text == "Game History"
             {
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
@@ -1067,6 +1295,7 @@ class StatisticsScene: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 backToSelectionButton.colorBlendFactor = 0
+                removeScoreSprites()
                 touchedBackToSelectionButton = false
                 UIBehaviorBeforeShowingResult()
                 handleGameModeArrowPress()
@@ -1153,6 +1382,8 @@ class StatisticsScene: SKScene
                 forwardButtonPages.colorBlendFactor = 0
                 resetResultLabels()
                 arrowPressCounterPages -= 1
+                currentResultPageTotalScoresCount = 0
+                removeScoreSprites()
                 resetResultLabels()
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
@@ -1195,6 +1426,8 @@ class StatisticsScene: SKScene
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
                 arrowPressCounterPages += 1
+                currentResultPageTotalScoresCount = 0
+                removeScoreSprites()
                 if (arrowPressCounterPages + 1 == numPages) && (oneResultPage != true)
                 {
                     forwardButtonPages.colorBlendFactor = 0.5
@@ -1277,5 +1510,9 @@ class StatisticsScene: SKScene
                 }
             }
         }
+    }
+    override func update(_ currentTime: TimeInterval)
+    {
+
     }
 }

@@ -3010,9 +3010,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             gameOver = true
             DBHelper.shared.createDatabase()
             DBHelper.shared.createTable(game: "MagnetHockey")
+            DBHelper.shared.createTable(game: "All")
+
             if northPlayerScore > 0 && southPlayerScore > 0
             {
                 DBHelper.shared.insertGame(game: "MagnetHockey", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: Int(northPlayerPointOrder)!, magnetGoalsOrderGameBottom: Int(southPlayerPointOrder)!)
+                DBHelper.shared.insertGame(game: "All", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: Int(northPlayerPointOrder)!, magnetGoalsOrderGameBottom: Int(southPlayerPointOrder)!)
                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                     self.gameOverIsTrue()
                 })
@@ -3020,6 +3023,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             else if northPlayerScore > 0 && southPlayerScore == 0
             {
                 DBHelper.shared.insertGame(game: "MagnetHockey", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: Int(northPlayerPointOrder)!, magnetGoalsOrderGameBottom: 0)
+                DBHelper.shared.insertGame(game: "All", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: Int(northPlayerPointOrder)!, magnetGoalsOrderGameBottom: 0)
                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                     self.gameOverIsTrue()
                 })
@@ -3027,6 +3031,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             else if northPlayerScore == 0 && southPlayerScore > 0
             {
                 DBHelper.shared.insertGame(game: "MagnetHockey", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: Int(southPlayerPointOrder)!)
+                DBHelper.shared.insertGame(game: "All", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: Int(southPlayerPointOrder)!)
                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                     self.gameOverIsTrue()
                 })
@@ -3034,6 +3039,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             else
             {
                 DBHelper.shared.insertGame(game: "MagnetHockey", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: 0)
+                DBHelper.shared.insertGame(game: "All", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: 0)
                 Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                     self.gameOverIsTrue()
                 })
