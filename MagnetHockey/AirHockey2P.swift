@@ -1363,8 +1363,8 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             DBHelper.shared.createDatabase()
             DBHelper.shared.createTable(game: "AirHockey2P")
             DBHelper.shared.createTable(game: "All")
-            DBHelper.shared.insertGame(game: "AirHockey2P", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: 0)
-            DBHelper.shared.insertGame(game: "All", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 0, magnetGoalsOrderGameBottom: 0)
+            DBHelper.shared.insertGame(game: "AirHockey2P", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 3, magnetGoalsOrderGameBottom: 3)
+            DBHelper.shared.insertGame(game: "All", topScoreGame: northPlayerScore, bottomScoreGame: southPlayerScore, magnetGoalsOrderGameTop: 3, magnetGoalsOrderGameBottom: 3)
             Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { timer in
                 self.gameOverIsTrue()
             })

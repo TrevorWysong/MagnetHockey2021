@@ -2872,7 +2872,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         if ballInSouthGoal == true
         {
             ballInSouthGoal = false
-            northPlayerPointOrder += "0"
+            northPlayerPointOrder += "2"
             northPlayerScore += 1
             ball?.physicsBody?.isDynamic = false
             ball?.position = CGPoint(x: bottomGoal.position.x, y: bottomGoal.position.y)
@@ -2905,7 +2905,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         else if ballInNorthGoal == true
         {
             ballInNorthGoal = false
-            southPlayerPointOrder += "0"
+            southPlayerPointOrder += "2"
             ball?.physicsBody?.isDynamic = false
             ball?.position = CGPoint(x: topGoal.position.x, y: topGoal.position.y)
             updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()

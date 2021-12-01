@@ -66,6 +66,8 @@ class DBHelper
             let createTable = self.airHockey1PTable.create { table in
                 table.column(self.topScore)
                 table.column(self.bottomScore)
+                table.column(self.magnetGoalsOrderTop)
+                table.column(self.magnetGoalsOrderBottom)
             }
             do
             {
@@ -81,6 +83,8 @@ class DBHelper
             let createTable = self.airHockey2PTable.create { table in
                 table.column(self.topScore)
                 table.column(self.bottomScore)
+                table.column(self.magnetGoalsOrderTop)
+                table.column(self.magnetGoalsOrderBottom)
             }
             do
             {
@@ -126,7 +130,7 @@ class DBHelper
         }
         else if game == "AirHockey1P"
         {
-            let insertGame = self.airHockey1PTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame)
+            let insertGame = self.airHockey1PTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame, magnetGoalsOrderTop <- magnetGoalsOrderGameTop, magnetGoalsOrderBottom <- magnetGoalsOrderGameBottom)
             do
             {
                 try self.database.run(insertGame)
@@ -138,7 +142,7 @@ class DBHelper
         }
         else if game == "AirHockey2P"
         {
-            let insertGame = self.airHockey2PTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame)
+            let insertGame = self.airHockey2PTable.insert(topScore <- topScoreGame, bottomScore <- bottomScoreGame, magnetGoalsOrderTop <- magnetGoalsOrderGameTop, magnetGoalsOrderBottom <- magnetGoalsOrderGameBottom)
             do
             {
                 try self.database.run(insertGame)
@@ -186,7 +190,7 @@ class DBHelper
                 let games = try self.database.prepare(self.airHockey1PTable)
                 for game in games
                 {
-                    airHockey1PArr.append([game[self.topScore], game[self.bottomScore]])
+                    airHockey1PArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
                 }
             }
             catch
@@ -201,7 +205,7 @@ class DBHelper
                 let games = try self.database.prepare(self.airHockey2PTable)
                 for game in games
                 {
-                    airHockey2PArr.append([game[self.topScore], game[self.bottomScore]])
+                    airHockey2PArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
                 }
             }
             catch

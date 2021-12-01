@@ -325,7 +325,7 @@ class StatisticsScene: SKScene
     {
         magnetSprite = SKSpriteNode(imageNamed: "magnetStatistics.png")
         magnetSprite.position = CGPoint(x: -frame.width/2, y: -frame.height * 0.56)
-        magnetSprite.scale(to: CGSize(width: frame.width * 0.06, height: frame.width * 0.06))
+        magnetSprite.scale(to: CGSize(width: frame.width * 0.05, height: frame.width * 0.05))
         magnetSprite.colorBlendFactor = 0
         magnetSprite.isHidden = false
         magnetSprite.zPosition = 5
@@ -333,7 +333,7 @@ class StatisticsScene: SKScene
         
         goalSprite = SKSpriteNode(imageNamed: "ballInGoalStatistics.png")
         goalSprite.position = CGPoint(x: -frame.width/2, y: -frame.height * 0.56)
-        goalSprite.scale(to: CGSize(width: frame.width * 0.06, height: frame.width * 0.06))
+        goalSprite.scale(to: CGSize(width: frame.width * 0.05, height: frame.width * 0.05))
         goalSprite.colorBlendFactor = 0
         goalSprite.isHidden = false
         goalSprite.zPosition = 2
@@ -655,20 +655,6 @@ class StatisticsScene: SKScene
             getNumPages(arrayCount: DBHelper.shared.allArr.count)
             numGames = DBHelper.shared.allArr.count
         }
-    
-        
-        //for goal/magnet order:
-        //consider binary int to get order of goal and magnet goals...
-        //concatenate to string and then cast to int before inserting to db
-        //for ex. int: 10111 % 2 != 0, then divide by 10 and take floor..
-        // ... 10 mod 10 = 0, therefore other..
-        
-        // pages algorithm:
-        // get length of arr (.count)
-        // len % (desired number of games per page)
-        // ex. 43 games with 5 games displayed per page should have 9 pages
-        // 43 / 8 = 5.3xx.. take floor of division and then + 1 ***if*** len % games per page != 0
-        
     }
     
     func formatResultLabels(resultText: SKLabelNode, resultScore: SKLabelNode)
@@ -681,7 +667,7 @@ class StatisticsScene: SKScene
     
     func createScoreSpriteChildren(spritePosition: CGPoint, spriteName: String)
     {
-        if spriteName.contains("magnet")
+        if spriteName.contains("magnet") && (currentTopScoreOrder != 3 || currentBottomScoreOrder != 3)
         {
             numScoreSprites += 1
             var magnetSpriteCopy = SKSpriteNode(imageNamed: "magnetStatistics.png")
@@ -690,7 +676,16 @@ class StatisticsScene: SKScene
             magnetSpriteCopy.name = spriteName + String(numScoreSprites)
             addChild(magnetSpriteCopy)
         }
-        else if spriteName.contains("goal")
+        else if spriteName.contains("goal") && (currentTopScoreOrder != 3 || currentBottomScoreOrder != 3)
+        {
+            numScoreSprites += 1
+            var goalSpriteCopy = SKSpriteNode(imageNamed: "ballInGoalStatistics.png")
+            goalSpriteCopy = goalSprite.copy() as! SKSpriteNode
+            goalSpriteCopy.position = spritePosition
+            goalSpriteCopy.name = spriteName + String(numScoreSprites)
+            addChild(goalSpriteCopy)
+        }
+        else if spriteName.contains("airHockey")
         {
             numScoreSprites += 1
             var goalSpriteCopy = SKSpriteNode(imageNamed: "ballInGoalStatistics.png")
@@ -711,12 +706,14 @@ class StatisticsScene: SKScene
                 if ((child.name?.contains("goal")) != nil)
                 {
                     child.removeFromParent()
-                    print("here1")
                 }
                 else if ((child.name?.contains("magnet")) != nil)
                 {
                     child.removeFromParent()
-                    print("here2")
+                }
+                else if ((child.name?.contains("airHockey")) != nil)
+                {
+                    child.removeFromParent()
                 }
             }
         }
@@ -726,38 +723,36 @@ class StatisticsScene: SKScene
     {
         if currentBottomScore > 0
         {
-            for i in 0...String(currentBottomScoreOrder).count - 1
+            for i in 0...currentBottomScore - 1
             {
                 var spriteName = String()
-                (spriteName, currentBottomScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentBottomScoreOrder)
-                if spriteName.contains("magnet")
+                if currentBottomScoreOrder != 3
                 {
-                    spriteName += String(magnetSprite.children.count + 1)
+                    (spriteName, currentBottomScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentBottomScoreOrder)
                 }
                 else
                 {
-                    spriteName += String(goalSprite.children.count + 1)
+                    spriteName = "airHockey"
                 }
                 
                 if i == 0
                 {
-                    let xPointForScoreSprite = frame.width * 0.54
+                    let xPointForScoreSprite = frame.width * 0.88
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
-                    
                 }
                 else if i == 1
                 {
-                    let xPointForScoreSprite = frame.width * 0.58
+                    let xPointForScoreSprite = frame.width * 0.835
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 2
                 {
-                    let xPointForScoreSprite = frame.width * 0.62
+                    let xPointForScoreSprite = frame.width * 0.79
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 3
                 {
-                    let xPointForScoreSprite = frame.width * 0.66
+                    let xPointForScoreSprite = frame.width * 0.745
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 4
@@ -767,17 +762,17 @@ class StatisticsScene: SKScene
                 }
                 else if i == 5
                 {
-                    let xPointForScoreSprite = frame.width * 0.74
+                    let xPointForScoreSprite = frame.width * 0.655
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 6
                 {
-                    let xPointForScoreSprite = frame.width * 0.78
+                    let xPointForScoreSprite = frame.width * 0.61
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 7
                 {
-                    let xPointForScoreSprite = frame.width * 0.82
+                    let xPointForScoreSprite = frame.width * 0.565
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
             }
@@ -788,33 +783,32 @@ class StatisticsScene: SKScene
     {
         if currentTopScore > 0
         {
-            for i in 0...String(currentTopScoreOrder).count - 1
+            for i in 0...currentTopScore - 1
             {
                 var spriteName = String()
-                (spriteName, currentTopScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentTopScoreOrder)
-                if spriteName.contains("magnet")
+                if currentTopScoreOrder != 3
                 {
-                    spriteName += String(magnetSprite.children.count + 1)
+                    (spriteName, currentTopScoreOrder) = spriteOrderAlgorithm(scoreOrder: currentTopScoreOrder)
                 }
                 else
                 {
-                    spriteName += String(goalSprite.children.count + 1)
+                    spriteName = "airHockey"
                 }
                 
                 if i == 0
                 {
-                    let xPointForScoreSprite = frame.width * 0.18
+                    let xPointForScoreSprite = frame.width * 0.435
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                     
                 }
                 else if i == 1
                 {
-                    let xPointForScoreSprite = frame.width * 0.22
+                    let xPointForScoreSprite = frame.width * 0.39
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 2
                 {
-                    let xPointForScoreSprite = frame.width * 0.26
+                    let xPointForScoreSprite = frame.width * 0.345
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 3
@@ -824,22 +818,22 @@ class StatisticsScene: SKScene
                 }
                 else if i == 4
                 {
-                    let xPointForScoreSprite = frame.width * 0.34
+                    let xPointForScoreSprite = frame.width * 0.255
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 5
                 {
-                    let xPointForScoreSprite = frame.width * 0.38
+                    let xPointForScoreSprite = frame.width * 0.21
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 6
                 {
-                    let xPointForScoreSprite = frame.width * 0.42
+                    let xPointForScoreSprite = frame.width * 0.165
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
                 else if i == 7
                 {
-                    let xPointForScoreSprite = frame.width * 0.46
+                    let xPointForScoreSprite = frame.width * 0.12
                     createScoreSpriteChildren(spritePosition: CGPoint(x: xPointForScoreSprite, y: yPointForScoreSprite), spriteName: spriteName)
                 }
             }
@@ -863,14 +857,20 @@ class StatisticsScene: SKScene
         else if i == firstResultNum + 1
         {
             formatResultLabels(resultText: result3Label, resultScore: result3Score)
+            iterateTopScoreOrder(yPointForScoreSprite: frame.height * 0.55)
+            iterateBottomScoreOrder(yPointForScoreSprite: frame.height * 0.55)
         }
         else if i == firstResultNum + 2
         {
             formatResultLabels(resultText: result4Label, resultScore: result4Score)
+            iterateTopScoreOrder(yPointForScoreSprite: frame.height * 0.46)
+            iterateBottomScoreOrder(yPointForScoreSprite: frame.height * 0.46)
         }
         else if i == firstResultNum + 3
         {
             formatResultLabels(resultText: result5Label, resultScore: result5Score)
+            iterateTopScoreOrder(yPointForScoreSprite: frame.height * 0.37)
+            iterateBottomScoreOrder(yPointForScoreSprite: frame.height * 0.37)
         }
     }
     
@@ -880,6 +880,8 @@ class StatisticsScene: SKScene
         //consider binary int to get order of goal and magnet goals...
         //for ex. int: 10111 % 2 != 0, then divide by 10 and take floor..
         // ... 10 mod 10 = 0, therefore other..
+        // 3 score indicates non-MagnetHockey game
+        // 1 = magnets; 2 = ball in goal
         if scoreOrder >= 10
         {
             if scoreOrder % 2 == 0
@@ -944,6 +946,8 @@ class StatisticsScene: SKScene
                     let arrayCount = DBHelper.shared.airHockey1PArr.count - 1
                     currentTopScore = DBHelper.shared.airHockey1PArr[arrayCount - i][0]
                     currentBottomScore = DBHelper.shared.airHockey1PArr[arrayCount - i][1]
+                    currentTopScoreOrder = DBHelper.shared.airHockey1PArr[arrayCount - i][2]
+                    currentBottomScoreOrder =  DBHelper.shared.airHockey1PArr[arrayCount - i][3]
                     currentResultPageTotalScoresCount += currentTopScore + currentBottomScore
                     
                     iterateResultsForLoop(i: i)
@@ -967,6 +971,8 @@ class StatisticsScene: SKScene
                     let arrayCount = DBHelper.shared.airHockey2PArr.count - 1
                     currentTopScore = DBHelper.shared.airHockey2PArr[arrayCount - i][0]
                     currentBottomScore = DBHelper.shared.airHockey2PArr[arrayCount - i][1]
+                    currentTopScoreOrder = DBHelper.shared.airHockey2PArr[arrayCount - i][2]
+                    currentBottomScoreOrder =  DBHelper.shared.airHockey2PArr[arrayCount - i][3]
                     currentResultPageTotalScoresCount += currentTopScore + currentBottomScore
                     
                     iterateResultsForLoop(i: i)
