@@ -22,8 +22,6 @@ class DBHelper
     var magnetHockeyArr: [[Int]] = []
     var airHockey1PArr: [[Int]] = []
     var airHockey2PArr: [[Int]] = []
-
-    
     
     // ? allows expression to be optional i.e. <Int?>
     
@@ -166,8 +164,11 @@ class DBHelper
         }
     }
     
-    func listGames(game: String)
+    func listGames(game: String) -> (Int, Int)
     {
+        var numTopWins = 0
+        var numBottomWins = 0
+        
         if game == "MagnetHockey"
         {
             do
@@ -176,6 +177,14 @@ class DBHelper
                 for game in games
                 {
                     magnetHockeyArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
+                    if game[self.topScore] > game[self.bottomScore]
+                    {
+                        numTopWins += 1
+                    }
+                    else
+                    {
+                        numBottomWins += 1
+                    }
                 }
             }
             catch
@@ -191,6 +200,14 @@ class DBHelper
                 for game in games
                 {
                     airHockey1PArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
+                    if game[self.topScore] > game[self.bottomScore]
+                    {
+                        numTopWins += 1
+                    }
+                    else
+                    {
+                        numBottomWins += 1
+                    }
                 }
             }
             catch
@@ -206,6 +223,14 @@ class DBHelper
                 for game in games
                 {
                     airHockey2PArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
+                    if game[self.topScore] > game[self.bottomScore]
+                    {
+                        numTopWins += 1
+                    }
+                    else
+                    {
+                        numBottomWins += 1
+                    }
                 }
             }
             catch
@@ -221,6 +246,14 @@ class DBHelper
                 for game in games
                 {
                     allArr.append([game[self.topScore], game[self.bottomScore], game[self.magnetGoalsOrderTop], game[self.magnetGoalsOrderBottom]])
+                    if game[self.topScore] > game[self.bottomScore]
+                    {
+                        numTopWins += 1
+                    }
+                    else
+                    {
+                        numBottomWins += 1
+                    }
                 }
             }
             catch
@@ -228,7 +261,7 @@ class DBHelper
                 print(error)
             }
         }
-        
+        return (numBottomWins, numTopWins)
     }
     
     func deleteTables()
