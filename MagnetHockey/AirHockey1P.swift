@@ -42,7 +42,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var touchedPauseButton = false
     var touchedBackToMenuButton = false
     var touchedSoundOff = false
-    var GameIsPaused = false
     var southPlayer : BottomPlayer?
     var botPlayer : BotPlayer?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
@@ -681,6 +680,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     override func didMove(to view: SKView)
     {
+        GameIsPaused = false
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?
@@ -1526,8 +1526,21 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     func ballCanReachTarget() -> Bool
     {
         let goalHeight = topGoalEdgeBottom
-        let goalDifferenceFromBall = goalHeight - ball!.position.y
-        if (ball?.physicsBody?.velocity.dy.magnitude)! >= goalDifferenceFromBall
+        let goalYDifferenceFromBall = goalHeight - ball!.position.y
+        var goalXDifferenceFromBall: CGFloat
+        if ball!.position.x < frame.width * 0.20
+        {
+            goalXDifferenceFromBall = abs((frame.width * 0.20) - ball!.position.x)
+        }
+        else if ball!.position.x > frame.width * 0.80
+        {
+            goalXDifferenceFromBall = abs((frame.width * 0.80) - ball!.position.x)
+        }
+        else
+        {
+            goalXDifferenceFromBall = 0
+        }
+        if (ball?.physicsBody?.velocity.dy.magnitude)! >= goalYDifferenceFromBall && (ball?.physicsBody?.velocity.dx.magnitude)! >= goalXDifferenceFromBall
         {
             return true
         }
@@ -1597,6 +1610,10 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     func botAttack()
     {
+        let playerPosBelowTopGoalEdge = topGoalEdgeBottom - botPlayer!.radius
+        let playerGoalDefenseHigherYBound = playerPosBelowTopGoalEdge - frame.height * 0.01
+        let playerGoalDefenseLowerYBound = playerPosBelowTopGoalEdge - frame.height * 0.02
+
         //If bot is above ball on bot's side trigger attack mode. Consider the balls velocity vector while going for attack
         if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botAttackSwitch == false && botDefendSwitch == false && botMirrorSwitch == false
         {
@@ -1613,7 +1630,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             if ballIsOnTarget() == false && ballCanReachTarget() == true
             {
                 // returned to mirror Y zone
-                if botPlayer!.position.y >= topGoalEdgeBottom - (frame.height * 0.07) && botPlayer!.position.y <= topGoalEdgeBottom - (frame.height * 0.055)
+                if botPlayer!.position.y >= playerGoalDefenseLowerYBound && botPlayer!.position.y <= playerGoalDefenseHigherYBound
                 {
                     botPlayer!.physicsBody?.velocity.dy = 0
                     
@@ -1705,7 +1722,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
 
                 //below mirroring y-zone for passive defending
-                else if botPlayer!.position.y < topGoalEdgeBottom - (frame.height * 0.07)
+                else if botPlayer!.position.y < playerGoalDefenseLowerYBound
                 {
                     botPlayer!.physicsBody?.velocity.dy = 300
                     
@@ -1797,7 +1814,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
 
                 //above mirroring y-zone for passive defending
-                else if botPlayer!.position.y > topGoalEdgeBottom - (frame.height * 0.055)
+                else if botPlayer!.position.y > playerGoalDefenseHigherYBound
                 {
                     botPlayer!.physicsBody?.velocity.dy = -300
                             
@@ -1892,17 +1909,17 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             else if ballIsOnTarget() == true
             {
                 // returned to mirror Y zone
-                if botPlayer!.position.y >= topGoalEdgeBottom - (frame.height * 0.05) && botPlayer!.position.y <= topGoalEdgeBottom - (frame.height * 0.055) && madeItToExpectedBallPos == false
+                if botPlayer!.position.y >= playerGoalDefenseLowerYBound && botPlayer!.position.y <= playerGoalDefenseHigherYBound && madeItToExpectedBallPos == false
                 {
                     botPlayer!.physicsBody?.velocity.dy = 0
                 }
                 //below mirroring y-zone for passive defending
-                else if botPlayer!.position.y < topGoalEdgeBottom - (frame.height * 0.05) && madeItToExpectedBallPos == false
+                else if botPlayer!.position.y < playerGoalDefenseLowerYBound && madeItToExpectedBallPos == false
                 {
                     botPlayer!.physicsBody?.velocity.dy = 300
                 }
                 //above mirroring y-zone for passive defending
-                else if botPlayer!.position.y > topGoalEdgeBottom - (frame.height * 0.055) && madeItToExpectedBallPos == false
+                else if botPlayer!.position.y > playerGoalDefenseHigherYBound && madeItToExpectedBallPos == false
                 {
                     botPlayer!.physicsBody?.velocity.dy = -300
                 }
@@ -1920,7 +1937,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     {
                         botPlayer?.physicsBody?.velocity.dx = (abs((botDistanceFromSave/ballDistanceFromGoal) * ball!.physicsBody!.velocity.dy)) * -1
                     }
-                    else if (botPlayer!.position.x - expectedBallXPos >= -10) && (botPlayer!.position.x - expectedBallXPos <= 10) && (botPlayer!.position.y > ball!.position.y) && (botPlayer!.position.y) >= (topGoalEdgeBottom - (frame.height * 0.08)) && (ball!.physicsBody!.velocity.dy > 0)
+                    else if (botPlayer!.position.x - expectedBallXPos >= -10) && (botPlayer!.position.x - expectedBallXPos <= 10) && (botPlayer!.position.y > ball!.position.y) && (botPlayer!.position.y) >= playerGoalDefenseLowerYBound && (ball!.physicsBody!.velocity.dy > 0)
                     {
                         botPlayer?.physicsBody?.velocity.dx = 0
                         madeItToExpectedBallPos = true
@@ -1936,7 +1953,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         }
         else if ballIsOnTarget() == false && ballCanReachTarget() == false && (ball?.position.y)! > frame.height * 0.50 && botAttackSwitch == true && ball!.physicsBody!.velocity.dy > -1 * (frame.height * 0.2)
         {
-            let timeToReachBall = 100.0
+            let timeToReachBall = 2.5
 
             let linearDampingX =  floor(Double(ball!.physicsBody!.velocity.dx / (1 + ((timeToReachBall/2) * ball!.physicsBody!.linearDamping))))
 
@@ -1961,6 +1978,10 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     func botMirror()
     {
+        let playerPosBelowTopGoalEdge = topGoalEdgeBottom - botPlayer!.radius
+        let playerGoalDefenseHigherYBound = playerPosBelowTopGoalEdge - frame.height * 0.05
+        let playerGoalDefenseLowerYBound = playerPosBelowTopGoalEdge - frame.height * 0.075
+        
         // If ball is on player's side, mirror the balls movement to prepare for defense and attack
         
         if (ball!.position.y) < frame.height * 0.5 && botMirrorSwitch == false
@@ -1973,7 +1994,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         else if (ball!.position.y) < frame.height * 0.5 && botMirrorSwitch == true
         {
             // returned to mirror Y zone
-            if botPlayer!.position.y >= topGoalEdgeBottom - (frame.height * 0.07) && botPlayer!.position.y <= topGoalEdgeBottom - (frame.height * 0.055)
+            if botPlayer!.position.y >= playerGoalDefenseLowerYBound && botPlayer!.position.y <= playerGoalDefenseHigherYBound
             {
                 botPlayer!.physicsBody?.velocity.dy = 0
                 
@@ -2065,7 +2086,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             }
 
             //below mirroring y-zone for passive defending
-            else if botPlayer!.position.y < topGoalEdgeBottom - (frame.height * 0.07)
+            else if botPlayer!.position.y < playerGoalDefenseLowerYBound
             {
                 botPlayer!.physicsBody?.velocity.dy = 300
                 
@@ -2157,7 +2178,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             }
 
             //above mirroring y-zone for passive defending
-            else if botPlayer!.position.y > topGoalEdgeBottom - (frame.height * 0.055)
+            else if botPlayer!.position.y > playerGoalDefenseHigherYBound
             {
                 botPlayer!.physicsBody?.velocity.dy = -300
                         
@@ -2298,7 +2319,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 SKTAudio.sharedInstance().pauseBackgroundMusic()
                 // Configure the view.
                 let skView = self.view!
-                skView.isMultipleTouchEnabled = true
+                skView.isMultipleTouchEnabled = false
                 GameIsPaused = false
             }
             else if nodesArray.contains(backToMenuButton) && touchedBackToMenuButton == true

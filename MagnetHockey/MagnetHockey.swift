@@ -103,7 +103,6 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var touchedBackToMenuButton = false
     var touchedSoundOff = false
     var touchedTutorial = false
-    var GameIsPaused = false
     var southPlayer : BottomPlayer?
     var northPlayer : NorthPlayer?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
@@ -1138,6 +1137,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     override func didMove(to view: SKView)
     {
+        GameIsPaused = false
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?

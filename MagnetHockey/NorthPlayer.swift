@@ -126,7 +126,7 @@ class NorthPlayer: SKShapeNode
             }
         }
         
-        if (releventTouch != nil) && lastTouchTimeStamp != nil
+        if (releventTouch != nil) && lastTouchTimeStamp != nil && GameIsPaused == false
         {
             //get touch position and relocate player
             let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y - frame.height * 0.42)
@@ -153,14 +153,10 @@ class NorthPlayer: SKShapeNode
             forceSaveDY.set(velocityCGFloat * yOffset / vectorLength, forKey: "NorthForceDY")
             forceSaveDY.synchronize()
             
-            let velocitySave = UserDefaults.standard
-            velocitySave.set(velocityCGFloat, forKey: "NorthVelocity")
-            velocitySave.synchronize()
-            
             //update latest touch time for next calculation
             lastTouchTimeStamp = releventTouch.timestamp
         }
-        else if (releventTouch != nil) && lastTouchTimeStamp == nil
+        else if (releventTouch != nil) && lastTouchTimeStamp == nil && GameIsPaused == false
         {
             //get touch position and relocate player
             let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y - frame.height * 0.42)

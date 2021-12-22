@@ -122,7 +122,7 @@ class BottomPlayer: SKShapeNode
             }
         }
         
-        if (releventTouch != nil) && lastTouchTimeStamp != nil
+        if (releventTouch != nil) && lastTouchTimeStamp != nil && GameIsPaused == false
         {
             //get touch position and relocate player
             let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * 0.24)
@@ -148,17 +148,13 @@ class BottomPlayer: SKShapeNode
             forceSaveDY.set(velocityCGFloat * yOffset / vectorLength, forKey: "BottomForceDY")
             forceSaveDY.synchronize()
             
-            let velocitySave = UserDefaults.standard
-            velocitySave.set(velocityCGFloat, forKey: "BottomVelocity")
-            velocitySave.synchronize()
-            
             //Only apply an impulse if the touch is active.
             delegate?.bottomTouchIsActive(bottomTouchIsActive, fromBottomPlayer: self)
 
             //update latest touch time for next calculation
             lastTouchTimeStamp = releventTouch.timestamp
         }
-        else if (releventTouch != nil) && lastTouchTimeStamp == nil
+        else if (releventTouch != nil) && lastTouchTimeStamp == nil && GameIsPaused == false
         {
             //get touch position and relocate player
             let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * 0.24)

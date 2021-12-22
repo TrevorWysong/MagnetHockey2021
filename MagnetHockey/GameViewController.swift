@@ -11,6 +11,7 @@ import GoogleMobileAds
 
 var adsAreDisabled = false
 var textureAtlas = [SKTextureAtlas]()
+var GameIsPaused : Bool?
 
 extension SKNode {
     class func unarchiveFromFile(_ file : NSString) -> SKNode?
