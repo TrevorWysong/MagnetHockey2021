@@ -75,6 +75,8 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
     var tempBallVelocity2 = CGVector(dx: 0, dy: 0)
     var tempResetBallPosition = CGPoint(x: 0, y: 0)
     var tempResetBall2Position = CGPoint(x: 0, y: 0)
+    var topGoalEdgeBottom = CGFloat(0.0)
+    var bottomGoalEdgeTop = CGFloat(0.0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
@@ -308,6 +310,8 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
         {
             topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.width * 0.323))
         }
+        topGoalEdgeBottom = topGoalEdge.position.y - (topGoalEdge.size.height * 0.5)
+        bottomGoalEdgeTop = bottomGoalEdge.position.y + (bottomGoalEdge.size.height * 0.5)
         topGoalEdge.zPosition = 100
         topGoalEdge.blendMode = .replace
         //setup physics for this edge
@@ -322,12 +326,6 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
         topGoalEdge.physicsBody?.angularDamping = 0.0
         addChild(topGoalEdge)
         
-//        let roundedRectangle = SKShapeNode(rect: CGRect(x: frame.width * 0.01, y: frame.height * 0.005, width: frame.width * 0.98, height: frame.height * 0.99), cornerRadius: 50)
-//        roundedRectangle.lineWidth = frame.width * 0.03
-//        roundedRectangle.zPosition = -25
-//        roundedRectangle.strokeColor = .darkGray
-//        roundedRectangle.blendMode = .replace
-//        addChild(roundedRectangle)
     }
     
     func createCenterCircle()
@@ -344,33 +342,24 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.45, height: frame.width * 0.415))
-            
-            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.935)
-            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.065)
-            semiCircleTop.scale(to: CGSize(width: frame.width * 0.625, height: (frame.width * 0.625) * 0.532))
-            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.625, height: (frame.width * 0.625) * 0.532))
         }
         else if frame.width < 700 && frame.height > 800
         {
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
-            
-            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.90)
-            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.10)
-            semiCircleTop.scale(to: CGSize(width: frame.width * 0.62, height: (frame.width * 0.62) * 0.532))
-            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.62, height: (frame.width * 0.62) * 0.532))
         }
         else
         {
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
-            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.96)
-            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.04)
-            semiCircleTop.scale(to: CGSize(width: frame.width * 0.645, height: (frame.width * 0.645) * 0.532))
-            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.645, height: (frame.width * 0.645) * 0.532))
         }
+        semiCircleTop.scale(to: CGSize(width: frame.width * 0.60, height: (frame.width * 0.60) * 0.48))
+        semiCircleBottom.scale(to: CGSize(width: frame.width * 0.60, height: (frame.width * 0.60) * 0.48))
+        semiCircleTop.position = CGPoint(x: frame.width/2, y: topGoalEdgeBottom - (semiCircleTop.size.height / 2))
+        semiCircleBottom.position = CGPoint(x: frame.width/2, y: bottomGoalEdgeTop + (semiCircleBottom.size.height/2))
+        
         centerCircle.zPosition = -100
         centerCircle.colorBlendFactor = 0.50
         addChild(centerCircle)
@@ -778,9 +767,9 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
             interstitialAd = createAndLoadInterstitial()
         }
         
+        createEdges()
         drawCenterLine()
         getMaxBallSpeed()
-        createCenterCircle()
         createPauseAndPlayButton()
         createPlayers()
         createBall()
@@ -789,9 +778,9 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
         createPauseGameTitle()
         createBackToMenuButton()
         createSoundButton()
+        createCenterCircle()
         createNorthPlayerScore()
         createSouthPlayerScore()
-        createEdges()
         createPlayerLoseWinBackgrounds()
         if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
         {
@@ -2050,63 +2039,88 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
 
         }
         
-        if frame.height > 800 && frame.width < 500
+        if topGoalEdgeBottom != 0 && bottomGoalEdgeTop != 0
         {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height * 0.955)
+            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > topGoalEdgeBottom)
             {
                 ballInNorthGoal = true
             }
-        }
-        else
-        {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height)
-            {
-                ballInNorthGoal = true
-            }
-        }
             
-        if frame.height > 800 && frame.width < 500
-        {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < frame.height * 0.045)
+            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < bottomGoalEdgeTop)
             {
                 ballInSouthGoal = true
             }
-        }
-        else
-        {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < 0)
-            {
-                ballInSouthGoal = true
-            }
-        }
-        
-        if frame.height > 800 && frame.width < 500
-        {
-            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y > frame.height * 0.955)
-            {
-                ball2InNorthGoal = true
-            }
-        }
-        else
-        {
-            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y > frame.height)
-            {
-                ball2InNorthGoal = true
-            }
-        }
             
-        if frame.height > 800 && frame.width < 500
-        {
-            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y < frame.height * 0.045)
+            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y > topGoalEdgeBottom)
+            {
+                ball2InNorthGoal = true
+            }
+            
+            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y < bottomGoalEdgeTop)
             {
                 ball2InSouthGoal = true
             }
         }
         else
         {
-            if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y < 0)
+            if frame.height > 800 && frame.width < 500
             {
-                ball2InSouthGoal = true
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height * 0.955)
+                {
+                    ballInNorthGoal = true
+                }
+            }
+            else
+            {
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height)
+                {
+                    ballInNorthGoal = true
+                }
+            }
+                
+            if frame.height > 800 && frame.width < 500
+            {
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < frame.height * 0.045)
+                {
+                    ballInSouthGoal = true
+                }
+            }
+            else
+            {
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < 0)
+                {
+                    ballInSouthGoal = true
+                }
+            }
+            
+            if frame.height > 800 && frame.width < 500
+            {
+                if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y > frame.height * 0.955)
+                {
+                    ball2InNorthGoal = true
+                }
+            }
+            else
+            {
+                if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y > frame.height)
+                {
+                    ball2InNorthGoal = true
+                }
+            }
+                
+            if frame.height > 800 && frame.width < 500
+            {
+                if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y < frame.height * 0.045)
+                {
+                    ball2InSouthGoal = true
+                }
+            }
+            else
+            {
+                if (((ball2!.position.x > frame.width * 0.2) && (ball2!.position.x < frame.width * 0.8)) && ball2!.position.y < 0)
+                {
+                    ball2InSouthGoal = true
+                }
             }
         }
         

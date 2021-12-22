@@ -65,12 +65,15 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     var repulsionMode = false
     var botDefendSwitch = false
     var botAttackSwitch = false
+    var botMirrorSwitch = false
     var madeItToExpectedBallPos = false
     var numberRounds = 0
     var numberGames = 0
     var tempBallVelocity = CGVector(dx: 0, dy: 0)
     var tempBotVelocity = CGVector(dx: 0, dy: 0)
     var tempResetBallPosition = CGPoint(x: 0, y: 0)
+    var topGoalEdgeBottom = CGFloat(0.0)
+    var bottomGoalEdgeTop = CGFloat(0.0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
@@ -96,21 +99,21 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         if frame.height >= 812 && frame.height <= 900 && frame.width < 500
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.22)
-            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.78)
+            let botPlayerStartPoint = CGPoint(x: frame.width * 0.505, y: frame.height * 0.78)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
         }
         else if frame.height == 926 && frame.width < 500
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.225)
-            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.775)
+            let botPlayerStartPoint = CGPoint(x: frame.width * 0.505, y: frame.height * 0.775)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
         }
         else
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.185)
-            let botPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.815)
+            let botPlayerStartPoint = CGPoint(x: frame.width * 0.505, y: frame.height * 0.815)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             botPlayer = botPlayer(at: botPlayerStartPoint, boundary: botPlayerArea)
         }
@@ -303,6 +306,9 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         {
             topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.width * 0.323))
         }
+        topGoalEdgeBottom = topGoalEdge.position.y - (topGoalEdge.size.height * 0.5)
+        bottomGoalEdgeTop = bottomGoalEdge.position.y + (bottomGoalEdge.size.height * 0.5)
+        
         topGoalEdge.zPosition = 100
         topGoalEdge.blendMode = .replace
         //setup physics for this edge
@@ -316,13 +322,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         topGoalEdge.physicsBody?.linearDamping = 0.0
         topGoalEdge.physicsBody?.angularDamping = 0.0
         addChild(topGoalEdge)
-        
-//        let roundedRectangle = SKShapeNode(rect: CGRect(x: frame.width * 0.01, y: frame.height * 0.005, width: frame.width * 0.98, height: frame.height * 0.99), cornerRadius: 50)
-//        roundedRectangle.lineWidth = frame.width * 0.03
-//        roundedRectangle.zPosition = -25
-//        roundedRectangle.strokeColor = .darkGray
-//        roundedRectangle.blendMode = .replace
-//        addChild(roundedRectangle)
     }
     
     func createCenterCircle()
@@ -339,33 +338,24 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.45, height: frame.width * 0.415))
-            
-            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.935)
-            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.065)
-            semiCircleTop.scale(to: CGSize(width: frame.width * 0.625, height: (frame.width * 0.625) * 0.532))
-            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.625, height: (frame.width * 0.625) * 0.532))
         }
         else if frame.width < 700 && frame.height > 800
         {
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
-            
-            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.90)
-            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.10)
-            semiCircleTop.scale(to: CGSize(width: frame.width * 0.62, height: (frame.width * 0.62) * 0.532))
-            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.62, height: (frame.width * 0.62) * 0.532))
         }
         else
         {
             centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
             centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
             centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
-            semiCircleTop.position = CGPoint(x: frame.width/2, y: frame.height * 0.96)
-            semiCircleBottom.position = CGPoint(x: frame.width/2, y: frame.height * 0.04)
-            semiCircleTop.scale(to: CGSize(width: frame.width * 0.645, height: (frame.width * 0.645) * 0.532))
-            semiCircleBottom.scale(to: CGSize(width: frame.width * 0.645, height: (frame.width * 0.645) * 0.532))
         }
+        semiCircleTop.scale(to: CGSize(width: frame.width * 0.60, height: (frame.width * 0.60) * 0.48))
+        semiCircleBottom.scale(to: CGSize(width: frame.width * 0.60, height: (frame.width * 0.60) * 0.48))
+        semiCircleTop.position = CGPoint(x: frame.width/2, y: topGoalEdgeBottom - (semiCircleTop.size.height / 2))
+        semiCircleBottom.position = CGPoint(x: frame.width/2, y: bottomGoalEdgeTop + (semiCircleBottom.size.height/2))
+        
         centerCircle.zPosition = -100
         centerCircle.colorBlendFactor = 0.50
         addChild(centerCircle)
@@ -603,7 +593,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         }
         else
         {
-            maxBallSpeed = (frame.height * frame.width) / 195
+            maxBallSpeed = (frame.height * frame.width) / 185
         }
     }
     
@@ -744,7 +734,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         {
             interstitialAd = createAndLoadInterstitial()
         }
-        
+        createEdges()
         drawCenterLine()
         getMaxBallSpeed()
         createCenterCircle()
@@ -758,7 +748,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         createSoundButton()
         createBotPlayerScore()
         createSouthPlayerScore()
-        createEdges()
         createPlayerLoseWinBackgrounds()
         if UserDefaults.standard.string(forKey: "GameType") == "RepulsionMode"
         {
@@ -919,18 +908,18 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         
         if frame.height >= 812  && frame.height <= 900 && frame.width < 500
         {
-            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.22)
-            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.78)
+            southPlayer?.position = CGPoint(x: frame.midX, y: frame.height * 0.22)
+            botPlayer?.position = CGPoint(x: frame.width * 0.501, y: frame.height * 0.78)
         }
         else if frame.height == 926 && frame.width < 500
         {
-            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.225)
-            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.775)
+            southPlayer?.position = CGPoint(x: frame.midX, y: frame.height * 0.225)
+            botPlayer?.position = CGPoint(x: frame.width * 0.501, y: frame.height * 0.775)
         }
         else
         {
-            southPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.185)
-            botPlayer?.position = CGPoint(x: self.frame.midX, y: self.size.height * 0.815)
+            southPlayer?.position = CGPoint(x: frame.midX, y: frame.height * 0.185)
+            botPlayer?.position = CGPoint(x: frame.width * 0.501, y: frame.height * 0.815)
         }
         southPlayer?.isHidden = false
         botPlayer?.isHidden = false
@@ -964,7 +953,6 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         if (contact.bodyA.categoryBitMask == BodyType.ball.rawValue && contact.bodyB.categoryBitMask == BodyType.player.rawValue) && (contact.bodyA.contactTestBitMask == 25 || contact.bodyB.contactTestBitMask == 25) && bottomTouchForCollision == true && ((southPlayer!.position.y < (frame.height * 0.5) - playerRadius) || (ball!.position.y <= southPlayer!.position.y))
         {
             let vmallet = CGVector(dx: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDX")), dy: CGFloat(UserDefaults.standard.float(forKey: "BottomForceDY")))
-//            let vball = ball!.physicsBody!.velocity
             let vball = CGVector(dx: 0, dy: 0)
             let vrelativedx = vball.dx - vmallet.dx
             let vrelativedy = vball.dy - vmallet.dy
@@ -1429,33 +1417,48 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         }
         
-        if frame.height > 800 && frame.width < 500
+        if topGoalEdgeBottom != 0 && bottomGoalEdgeTop != 0
         {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height * 0.955)
+            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > topGoalEdgeBottom)
             {
                 ballInNorthGoal = true
             }
-        }
-        else
-        {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height)
-            {
-                ballInNorthGoal = true
-            }
-        }
             
-        if frame.height > 800 && frame.width < 500
-        {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < frame.height * 0.045)
+            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < bottomGoalEdgeTop)
             {
                 ballInSouthGoal = true
             }
         }
         else
         {
-            if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < 0)
+            if frame.height > 800 && frame.width < 500
             {
-                ballInSouthGoal = true
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height * 0.93)
+                {
+                    ballInNorthGoal = true
+                }
+            }
+            else
+            {
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y > frame.height)
+                {
+                    ballInNorthGoal = true
+                }
+            }
+            
+            if frame.height > 800 && frame.width < 500
+            {
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < frame.height * 0.045)
+                {
+                    ballInSouthGoal = true
+                }
+            }
+            else
+            {
+                if (((ball!.position.x > frame.width * 0.2) && (ball!.position.x < frame.width * 0.8)) && ball!.position.y < 0)
+                {
+                    ballInSouthGoal = true
+                }
             }
         }
         
@@ -1503,14 +1506,14 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     func ballIsOnTarget() -> Bool
     {
         let ballVectorSlope = (ball!.physicsBody!.velocity.dy) / (ball!.physicsBody!.velocity.dx)
-        let goalHeight = frame.height * 0.90
+        let goalHeight = topGoalEdgeBottom
         let goalDifferenceFromBall = goalHeight - ball!.position.y
         let changeOfX = goalDifferenceFromBall / ballVectorSlope
         let goalLeftXBound = frame.width * 0.20
         let goalRightXBound = frame.width * 0.80
         expectedBallXPos = round(ball!.position.x + changeOfX)
 
-        if (expectedBallXPos >= goalLeftXBound) && (expectedBallXPos <= goalRightXBound) && (ball!.physicsBody!.velocity.dy > 0)
+        if (expectedBallXPos >= goalLeftXBound) && (expectedBallXPos <= goalRightXBound) && (ball!.physicsBody!.velocity.dy > 0) && (ball?.physicsBody?.velocity.dy.magnitude)! >= goalDifferenceFromBall
         {
             return true
         }
@@ -1520,29 +1523,97 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         }
     }
     
+    func ballCanReachTarget() -> Bool
+    {
+        let goalHeight = topGoalEdgeBottom
+        let goalDifferenceFromBall = goalHeight - ball!.position.y
+        if (ball?.physicsBody?.velocity.dy.magnitude)! >= goalDifferenceFromBall
+        {
+            return true
+        }
+        else
+        {
+            return false
+        }
+    }
+    
+//    func botStrike()
+//    {
+//        if (botPlayer!.position.y - ball!.position.y) <= 15 && (botPlayer!.position.y - ball!.position.y) > 0
+//        {
+//
+//        }
+//    }
+    func botStrikeBallInCorner()
+    {
+        
+    }
+    
     func botDefend()
     {
         //If ball is above bot on bot's side, trigger defend mode
-        
-        if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y <= ball!.position.y || abs(botPlayer!.position.y - ball!.position.y) <= 15) && botDefendSwitch == false
+        if ball!.position.y > frame.height * 0.5 && botPlayer!.position.y <= ball!.position.y && botDefendSwitch == false
+        //|| abs(botPlayer!.position.y - ball!.position.y) <= 15)
         {
             botDefendSwitch = true
             botAttackSwitch = false
+            botMirrorSwitch = false
+            botPlayer?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         }
-        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y <= ball!.position.y || abs(botPlayer!.position.y - ball!.position.y) <= 15) && botDefendSwitch == true
+                                                     
+        else if botDefendSwitch == true
         {
- 
-            if botPlayer!.physicsBody!.velocity.dy < 300
+            let distanceFromCenterX = abs((botPlayer?.position.x)! - (frame.width * 0.5))
+            
+            if distanceFromCenterX > frame.width * 0.2 && (botPlayer?.position.x)! < frame.width * 0.5
             {
-                botPlayer!.physicsBody!.velocity.dy += 80
+                botPlayer!.physicsBody?.velocity.dx += 10
+            }
+            else if distanceFromCenterX > frame.width * 0.2 && (botPlayer?.position.x)! > frame.width * 0.5
+            {
+                botPlayer!.physicsBody?.velocity.dx -= 10
+            }
+            else
+            {
+                botPlayer!.physicsBody?.velocity.dx = 0
+            }
+            
+            if botPlayer!.position.y < ball!.position.y || botPlayer!.position.y < frame.height * 0.85
+            {
+                botPlayer!.physicsBody?.velocity.dy += 10
+            }
+            else
+            {
+                botPlayer!.physicsBody?.velocity.dy = 0
+                botDefendSwitch = false
             }
         }
-        else if ball!.position.y > frame.height * 0.40 && (botPlayer!.position.y >= ball!.position.y)
+        else
         {
-            if ballIsOnTarget() == false && ball!.physicsBody!.velocity.dy >= frame.height * 0.20
+            botDefendSwitch = false
+        }
+
+    }
+    
+    func botAttack()
+    {
+        //If bot is above ball on bot's side trigger attack mode. Consider the balls velocity vector while going for attack
+        if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botAttackSwitch == false && botDefendSwitch == false && botMirrorSwitch == false
+        {
+            botDefendSwitch = false
+            botAttackSwitch = true
+            botMirrorSwitch = false
+            botPlayer?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        }
+
+
+        else if ball!.position.y > frame.height * 0.50 && (botPlayer!.position.y >= ball!.position.y) && (ballIsOnTarget() || ballCanReachTarget()) && botAttackSwitch == true
+        {
+            //mirror ball to play defensive
+            if ballIsOnTarget() == false && ballCanReachTarget() == true
             {
                 // returned to mirror Y zone
-                if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
+                if botPlayer!.position.y >= topGoalEdgeBottom - (frame.height * 0.07) && botPlayer!.position.y <= topGoalEdgeBottom - (frame.height * 0.055)
                 {
                     botPlayer!.physicsBody?.velocity.dy = 0
                     
@@ -1634,7 +1705,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
 
                 //below mirroring y-zone for passive defending
-                else if botPlayer!.position.y < frame.height * 0.87
+                else if botPlayer!.position.y < topGoalEdgeBottom - (frame.height * 0.07)
                 {
                     botPlayer!.physicsBody?.velocity.dy = 300
                     
@@ -1726,7 +1797,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
 
                 //above mirroring y-zone for passive defending
-                else if botPlayer!.position.y > frame.height * 0.90
+                else if botPlayer!.position.y > topGoalEdgeBottom - (frame.height * 0.055)
                 {
                     botPlayer!.physicsBody?.velocity.dy = -300
                             
@@ -1821,32 +1892,35 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             else if ballIsOnTarget() == true
             {
                 // returned to mirror Y zone
-                if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90 && madeItToExpectedBallPos == false
+                if botPlayer!.position.y >= topGoalEdgeBottom - (frame.height * 0.05) && botPlayer!.position.y <= topGoalEdgeBottom - (frame.height * 0.055) && madeItToExpectedBallPos == false
                 {
                     botPlayer!.physicsBody?.velocity.dy = 0
                 }
                 //below mirroring y-zone for passive defending
-                else if botPlayer!.position.y < frame.height * 0.87 && madeItToExpectedBallPos == false
+                else if botPlayer!.position.y < topGoalEdgeBottom - (frame.height * 0.05) && madeItToExpectedBallPos == false
                 {
                     botPlayer!.physicsBody?.velocity.dy = 300
                 }
                 //above mirroring y-zone for passive defending
-                else if botPlayer!.position.y > frame.height * 0.90 && madeItToExpectedBallPos == false
+                else if botPlayer!.position.y > topGoalEdgeBottom - (frame.height * 0.055) && madeItToExpectedBallPos == false
                 {
                     botPlayer!.physicsBody?.velocity.dy = -300
                 }
                 
                 if madeItToExpectedBallPos == false
                 {
+                    let botDistanceFromSave = abs((botPlayer!.position.x - expectedBallXPos))
+                    let ballDistanceFromGoal = abs((ball!.position.y - topGoalEdgeBottom))
+                    
                     if (botPlayer!.position.x - expectedBallXPos < -10)
                     {
-                        botPlayer?.physicsBody?.velocity.dx += (abs(botPlayer!.position.x - expectedBallXPos) / 3)
+                        botPlayer?.physicsBody?.velocity.dx = (abs((botDistanceFromSave/ballDistanceFromGoal) * ball!.physicsBody!.velocity.dy))
                     }
                     else if (botPlayer!.position.x - expectedBallXPos > 10)
                     {
-                        botPlayer?.physicsBody?.velocity.dx -= abs((botPlayer!.position.x - expectedBallXPos) / 3)
+                        botPlayer?.physicsBody?.velocity.dx = (abs((botDistanceFromSave/ballDistanceFromGoal) * ball!.physicsBody!.velocity.dy)) * -1
                     }
-                    else if (botPlayer!.position.x - expectedBallXPos >= -10) && (botPlayer!.position.x - expectedBallXPos <= 10) && (botPlayer!.position.y > ball!.position.y) && (botPlayer!.position.y) >= (frame.height * 0.87) && (ball!.physicsBody!.velocity.dy > 0)
+                    else if (botPlayer!.position.x - expectedBallXPos >= -10) && (botPlayer!.position.x - expectedBallXPos <= 10) && (botPlayer!.position.y > ball!.position.y) && (botPlayer!.position.y) >= (topGoalEdgeBottom - (frame.height * 0.08)) && (ball!.physicsBody!.velocity.dy > 0)
                     {
                         botPlayer?.physicsBody?.velocity.dx = 0
                         madeItToExpectedBallPos = true
@@ -1860,40 +1934,28 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                 }
             }
         }
+        else if ballIsOnTarget() == false && ballCanReachTarget() == false && (ball?.position.y)! > frame.height * 0.50 && botAttackSwitch == true && ball!.physicsBody!.velocity.dy > -1 * (frame.height * 0.2)
+        {
+            let timeToReachBall = 100.0
+
+            let linearDampingX =  floor(Double(ball!.physicsBody!.velocity.dx / (1 + ((timeToReachBall/2) * ball!.physicsBody!.linearDamping))))
+
+            let linearDampingY =  floor(Double(ball!.physicsBody!.velocity.dy / (1 + ((timeToReachBall/2) * ball!.physicsBody!.linearDamping))))
+
+
+            let intersectionXPoint = ball!.position.x + linearDampingX
+            let intersectionYPoint = ball!.position.y + linearDampingY
+
+            let botPlayerXVelocity = (botPlayer!.position.x - intersectionXPoint) * timeToReachBall
+            let botPlayerYVelocity = (botPlayer!.position.y - intersectionYPoint) * timeToReachBall
+            if (intersectionXPoint > 0 && intersectionXPoint < frame.width) && intersectionYPoint > frame.height * 0.5
+            {
+                botPlayer?.physicsBody?.velocity = CGVector(dx: -botPlayerXVelocity, dy: -botPlayerYVelocity)
+            }
+        }
         else
         {
-            botDefendSwitch = false
-        }
-
-    }
-    
-    func botAttack()
-    {
-        //If bot is above ball on bot's side trigger attack mode. Consider the balls velocity vector while going for attack
-        if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botAttackSwitch == false
-        {
-            botDefendSwitch = false
-            botAttackSwitch = true
-        }
-        else if ball!.position.y > frame.height * 0.5 && (botPlayer!.position.y >= ball!.position.y) && botDefendSwitch == false && botAttackSwitch == true
-        {
-            if botPlayer!.position.x < ball!.position.x
-            {
-                botPlayer!.physicsBody?.velocity.dx += 10
-            }
-            if botPlayer!.position.x > ball!.position.x
-            {
-                botPlayer!.physicsBody?.velocity.dx -= 10
-            }
-            
-            if botPlayer!.position.y < ball!.position.y
-            {
-                botPlayer!.physicsBody?.velocity.dy += 10
-            }
-            if botPlayer!.position.y > ball!.position.y
-            {
-                botPlayer!.physicsBody?.velocity.dy -= 10
-            }
+            botAttackSwitch = false
         }
     }
     
@@ -1901,10 +1963,17 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     {
         // If ball is on player's side, mirror the balls movement to prepare for defense and attack
         
-        if (ball!.position.y) < frame.height * 0.5
+        if (ball!.position.y) < frame.height * 0.5 && botMirrorSwitch == false
+        {
+            botMirrorSwitch = true
+            botDefendSwitch = false
+            botAttackSwitch = false
+            botPlayer?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+        }
+        else if (ball!.position.y) < frame.height * 0.5 && botMirrorSwitch == true
         {
             // returned to mirror Y zone
-            if botPlayer!.position.y >= frame.height * 0.87 && botPlayer!.position.y <= frame.height * 0.90
+            if botPlayer!.position.y >= topGoalEdgeBottom - (frame.height * 0.07) && botPlayer!.position.y <= topGoalEdgeBottom - (frame.height * 0.055)
             {
                 botPlayer!.physicsBody?.velocity.dy = 0
                 
@@ -1996,7 +2065,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             }
 
             //below mirroring y-zone for passive defending
-            else if botPlayer!.position.y < frame.height * 0.87
+            else if botPlayer!.position.y < topGoalEdgeBottom - (frame.height * 0.07)
             {
                 botPlayer!.physicsBody?.velocity.dy = 300
                 
@@ -2088,7 +2157,7 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
             }
 
             //above mirroring y-zone for passive defending
-            else if botPlayer!.position.y > frame.height * 0.90
+            else if botPlayer!.position.y > topGoalEdgeBottom - (frame.height * 0.055)
             {
                 botPlayer!.physicsBody?.velocity.dy = -300
                         
@@ -2178,6 +2247,10 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
                     botPlayer!.physicsBody?.velocity.dx = 0
                 }
             }
+        }
+        else
+        {
+            botMirrorSwitch = false
         }
     }
     

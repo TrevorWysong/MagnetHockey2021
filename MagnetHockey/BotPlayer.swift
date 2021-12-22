@@ -78,7 +78,6 @@ class BotPlayer: SKShapeNode
                
         //create the circle shape
         circularPath.addArc(center: CGPoint(x: 0, y:0), radius: radius, startAngle: 0, endAngle: 2*π, clockwise: true)
-       // CGPathAddArc(circularPath, nil, 0, 0, radius, 0, π*2, true)
         
         //assign the path to this SKShapeNode's path property
         path = circularPath
@@ -104,74 +103,4 @@ class BotPlayer: SKShapeNode
     {
         fatalError("init(coder:) has not been implemented")
     }
-    
-//    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
-//    {
-//        botTouchIsActive = true
-//        var releventTouch:UITouch!
-//        //convert set to known type
-//        let touchSet = touches
-//
-//        //get array of touches so we can loop through them
-//        let orderedTouches = Array(touchSet)
-//
-//
-//        for touch in orderedTouches
-//        {
-//            //if we've not yet found a relevent touch
-//            if releventTouch == nil
-//            {
-//                //look for a touch that is in the activeArea (Avoid touches by opponent)
-//                if activeArea.contains(CGPoint(x: touch.location(in: parent!).x, y: touch.location(in: parent!).y - frame.height * 0.42))
-//                {
-//                    isUserInteractionEnabled = true
-//                    releventTouch = touch
-//                }
-//                else
-//                {
-//                    releventTouch = nil
-//                }
-//            }
-//        }
-//
-//        if (releventTouch != nil)
-//        {
-//            //get touch position and relocate player
-////            let location = releventTouch!.location(in: parent!)
-//            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y - frame.height * 0.42)
-//            position = location
-//
-//            //find old location and use pythagoras to determine length between both points
-////            let oldLocation = releventTouch!.previousLocation(in: parent!)
-//            let oldLocation = CGPoint(x: releventTouch!.previousLocation(in: parent!).x, y: releventTouch!.previousLocation(in: parent!).y - frame.height * 0.42)
-//            let xOffset = location.x - oldLocation.x
-//            let yOffset = location.y - oldLocation.y
-//            let vectorLength = sqrt(xOffset * xOffset + yOffset * yOffset)
-//
-//            //get eleapsed and use to calculate speed
-//            if  lastTouchTimeStamp != nil
-//            {
-//                let seconds = releventTouch.timestamp - lastTouchTimeStamp!
-//                let velocity = 0.01 * Double(vectorLength) / seconds
-//
-//                //to calculate the vector, the velcity needs to be converted to a CGFloat
-//                let velocityCGFloat = CGFloat(velocity)
-//
-//                //calculate the impulse
-//                let directionVector = CGVector(dx: velocityCGFloat * xOffset / vectorLength, dy: velocityCGFloat * yOffset / vectorLength)
-//
-//                //pass the vector to the scene (so it can apply an impulse to the puck)
-//                delegate?.botForce(directionVector, fromBotPlayer: self)
-//                delegate?.botTouchIsActive(botTouchIsActive, fromBotPlayer: self)
-//            }
-//            //update latest touch time for next calculation
-//            lastTouchTimeStamp = releventTouch.timestamp
-//        }
-//    }
-//
-//    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?)
-//    {
-//        botTouchIsActive = false
-//        delegate?.botTouchIsActive(botTouchIsActive, fromBotPlayer: self)
-//    }
 }

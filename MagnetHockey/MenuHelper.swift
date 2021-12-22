@@ -85,7 +85,7 @@ class MenuHelper
     func createBackToMenuButton(frame: CGRect, menuButton: SKSpriteNode) -> (SKSpriteNode)
     {
         menuButton.blendMode = .replace
-        menuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.15)
+        menuButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.17)
         menuButton.scale(to: CGSize(width: frame.width * 2/3, height: frame.height/10))
         menuButton.colorBlendFactor = 0
         return (menuButton)
@@ -97,7 +97,7 @@ class MenuHelper
         menuLabel.fontColor = SKColor.white
         menuLabel.horizontalAlignmentMode = .center
         menuLabel.verticalAlignmentMode = .center
-        menuLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.15)
+        menuLabel.position = CGPoint(x: frame.width/2, y: frame.height * 0.17)
         menuLabel.zPosition = 2
         menuLabel.text = "Back to Menu"
         return (menuLabel)

@@ -87,7 +87,7 @@ class NorthPlayer: SKShapeNode
         physicsBody?.categoryBitMask = BodyType.player.rawValue
         physicsBody!.affectedByGravity = false;
         physicsBody?.linearDamping = 1
-        physicsBody?.angularDamping = 1
+        physicsBody?.angularDamping = 0
         physicsBody?.friction = 1
 
     }

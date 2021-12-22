@@ -1746,8 +1746,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func tutorialPlayerDirections()
     {
-        gameInstructionsButtonLabel.text = "Players should control"
-        gameInstructionsButtonLabel2.text = "the red mallets to..."
+        gameInstructionsButtonLabel.text = "Players can touch to"
+        gameInstructionsButtonLabel2.text = "control the red mallets."
         
         if (southPlayer!.position.y <= frame.height * 0.3) && (northPlayer!.position.y >= frame.height * 0.7)
         {
@@ -1805,8 +1805,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func tutorialBallDirections()
     {
-        gameInstructionsButtonLabel.text = "... strike the"
-        gameInstructionsButtonLabel2.text = ballColorGame.lowercased() + " into..."
+        gameInstructionsButtonLabel.text = "Use the mallets to"
+        gameInstructionsButtonLabel2.text = "strike the " + ballColorGame.lowercased() + "."
         
         if (southPlayer!.position.y <= frame.height * 0.3) && (northPlayer!.position.y >= frame.height * 0.7)
         {
@@ -1825,8 +1825,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func tutorialGoalDirections()
     {
-        gameInstructionsButtonLabel.text = "... the enemy's goal"
-        gameInstructionsButtonLabel2.text = "to score!"
+        gameInstructionsButtonLabel.text = "Aim for the enemy's"
+        gameInstructionsButtonLabel2.text = "goal to score!"
         
         if gameInstructionsButton.position.y > frame.height * 0.65
         {
@@ -1843,7 +1843,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     func tutorialTextDirections()
     {
         gameInstructionsButtonLabel.text = "The score is indicated"
-        gameInstructionsButtonLabel2.text = "on the left side!"
+        gameInstructionsButtonLabel2.text = "on the left side."
         
         gameInstructionsButton.position = CGPoint(x: frame.width * 0.5, y: frame.height * 0.65)
         tutorialDoneButton.position = CGPoint(x: frame.width * 0.5, y: frame.height * 0.425)

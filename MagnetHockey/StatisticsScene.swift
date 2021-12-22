@@ -115,6 +115,9 @@ class StatisticsScene: SKScene
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
         addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
         addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
+        backToMenuButton.position.y = frame.height * 0.15
+        backToMenuButtonLabel.position.y = frame.height * 0.15
+
     }
     
     func createSceneTitleSprites()
@@ -353,21 +356,11 @@ class StatisticsScene: SKScene
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?
         let bannerViewSettingsScene = self.view?.viewWithTag(103) as! GADBannerView?
-        
-        if KeychainWrapper.standard.bool(forKey: "Purchase") != true
-        {
-            bannerViewStartScene?.isHidden = true
-            bannerViewGameOverScene?.isHidden = true
-            bannerViewInfoScene?.isHidden = false
-            bannerViewSettingsScene?.isHidden = true
-        }
-        else
-        {
-            bannerViewStartScene?.isHidden = true
-            bannerViewGameOverScene?.isHidden = true
-            bannerViewInfoScene?.isHidden = true
-            bannerViewSettingsScene?.isHidden = true
-        }
+
+        bannerViewStartScene?.isHidden = true
+        bannerViewGameOverScene?.isHidden = true
+        bannerViewInfoScene?.isHidden = true
+        bannerViewSettingsScene?.isHidden = true
     }
     
     func createShowResultsButton()
