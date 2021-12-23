@@ -13,25 +13,32 @@ class MenuHelper
 
     func createEdges(frame: CGRect) -> (SKSpriteNode, SKSpriteNode, SKSpriteNode, SKSpriteNode)
     {
-        let leftEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(533/10000 * frame.width), height: frame.height + ((35000/400000) * frame.height)))
-        let rightEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(20/75 * frame.width), height: frame.height + ((35000/400000) * frame.height)))
-        let bottomEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
-        let topEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.00/100) * frame.width))
+        let edgeWidth = frame.width * 0.03
+        let notchOffset = frame.height * 0.0625
         
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
+        let leftEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: edgeWidth, height: frame.height))
+        let rightEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: edgeWidth, height: frame.height))
+        let bottomEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width, height: edgeWidth))
+        let topEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width, height: edgeWidth))
+        
+        leftEdge.position = CGPoint(x: 0 + edgeWidth/2, y: frame.height/2)
         leftEdge.zPosition = 100
-        rightEdge.position = CGPoint(x: frame.width + (6.85/65 * (frame.width)), y: frame.height/2)
+        rightEdge.position = CGPoint(x: frame.width - edgeWidth/2, y: frame.height/2)
         rightEdge.zPosition = 100
 
         if frame.height > 800 && frame.width < 500
         {
-            bottomEdge.position = CGPoint(x: 0, y: -1 * frame.height/10)
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2/30 * frame.height))
+            bottomEdge.size.height = notchOffset
+            topEdge.size.height = notchOffset
+            bottomEdge.position = CGPoint(x: frame.width * 0.5, y: 0 + notchOffset/2)
+            topEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height - notchOffset/2)
         }
         else
         {
-            bottomEdge.position = CGPoint(x: 0, y: 0 - (frame.width * 6.50/20))
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.2/37.5) * frame.width))
+            bottomEdge.size.height = edgeWidth
+            topEdge.size.height = edgeWidth
+            bottomEdge.position = CGPoint(x: frame.width * 0.5, y: 0 + edgeWidth/2)
+            topEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height - edgeWidth/2)
         }
         bottomEdge.zPosition = -5
         topEdge.zPosition = -5

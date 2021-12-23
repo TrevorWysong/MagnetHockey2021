@@ -148,8 +148,11 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
     
     func createEdges()
     {
-        let leftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: CGFloat(533/10000 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
+        let edgeWidth = frame.width * 0.03
+        let notchOffset = frame.height * 0.0625
+
+        let leftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: edgeWidth, height: frame.height))
+        leftEdge.position = CGPoint(x: 0 + (edgeWidth/2), y: frame.height/2)
         leftEdge.zPosition = 100
         //setup physics for this edge
         leftEdge.physicsBody = SKPhysicsBody(rectangleOf: leftEdge.size)
@@ -165,8 +168,8 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         addChild(leftEdge)
         
         //copy the left edge and position it as the right edge
-        let rightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: CGFloat(20/75 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        rightEdge.position = CGPoint(x: size.width + (6.85/65 * (frame.width)), y: frame.height/2)
+        let rightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: edgeWidth, height: frame.height))
+        rightEdge.position = CGPoint(x: frame.width - (edgeWidth/2), y: frame.height/2)
         rightEdge.zPosition = 100
         rightEdge.physicsBody = SKPhysicsBody(rectangleOf: rightEdge.size)
         rightEdge.physicsBody!.isDynamic = false
@@ -179,14 +182,16 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         rightEdge.blendMode = .replace
         addChild(rightEdge)
         
-        let bottomRightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
+        let bottomRightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width * 0.20, height: edgeWidth))
         if frame.height > 800 && frame.width < 500
         {
-            bottomRightEdge.position = CGPoint(x: frame.width * 2.30, y: -1 * frame.height/10)
+            bottomRightEdge.size.height = notchOffset
+            bottomRightEdge.position = CGPoint(x: frame.width * 0.90, y: 0 + notchOffset/2)
         }
         else
         {
-            bottomRightEdge.position = CGPoint(x: frame.width * 2.30, y: 0 - (frame.width * 6.46/20))
+            bottomRightEdge.size.height = edgeWidth
+            bottomRightEdge.position = CGPoint(x: frame.width * 0.90, y: 0 + edgeWidth/2)
         }
         bottomRightEdge.zPosition = -5
         //setup physics for this edge
@@ -202,14 +207,16 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         bottomRightEdge.blendMode = .replace
         addChild(bottomRightEdge)
         
-        let bottomLeftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
+        let bottomLeftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width * 0.20, height: edgeWidth))
         if frame.height > 800 && frame.width < 500
         {
-            bottomLeftEdge.position = CGPoint(x: frame.width * -1.30, y: -1 * frame.height/10)
+            bottomLeftEdge.size.height = notchOffset
+            bottomLeftEdge.position = CGPoint(x: frame.width * 0.10, y: 0 + notchOffset/2)
         }
         else
         {
-            bottomLeftEdge.position = CGPoint(x: frame.width * -1.30, y: 0 - (frame.width * 6.46/20))
+            bottomLeftEdge.size.height = edgeWidth
+            bottomLeftEdge.position = CGPoint(x: frame.width * 0.10, y: 0 + edgeWidth/2)
         }
         bottomLeftEdge.zPosition = -5
         //setup physics for this edge
@@ -225,14 +232,16 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         bottomLeftEdge.blendMode = .replace
         addChild(bottomLeftEdge)
         
-        let topRightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
+        let topRightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width * 0.20, height: edgeWidth))
         if frame.height > 800 && frame.width < 500
         {
-            topRightEdge.position = CGPoint(x: frame.width * -1.30, y: frame.height + (frame.height * 0.10))
+            topRightEdge.size.height = notchOffset
+            topRightEdge.position = CGPoint(x: frame.width * 0.90, y: frame.height - notchOffset/2)
         }
         else
         {
-            topRightEdge.position = CGPoint(x: frame.width * -1.30, y: frame.height + (frame.width * 0.323))
+            topRightEdge.size.height = edgeWidth
+            topRightEdge.position = CGPoint(x: frame.width * 0.90, y: frame.height - edgeWidth/2)
         }
         topRightEdge.zPosition = -5
         //setup physics for this edge
@@ -247,14 +256,16 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         topRightEdge.blendMode = .replace
         addChild(topRightEdge)
         
-        let topLeftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
+        let topLeftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width * 0.20, height: edgeWidth))
         if frame.height > 800 && frame.width < 500
         {
-            topLeftEdge.position = CGPoint(x: frame.width * 2.30, y: frame.height + (frame.height * 0.10))
+            topLeftEdge.size.height = notchOffset
+            topLeftEdge.position = CGPoint(x: frame.width * 0.10, y: frame.height - notchOffset/2)
         }
         else
         {
-            topLeftEdge.position = CGPoint(x: frame.width * 2.30, y: frame.height + (frame.width * 0.323))
+            topLeftEdge.size.height = edgeWidth
+            topLeftEdge.position = CGPoint(x: frame.width * 0.10, y: frame.height - edgeWidth/2)
         }
         topLeftEdge.zPosition = -5
         //setup physics for this edge
@@ -271,14 +282,15 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         
         let bottomGoalEdge = SKSpriteNode(imageNamed: "goalGradientBottom.png")
         bottomGoalEdge.color = .black
-        bottomGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
-            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: -1 * frame.height/10)
+            bottomGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: notchOffset))
+            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 + notchOffset/2)
         }
         else
         {
-            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 - (frame.width * 6.46/20))
+            bottomGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: edgeWidth))
+            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 + edgeWidth)
         }
         bottomGoalEdge.zPosition = 100
         bottomGoalEdge.blendMode = .replace
@@ -296,14 +308,15 @@ class AirHockey1P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, BotP
         
         let topGoalEdge = SKSpriteNode(imageNamed: "goalGradient.png")
         topGoalEdge.color = .black
-        topGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: CGFloat(14/20 * frame.width)))
         if frame.height > 800 && frame.width < 500
         {
-            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.height * 0.10))
+            topGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: notchOffset))
+            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height - notchOffset/2)
         }
         else
         {
-            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height + (frame.width * 0.323))
+            topGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: edgeWidth))
+            topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height - edgeWidth/2)
         }
         topGoalEdgeBottom = topGoalEdge.position.y - (topGoalEdge.size.height * 0.5)
         bottomGoalEdgeTop = bottomGoalEdge.position.y + (bottomGoalEdge.size.height * 0.5)
