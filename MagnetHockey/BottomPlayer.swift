@@ -103,6 +103,24 @@ class BottomPlayer: SKShapeNode
         let touchSet = touches
         //get array of touches so we can loop through them
         let orderedTouches = Array(touchSet)
+        
+        let edgeWidth = frame.width * 0.03
+        let notchOffset = frame.height * 0.0625
+        let leftBoundary = 0 + edgeWidth
+        let rightBoundary = frame.width - edgeWidth
+        var bottomBoundary: CGFloat
+        var topBoundary: CGFloat
+        
+        if frame.height > 800 && frame.width < 500
+        {
+            bottomBoundary = 0 + notchOffset + radius
+            topBoundary = frame.height - notchOffset - radius
+        }
+        else
+        {
+            bottomBoundary = 0 + edgeWidth + radius
+            topBoundary = frame.height - edgeWidth - radius
+        }
 
         for touch in orderedTouches
         {
@@ -124,6 +142,8 @@ class BottomPlayer: SKShapeNode
         
         if (releventTouch != nil) && lastTouchTimeStamp != nil && GameIsPaused == false
         {
+            print(bottomBoundary)
+            print(topBoundary)
             //get touch position and relocate player
             let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * 0.24)
             position = location
@@ -137,7 +157,6 @@ class BottomPlayer: SKShapeNode
             let velocity = 0.015 * Double(vectorLength) / seconds
             //to calculate the vector, the velcity needs to be converted to a CGFloat
             let velocityCGFloat = CGFloat(velocity)
-            
             
             // NSUserDefaults for more direct access in collision detection
             let forceSaveDX = UserDefaults.standard

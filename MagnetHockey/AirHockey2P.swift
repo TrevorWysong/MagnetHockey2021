@@ -284,7 +284,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         else
         {
             bottomGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: edgeWidth))
-            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 + edgeWidth)
+            bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 + edgeWidth/2)
         }
         bottomGoalEdge.zPosition = 100
         bottomGoalEdge.blendMode = .replace
