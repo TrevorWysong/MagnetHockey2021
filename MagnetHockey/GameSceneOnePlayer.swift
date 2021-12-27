@@ -653,16 +653,6 @@ class GameSceneOnePlayer: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegat
         return interstitial
     }
     
-//    func createBackground()
-//    {
-//        let background = SKSpriteNode(imageNamed: "dot.png")
-//        background.position = CGPoint(x: frame.width/2, y: frame.height/2)
-//        background.scale(to: CGSize(width: frame.width, height: frame.height))
-//        background.colorBlendFactor = 0.6
-//        background.zPosition = -100
-//        addChild(background)
-//    }
-    
     override func didMove(to view: SKView)
     {
         self.physicsWorld.contactDelegate = self

@@ -99,6 +99,7 @@ class NorthPlayer: SKShapeNode
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
     {
+        let handlingYOffset = 0.30
         northTouchIsActive = true
         var releventTouch:UITouch!
         //convert set to known type
@@ -114,7 +115,7 @@ class NorthPlayer: SKShapeNode
             if releventTouch == nil
             {
                 //look for a touch that is in the activeArea (Avoid touches by opponent)
-                if activeArea.contains(CGPoint(x: touch.location(in: parent!).x, y: touch.location(in: parent!).y - frame.height * 0.42))
+                if activeArea.contains(CGPoint(x: touch.location(in: parent!).x, y: touch.location(in: parent!).y))
                 {
                     isUserInteractionEnabled = true
                     releventTouch = touch
@@ -126,14 +127,14 @@ class NorthPlayer: SKShapeNode
             }
         }
         
-        if (releventTouch != nil) && lastTouchTimeStamp != nil && GameIsPaused == false
+        if (releventTouch != nil) && lastTouchTimeStamp != nil && activeArea.contains(CGPoint(x: releventTouch!.location(in: parent!).x, y: (releventTouch!.location(in: parent!).y - frame.height * handlingYOffset) - (frame.height/2) + handlingYOffset)) && GameIsPaused == false
         {
             //get touch position and relocate player
-            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y - frame.height * 0.42)
+            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y - frame.height * handlingYOffset)
             position = location
         
             //find old location and use pythagoras to determine length between both points
-            let oldLocation = CGPoint(x: releventTouch!.previousLocation(in: parent!).x, y: releventTouch!.previousLocation(in: parent!).y - frame.height * 0.42)
+            let oldLocation = CGPoint(x: releventTouch!.previousLocation(in: parent!).x, y: releventTouch!.previousLocation(in: parent!).y - frame.height * handlingYOffset)
             let xOffset = location.x - oldLocation.x
             let yOffset = location.y - oldLocation.y
             let vectorLength = sqrt(xOffset * xOffset + yOffset * yOffset)
@@ -156,10 +157,10 @@ class NorthPlayer: SKShapeNode
             //update latest touch time for next calculation
             lastTouchTimeStamp = releventTouch.timestamp
         }
-        else if (releventTouch != nil) && lastTouchTimeStamp == nil && GameIsPaused == false
+        else if (releventTouch != nil) && lastTouchTimeStamp == nil && activeArea.contains(CGPoint(x: releventTouch!.location(in: parent!).x, y: (releventTouch!.location(in: parent!).y + frame.height * handlingYOffset) - (frame.height/2) + handlingYOffset)) && GameIsPaused == false
         {
             //get touch position and relocate player
-            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y - frame.height * 0.42)
+            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * -handlingYOffset)
             position = location
             
             //update latest touch time for next calculation

@@ -9,7 +9,7 @@
 
 import SpriteKit
 
-protocol BotPlayerDelegate : class
+protocol BotPlayerDelegate : AnyObject
 {
 //    func botForce(_ force: CGVector, fromBotPlayer botPlayer: BotPlayer)
     func botTouchIsActive(_ botTouchIsActive: Bool, fromBotPlayer botPlayer: BotPlayer)

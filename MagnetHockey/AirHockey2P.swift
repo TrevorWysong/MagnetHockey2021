@@ -17,6 +17,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     var ballRadius = CGFloat(0.0)
     var playerRadius = CGFloat(0.0)
     var maxBallSpeed = CGFloat(0.0)
+    var centerLineWidth = CGFloat(0.0)
     var centerCircle = SKSpriteNode()
     var semiCircleBottom = SKSpriteNode()
     var semiCircleTop = SKSpriteNode()
@@ -87,8 +88,19 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
     
     func createPlayers()
     {
-        southPlayerArea = CGRect(x: 0, y: frame.height * 0.00, width: frame.width, height: frame.height * 0.50)
-        northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height * 0.50)
+        let edgeWidth = frame.width * 0.03
+        let notchOffset = frame.height * 0.0625
+        
+        if frame.height > 800 && frame.width < 500
+        {
+            southPlayerArea = CGRect(x: 0 + edgeWidth, y: (frame.height * 0.00) + notchOffset, width: frame.width - (edgeWidth * 2), height: (frame.height * 0.50) - (notchOffset - centerLineWidth))
+            northPlayerArea = CGRect(x: 0 + edgeWidth, y: frame.height/2 - centerLineWidth, width: frame.width - (edgeWidth * 2), height: frame.height * 0.50 - (notchOffset - centerLineWidth))
+        }
+        else
+        {
+            southPlayerArea = CGRect(x: 0 + edgeWidth, y: (frame.height * 0.00) + edgeWidth, width: frame.width - (edgeWidth * 2), height: (frame.height * 0.50) - (edgeWidth - centerLineWidth))
+            northPlayerArea = CGRect(x: 0 + edgeWidth, y: frame.height/2 - centerLineWidth, width: frame.width - (edgeWidth * 2), height: frame.height * 0.50 - (edgeWidth - centerLineWidth))
+        }
         
         if frame.height >= 812 && frame.height <= 900 && frame.width < 500
         {
@@ -768,10 +780,12 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         if frame.width > 700
         {
             centerLine = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width, height: frame.width/102.5))
+            centerLineWidth = centerLine.size.height/2
         }
         else
         {
             centerLine = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width, height: frame.width/82))
+            centerLineWidth = centerLine.size.height/2
         }
         //setup physics for this edge
         centerLine.physicsBody = SKPhysicsBody(rectangleOf: centerLine.size)
@@ -856,8 +870,8 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             ball!.physicsBody!.restitution = 1.00
             
             //how much friction affects it
-            ball!.physicsBody!.linearDamping = 0.90
-            ball!.physicsBody!.angularDamping = 0.90
+            ball!.physicsBody!.linearDamping = 0.65
+            ball!.physicsBody!.angularDamping = 0.65
 
             ball?.physicsBody?.categoryBitMask = BodyType.ball.rawValue
             ball?.physicsBody?.fieldBitMask = 640

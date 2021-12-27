@@ -97,30 +97,13 @@ class BottomPlayer: SKShapeNode
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?)
     {
+        let handlingYOffset = 0.30
         bottomTouchIsActive = true
         var releventTouch:UITouch!
         //convert set to known type
         let touchSet = touches
         //get array of touches so we can loop through them
         let orderedTouches = Array(touchSet)
-        
-        let edgeWidth = frame.width * 0.03
-        let notchOffset = frame.height * 0.0625
-        let leftBoundary = 0 + edgeWidth
-        let rightBoundary = frame.width - edgeWidth
-        var bottomBoundary: CGFloat
-        var topBoundary: CGFloat
-        
-        if frame.height > 800 && frame.width < 500
-        {
-            bottomBoundary = 0 + notchOffset + radius
-            topBoundary = frame.height - notchOffset - radius
-        }
-        else
-        {
-            bottomBoundary = 0 + edgeWidth + radius
-            topBoundary = frame.height - edgeWidth - radius
-        }
 
         for touch in orderedTouches
         {
@@ -128,7 +111,7 @@ class BottomPlayer: SKShapeNode
             if releventTouch == nil
             {
                 //look for a touch that is in the activeArea (Avoid touches by opponent)
-                if activeArea.contains(CGPoint(x: touch.location(in: parent!).x, y: touch.location(in: parent!).y + frame.height * 0.24))
+                if activeArea.contains(CGPoint(x: touch.location(in: parent!).x, y: touch.location(in: parent!).y))
                 {
                     isUserInteractionEnabled = true
                     releventTouch = touch
@@ -139,17 +122,21 @@ class BottomPlayer: SKShapeNode
                 }
             }
         }
-        
-        if (releventTouch != nil) && lastTouchTimeStamp != nil && GameIsPaused == false
+
+        if (releventTouch != nil) && lastTouchTimeStamp != nil && activeArea.contains(CGPoint(x: releventTouch!.location(in: parent!).x, y: (releventTouch!.location(in: parent!).y + frame.height * handlingYOffset) + (frame.height/2) - handlingYOffset)) && GameIsPaused == false
         {
-            print(bottomBoundary)
-            print(topBoundary)
-            //get touch position and relocate player
-            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * 0.24)
-            position = location
+
+            //     pos.y + frame.height / bound.height = % of frame height
+            //     => ex. = 34% .... offset should be frame.height * 0.16
+            //     => or .50 (half line) - % of frame height
+            //
             
+            //get touch position and relocate player
+            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * handlingYOffset)
+            
+            position = location
             //find old location and use pythagoras to determine length between both points
-            let oldLocation = CGPoint(x: releventTouch!.previousLocation(in: parent!).x, y: releventTouch!.previousLocation(in: parent!).y + frame.height * 0.24)
+            let oldLocation = CGPoint(x: releventTouch!.previousLocation(in: parent!).x, y: releventTouch!.previousLocation(in: parent!).y + frame.height * handlingYOffset)
             let xOffset = location.x - oldLocation.x
             let yOffset = location.y - oldLocation.y
             let vectorLength = sqrt(xOffset * xOffset + yOffset * yOffset)
@@ -173,10 +160,14 @@ class BottomPlayer: SKShapeNode
             //update latest touch time for next calculation
             lastTouchTimeStamp = releventTouch.timestamp
         }
-        else if (releventTouch != nil) && lastTouchTimeStamp == nil && GameIsPaused == false
+        
+        else if (releventTouch != nil) && lastTouchTimeStamp == nil && activeArea.contains(CGPoint(x: releventTouch!.location(in: parent!).x, y: (releventTouch!.location(in: parent!).y + frame.height * handlingYOffset) + (frame.height/2) - handlingYOffset)) &&  GameIsPaused == false
         {
+//            let handlingYOffset =  0.50 - (position.y / activeArea.height)
+            
             //get touch position and relocate player
-            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * 0.24)
+            let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * handlingYOffset)
+
             position = location
             
            //update latest touch time for next calculation
