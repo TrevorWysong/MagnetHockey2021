@@ -96,7 +96,7 @@ class BotPlayer: SKShapeNode
         physicsBody?.linearDamping = 1
         physicsBody?.angularDamping = 1
         physicsBody?.friction = 1
-
+        physicsBody?.usesPreciseCollisionDetection = true
     }
     
     required init?(coder aDecoder: NSCoder)
