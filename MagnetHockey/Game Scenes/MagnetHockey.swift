@@ -31,12 +31,20 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var leftMagnetHolder = SKSpriteNode()
     var centerMagnetHolder = SKSpriteNode()
     var rightMagnetHolder = SKSpriteNode()
-    var southLeftMagnetX = SKSpriteNode()
-    var southCenterMagnetX = SKSpriteNode()
-    var southRightMagnetX = SKSpriteNode()
-    var northLeftMagnetX = SKSpriteNode()
-    var northCenterMagnetX = SKSpriteNode()
-    var northRightMagnetX = SKSpriteNode()
+//    var southLeftMagnetX = SKSpriteNode()
+//    var southCenterMagnetX = SKSpriteNode()
+//    var southRightMagnetX = SKSpriteNode()
+//    var northLeftMagnetX = SKSpriteNode()
+//    var northCenterMagnetX = SKSpriteNode()
+//    var northRightMagnetX = SKSpriteNode()
+    
+    var southLeftMagnetX: MagnetHitMarker?
+    var southCenterMagnetX: MagnetHitMarker?
+    var southRightMagnetX: MagnetHitMarker?
+    var northLeftMagnetX: MagnetHitMarker?
+    var northCenterMagnetX: MagnetHitMarker?
+    var northRightMagnetX: MagnetHitMarker?
+    
     var centerCircle = SKSpriteNode()
     var playerLosesBackground = SKSpriteNode()
     var playerWinsBackground = SKSpriteNode()
@@ -830,63 +838,19 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func createMagnetXMarks()
     {
-        southLeftMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        southCenterMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        southRightMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        northLeftMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        northCenterMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
-        northRightMagnetX = SKSpriteNode(imageNamed: "magnetHitMarkerNew.png")
+        southLeftMagnetX = MagnetHitMarker(hitMarkerNum: 1)
+        southCenterMagnetX = MagnetHitMarker(hitMarkerNum: 2)
+        southRightMagnetX = MagnetHitMarker(hitMarkerNum: 3)
+        northLeftMagnetX = MagnetHitMarker(hitMarkerNum: 4)
+        northCenterMagnetX = MagnetHitMarker(hitMarkerNum: 5)
+        northRightMagnetX = MagnetHitMarker(hitMarkerNum: 6)
         
-        southLeftMagnetX.zPosition = -1
-        southCenterMagnetX.zPosition = -1
-        southRightMagnetX.zPosition = -1
-        northLeftMagnetX.zPosition = -1
-        northCenterMagnetX.zPosition = -1
-        northRightMagnetX.zPosition = -1
-
-        if frame.height == 812 && frame.width < 500
-        {
-            southLeftMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            southCenterMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            southRightMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            northLeftMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            northCenterMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            northRightMagnetX.size = CGSize(width: 1/16 * frame.width, height: 1/16 * frame.width)
-            southLeftMagnetX.position = CGPoint(x: frame.width * 1 / 11, y: frame.width/14)
-            southCenterMagnetX.position = CGPoint(x: frame.width * 1.75 / 11, y: frame.width/14)
-            southRightMagnetX.position = CGPoint(x: frame.width * 2.5 / 11, y: frame.width/14)
-            northLeftMagnetX.position = CGPoint(x: frame.width*(10/11), y: frame.height - frame.width/17)
-            northCenterMagnetX.position = CGPoint(x: frame.width * (9.25/11), y: frame.height - frame.width/17)
-            northRightMagnetX.position = CGPoint(x: frame.width * 8 / 11, y: -200)
-        }
-        else
-        {
-            southLeftMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            southCenterMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            southRightMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            northLeftMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            northCenterMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            northRightMagnetX.size = CGSize(width: 1/12 * frame.width, height: 1/12 * frame.width)
-            southLeftMagnetX.position = CGPoint(x: frame.width/11, y: frame.width/12)
-            southCenterMagnetX.position = CGPoint(x: frame.width/5.5, y: frame.width/12)
-            southRightMagnetX.position = CGPoint(x: frame.width/3.65, y: frame.width/12)
-            northLeftMagnetX.position = CGPoint(x: frame.width*(10/11), y: frame.height - frame.width/12)
-            northCenterMagnetX.position = CGPoint(x: frame.width * 4.5/5.5, y: frame.height - frame.width/12)
-            northRightMagnetX.position = CGPoint(x: frame.width * 4/5.5, y: frame.height - frame.width/12)
-        }
-        southLeftMagnetX.isHidden = true
-        southCenterMagnetX.isHidden = true
-        southRightMagnetX.isHidden = true
-        northLeftMagnetX.isHidden = true
-        northCenterMagnetX.isHidden = true
-        northRightMagnetX.isHidden = true
-        
-        addChild(southLeftMagnetX)
-        addChild(southCenterMagnetX)
-        addChild(southRightMagnetX)
-        addChild(northLeftMagnetX)
-        addChild(northCenterMagnetX)
-        addChild(northRightMagnetX)
+        addChild(southLeftMagnetX!)
+        addChild(southCenterMagnetX!)
+        addChild(southRightMagnetX!)
+        addChild(northLeftMagnetX!)
+        addChild(northCenterMagnetX!)
+        addChild(northRightMagnetX!)
     }
 
     
@@ -894,28 +858,28 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     {
         if southPlayerMagnetCount >= 1
         {
-            southLeftMagnetX.isHidden = false
+            southLeftMagnetX!.isHidden = false
         }
         if southPlayerMagnetCount >= 2
         {
-            southCenterMagnetX.isHidden = false
+            southCenterMagnetX!.isHidden = false
         }
         if southPlayerMagnetCount == 3
         {
-            southRightMagnetX.isHidden = false
+            southRightMagnetX!.isHidden = false
         }
         
         if northPlayerMagnetCount >= 1
         {
-            northLeftMagnetX.isHidden = false
+            northLeftMagnetX!.isHidden = false
         }
         if northPlayerMagnetCount >= 2
         {
-            northCenterMagnetX.isHidden = false
+            northCenterMagnetX!.isHidden = false
         }
         if northPlayerMagnetCount == 3
         {
-            northRightMagnetX.isHidden = false
+            northRightMagnetX!.isHidden = false
         }
     }
     
@@ -1358,12 +1322,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             leftMagnetHolder.zPosition = -100
             centerMagnetHolder.zPosition = -100
             rightMagnetHolder.zPosition = -100
-            northLeftMagnetX.zPosition = 0
-            northCenterMagnetX.zPosition = 0
-            northRightMagnetX.zPosition = 0
-            southLeftMagnetX.zPosition = 0
-            southCenterMagnetX.zPosition = 0
-            southRightMagnetX.zPosition = 0
+            northLeftMagnetX!.zPosition = 0
+            northCenterMagnetX!.zPosition = 0
+            northRightMagnetX!.zPosition = 0
+            southLeftMagnetX!.zPosition = 0
+            southCenterMagnetX!.zPosition = 0
+            southRightMagnetX!.zPosition = 0
             leftMagnet?.zPosition = 0
             centerMagnet?.zPosition = 0
             rightMagnet?.zPosition = 0
@@ -1401,12 +1365,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             leftMagnetHolder.zPosition = -100
             centerMagnetHolder.zPosition = -100
             rightMagnetHolder.zPosition = -100
-            northLeftMagnetX.zPosition = -100
-            northCenterMagnetX.zPosition = -100
-            northRightMagnetX.zPosition = -100
-            southLeftMagnetX.zPosition = -100
-            southCenterMagnetX.zPosition = -100
-            southRightMagnetX.zPosition = -100
+            northLeftMagnetX!.zPosition = -100
+            northCenterMagnetX!.zPosition = -100
+            northRightMagnetX!.zPosition = -100
+            southLeftMagnetX!.zPosition = -100
+            southCenterMagnetX!.zPosition = -100
+            southRightMagnetX!.zPosition = -100
             leftMagnet?.zPosition = -97
             centerMagnet?.zPosition = -97
             rightMagnet?.zPosition = -97
@@ -1443,12 +1407,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             leftMagnetHolder.zPosition = -100
             centerMagnetHolder.zPosition = -100
             rightMagnetHolder.zPosition = -100
-            northLeftMagnetX.zPosition = -100
-            northCenterMagnetX.zPosition = -100
-            northRightMagnetX.zPosition = -100
-            southLeftMagnetX.zPosition = -100
-            southCenterMagnetX.zPosition = -100
-            southRightMagnetX.zPosition = -100
+            northLeftMagnetX!.zPosition = -100
+            northCenterMagnetX!.zPosition = -100
+            northRightMagnetX!.zPosition = -100
+            southLeftMagnetX!.zPosition = -100
+            southCenterMagnetX!.zPosition = -100
+            southRightMagnetX!.zPosition = -100
             leftMagnet?.zPosition = -97
             centerMagnet?.zPosition = -97
             rightMagnet?.zPosition = -97
@@ -1486,12 +1450,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             leftMagnetHolder.zPosition = -100
             centerMagnetHolder.zPosition = -100
             rightMagnetHolder.zPosition = -100
-            northLeftMagnetX.zPosition = -100
-            northCenterMagnetX.zPosition = -100
-            northRightMagnetX.zPosition = -100
-            southLeftMagnetX.zPosition = -100
-            southCenterMagnetX.zPosition = -100
-            southRightMagnetX.zPosition = -100
+            northLeftMagnetX!.zPosition = -100
+            northCenterMagnetX!.zPosition = -100
+            northRightMagnetX!.zPosition = -100
+            southLeftMagnetX!.zPosition = -100
+            southCenterMagnetX!.zPosition = -100
+            southRightMagnetX!.zPosition = -100
             leftMagnet?.zPosition = -97
             centerMagnet?.zPosition = -97
             rightMagnet?.zPosition = -97
@@ -1529,12 +1493,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             leftMagnetHolder.zPosition = -100
             centerMagnetHolder.zPosition = -100
             rightMagnetHolder.zPosition = -100
-            northLeftMagnetX.zPosition = -100
-            northCenterMagnetX.zPosition = -100
-            northRightMagnetX.zPosition = -100
-            southLeftMagnetX.zPosition = -100
-            southCenterMagnetX.zPosition = -100
-            southRightMagnetX.zPosition = -100
+            northLeftMagnetX!.zPosition = -100
+            northCenterMagnetX!.zPosition = -100
+            northRightMagnetX!.zPosition = -100
+            southLeftMagnetX!.zPosition = -100
+            southCenterMagnetX!.zPosition = -100
+            southRightMagnetX!.zPosition = -100
             leftMagnet?.zPosition = -97
             centerMagnet?.zPosition = -97
             rightMagnet?.zPosition = -97
@@ -1785,12 +1749,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         leftMagnetHolder.zPosition = 0
         centerMagnetHolder.zPosition = 0
         rightMagnetHolder.zPosition = 0
-        northLeftMagnetX.zPosition = 0
-        northCenterMagnetX.zPosition = 0
-        northRightMagnetX.zPosition = 0
-        southLeftMagnetX.zPosition = 0
-        southCenterMagnetX.zPosition = 0
-        southRightMagnetX.zPosition = 0
+        northLeftMagnetX!.zPosition = 0
+        northCenterMagnetX!.zPosition = 0
+        northRightMagnetX!.zPosition = 0
+        southLeftMagnetX!.zPosition = 0
+        southCenterMagnetX!.zPosition = 0
+        southRightMagnetX!.zPosition = 0
         ball?.zPosition = 3
         leftMagnet?.zPosition = 3
         centerMagnet?.zPosition = 3
@@ -1927,12 +1891,12 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func resetMagnetHitMarkers()
     {
-        southLeftMagnetX.isHidden = true
-        southCenterMagnetX.isHidden = true
-        southRightMagnetX.isHidden = true
-        northLeftMagnetX.isHidden = true
-        northCenterMagnetX.isHidden = true
-        northRightMagnetX.isHidden = true
+        southLeftMagnetX!.isHidden = true
+        southCenterMagnetX!.isHidden = true
+        southRightMagnetX!.isHidden = true
+        northLeftMagnetX!.isHidden = true
+        northCenterMagnetX!.isHidden = true
+        northRightMagnetX!.isHidden = true
     }
     
     func pausePhysics()

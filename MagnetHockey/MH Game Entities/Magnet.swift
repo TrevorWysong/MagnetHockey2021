@@ -12,7 +12,6 @@ class Magnet: SKShapeNode
 {
     var radius = CGFloat()
     
-    //when we instantiate the class we will set the active area
     init(categoryBitMask: UInt32)
     {
         let screenRect = UIScreen.main.bounds
