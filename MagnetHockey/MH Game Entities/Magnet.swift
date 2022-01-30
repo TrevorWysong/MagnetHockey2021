@@ -14,9 +14,6 @@ class Magnet: SKShapeNode
     
     init(categoryBitMask: UInt32)
     {
-        let screenRect = UIScreen.main.bounds
-        let screenWidth = screenRect.size.width
-        
         if screenWidth < 700
         {
             radius = screenWidth / 40

@@ -85,6 +85,7 @@ class NorthPlayer: SKShapeNode
         physicsBody = SKPhysicsBody(circleOfRadius: radius)
         physicsBody!.mass = 500;
         physicsBody?.categoryBitMask = BodyType.player.rawValue
+        physicsBody?.contactTestBitMask = 75
         physicsBody!.affectedByGravity = false;
         physicsBody?.linearDamping = 1
         physicsBody?.angularDamping = 0

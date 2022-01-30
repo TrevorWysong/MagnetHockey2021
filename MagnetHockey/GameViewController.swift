@@ -12,6 +12,11 @@ import GoogleMobileAds
 var adsAreDisabled = false
 var textureAtlas = [SKTextureAtlas]()
 var GameIsPaused : Bool?
+let deviceType = UIDevice.current.model
+let screenRect = UIScreen.main.bounds
+let screenWidth = screenRect.size.width
+let screenHeight = screenRect.size.height
+let screenPixels = screenWidth * screenHeight
 
 extension SKNode {
     class func unarchiveFromFile(_ file : NSString) -> SKNode?

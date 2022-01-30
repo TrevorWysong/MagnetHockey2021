@@ -83,6 +83,8 @@ class BottomPlayer: SKShapeNode
         physicsBody = SKPhysicsBody(circleOfRadius: radius)
         physicsBody!.mass = 500;
         physicsBody?.categoryBitMask = BodyType.player.rawValue
+        physicsBody?.contactTestBitMask = 25
+        physicsBody?.fieldBitMask = 45
         physicsBody!.affectedByGravity = false;
         physicsBody?.linearDamping = 1
         physicsBody?.angularDamping = 1
@@ -163,8 +165,6 @@ class BottomPlayer: SKShapeNode
         
         else if (releventTouch != nil) && lastTouchTimeStamp == nil && activeArea.contains(CGPoint(x: releventTouch!.location(in: parent!).x, y: (releventTouch!.location(in: parent!).y + frame.height * handlingYOffset) + (frame.height/2) - handlingYOffset)) &&  GameIsPaused == false
         {
-//            let handlingYOffset =  0.50 - (position.y / activeArea.height)
-            
             //get touch position and relocate player
             let location = CGPoint(x: releventTouch!.location(in: parent!).x, y: releventTouch!.location(in: parent!).y + frame.height * handlingYOffset)
 

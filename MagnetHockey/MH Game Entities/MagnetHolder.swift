@@ -8,7 +8,21 @@
 
 import SpriteKit
 
-class MagnetHolder: Magnet
+class MagnetHolder: SKSpriteNode
 {
-
+    // 1-3: 1 represents left, 2 represents center, 3 represents right
+    init(magnetHolderNum: Int)
+    {
+        let magnetHolderSize = CGSize(width: screenWidth / 15, height: screenWidth / 15)
+        
+        super.init(texture: SKTexture(imageNamed: "magnetSpots.png"), color: UIColor.clear, size: magnetHolderSize)
+        
+        position = CGPoint(x: (((CGFloat(magnetHolderNum) * 20.0) + 10.0) / 100.0) * screenWidth, y: screenHeight/2)
+        zPosition = -1
+        print(position)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }

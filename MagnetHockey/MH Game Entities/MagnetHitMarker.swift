@@ -12,18 +12,13 @@ class MagnetHitMarker: SKSpriteNode
 {
     init(hitMarkerNum: Int)
     {
-        let screenRect = UIScreen.main.bounds
-        let screenWidth = screenRect.size.width
-        let screenHeight = screenRect.size.height
-        let screenPixels = screenWidth * screenHeight
-        
-        let hitMarkerSize = CGSize(width: screenPixels / 10000, height: screenPixels / 10000)
+        let hitMarkerSize = CGSize(width: 30, height: 30)
         var hitMarkerPosition: CGPoint
         
         super.init(texture: SKTexture(imageNamed: "magnetHitMarkerNew.png"), color: UIColor.clear, size: hitMarkerSize)
         
         // Hit Marker positioning for bottom player
-        if (hitMarkerNum <= 3)
+        if (hitMarkerNum <= 2)
         {
             let xPos = (CGFloat(hitMarkerNum) * size.width) + (screenWidth * 0.003)
             let yPos = CGFloat(size.height + (screenHeight * 0.003))
@@ -33,7 +28,7 @@ class MagnetHitMarker: SKSpriteNode
         // Hit marker positioning for top player
         else
         {
-            let xPos = (screenWidth - (screenWidth * 0.003)) - (CGFloat(hitMarkerNum - 3) * size.width)
+            let xPos = (screenWidth - (screenWidth * 0.003)) - (CGFloat(hitMarkerNum - 2) * size.width)
             let yPos = (screenHeight - (screenHeight * 0.003)) - size.height
             hitMarkerPosition = CGPoint(x: xPos, y: yPos)
         }
