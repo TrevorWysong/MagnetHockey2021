@@ -61,6 +61,8 @@
 		C3FD7CAB27A64EB4006657F0 /* CenterCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7CAA27A64EB4006657F0 /* CenterCircle.swift */; };
 		C3FD7CAE27A6EE9C006657F0 /* GoalCollisionPlus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7CAD27A6EE9C006657F0 /* GoalCollisionPlus.swift */; };
 		C3FD7CB027A6F226006657F0 /* CenterLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7CAF27A6F226006657F0 /* CenterLine.swift */; };
+		C3FD7CB227A71C35006657F0 /* SpringField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7CB127A71C35006657F0 /* SpringField.swift */; };
+		C3FD7CB427A71CB3006657F0 /* ElectricField.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7CB327A71CB3006657F0 /* ElectricField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,6 +159,8 @@
 		C3FD7CAA27A64EB4006657F0 /* CenterCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterCircle.swift; sourceTree = "<group>"; };
 		C3FD7CAD27A6EE9C006657F0 /* GoalCollisionPlus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCollisionPlus.swift; sourceTree = "<group>"; };
 		C3FD7CAF27A6F226006657F0 /* CenterLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CenterLine.swift; sourceTree = "<group>"; };
+		C3FD7CB127A71C35006657F0 /* SpringField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringField.swift; sourceTree = "<group>"; };
+		C3FD7CB327A71CB3006657F0 /* ElectricField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectricField.swift; sourceTree = "<group>"; };
 		EDBB9D8084BC352C6FFBD103 /* Pods-MagnetHockeyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MagnetHockeyTests.release.xcconfig"; path = "Target Support Files/Pods-MagnetHockeyTests/Pods-MagnetHockeyTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -262,6 +266,8 @@
 				C3FD7CA3279F2541006657F0 /* MagnetHolder.swift */,
 				C3FD7CA5279F2586006657F0 /* MagnetHitMarker.swift */,
 				C3FD7CAA27A64EB4006657F0 /* CenterCircle.swift */,
+				C3FD7CB127A71C35006657F0 /* SpringField.swift */,
+				C3FD7CB327A71CB3006657F0 /* ElectricField.swift */,
 			);
 			path = "MH Game Entities";
 			sourceTree = "<group>";
@@ -629,6 +635,7 @@
 				C33AD55B245B2B850015F392 /* IAPService.swift in Sources */,
 				C3FD7C9B279F0BEB006657F0 /* PauseHelper.swift in Sources */,
 				C3FD7CA4279F2541006657F0 /* MagnetHolder.swift in Sources */,
+				C3FD7CB227A71C35006657F0 /* SpringField.swift in Sources */,
 				C30208C32539F1B7004B9258 /* InfoScene.swift in Sources */,
 				C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */,
 				C3FD7C97279E6829006657F0 /* GoalCircle.swift in Sources */,
@@ -636,6 +643,7 @@
 				C3FD7C9D279F1217006657F0 /* Player.swift in Sources */,
 				C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */,
 				C31682F42738C71D00D0C09D /* StatisticsScene.swift in Sources */,
+				C3FD7CB427A71CB3006657F0 /* ElectricField.swift in Sources */,
 				C3B9BE222710C66300A1673A /* BotPlayer.swift in Sources */,
 				C32017D3277977B0007ECAA0 /* GameService.swift in Sources */,
 				C32017D6279DBD54007ECAA0 /* Magnet.swift in Sources */,

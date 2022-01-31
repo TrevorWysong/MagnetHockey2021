@@ -18,6 +18,15 @@ let screenWidth = screenRect.size.width
 let screenHeight = screenRect.size.height
 let screenPixels = screenWidth * screenHeight
 
+var hasTopNotch: Bool
+{
+    if #available(iOS 11.0, tvOS 11.0, *)
+    {
+        return UIApplication.shared.delegate?.window??.safeAreaInsets.top ?? 0 > 20
+    }
+    return false
+}
+
 extension SKNode {
     class func unarchiveFromFile(_ file : NSString) -> SKNode?
     {

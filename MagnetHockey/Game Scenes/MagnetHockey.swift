@@ -45,10 +45,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var ballSoundControl = true
     var magnetBallSoundControl = true
     var magnetHitsMagnetSoundControl = true
-    var topGoal = SKSpriteNode()
-    var bottomGoal = SKSpriteNode()
-    var topGoalPlus = SKSpriteNode()
-    var bottomGoalPlus = SKSpriteNode()
+    var topGoal: GoalCircle?
+    var bottomGoal: GoalCircle?
+    var topGoalPlus: GoalCollisionPlus?
+    var bottomGoalPlus: GoalCollisionPlus?
     var pauseButton = SKSpriteNode()
     var pauseButtonWhite = SKSpriteNode()
     var pauseButtonSprite = SKSpriteNode()
@@ -350,7 +350,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     {
         let springFieldTopGoal = SKFieldNode.springField()
         springFieldTopGoal.strength = 0.2
-        springFieldTopGoal.position = CGPoint(x: topGoal.position.x, y: topGoal.position.y)
+        springFieldTopGoal.position = CGPoint(x: topGoal!.position.x, y: topGoal!.position.y)
         if frame.width > 700
         {
             springFieldTopGoal.region = SKRegion(size: CGSize(width: frame.width/10, height: frame.width/9.1))
@@ -372,7 +372,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         let springFieldBottomGoal = SKFieldNode.springField()
         springFieldBottomGoal.strength = 0.2
         
-        springFieldBottomGoal.position = CGPoint(x: bottomGoal.position.x, y: bottomGoal.position.y)
+        springFieldBottomGoal.position = CGPoint(x: bottomGoal!.position.x, y: bottomGoal!.position.y)
         if frame.width > 700
         {
             springFieldBottomGoal.region = SKRegion(size: CGSize(width: frame.width/10, height: frame.width/9.1))
@@ -688,8 +688,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         southPlayerGlow = TutorialHelper.shared.createGlow(glowName: southPlayerGlow, glowSize: southPlayer!)
         northPlayerGlow = TutorialHelper.shared.createGlow(glowName: northPlayerGlow, glowSize: northPlayer!)
         ballGlow = TutorialHelper.shared.createGlow(glowName: ballGlow, glowSize: ball!)
-        topGoalGlow = TutorialHelper.shared.createGlow(glowName: topGoalGlow, glowSize: topGoal)
-        bottomGoalGlow = TutorialHelper.shared.createGlow(glowName: bottomGoalGlow, glowSize: bottomGoal)
+        topGoalGlow = TutorialHelper.shared.createGlow(glowName: topGoalGlow, glowSize: topGoal!)
+        bottomGoalGlow = TutorialHelper.shared.createGlow(glowName: bottomGoalGlow, glowSize: bottomGoal!)
         addChild(leftMagnetGlow)
         addChild(centerMagnetGlow)
         addChild(rightMagnetGlow)
@@ -804,10 +804,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             ballGlow.isHidden = true
             
             
-            topGoal.zPosition = -100
-            bottomGoal.zPosition = -100
-            topGoalPlus.zPosition = -99
-            bottomGoalPlus.zPosition = -99
+            topGoal?.zPosition = -100
+            bottomGoal?.zPosition = -100
+            topGoalPlus?.zPosition = -99
+            bottomGoalPlus?.zPosition = -99
             northPlayerScoreText.zPosition = -100
             southPlayerScoreText.zPosition = -100
             southPlayer?.zPosition = -98
@@ -845,10 +845,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             tutorialDoneButton.isHidden = true
             doneButtonLabel.isHidden = true
             
-            topGoal.zPosition = -100
-            bottomGoal.zPosition = -100
-            topGoalPlus.zPosition = -99
-            bottomGoalPlus.zPosition = -99
+            topGoal?.zPosition = -100
+            bottomGoal?.zPosition = -100
+            topGoalPlus?.zPosition = -99
+            bottomGoalPlus?.zPosition = -99
             northPlayerScoreText.zPosition = -100
             southPlayerScoreText.zPosition = -100
             southPlayer?.zPosition = 0
@@ -885,10 +885,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             tutorialDoneButton.isHidden = true
             doneButtonLabel.isHidden = true
             
-            topGoal.zPosition = -100
-            bottomGoal.zPosition = -100
-            topGoalPlus.zPosition = -99
-            bottomGoalPlus.zPosition = -99
+            topGoal?.zPosition = -100
+            bottomGoal?.zPosition = -100
+            topGoalPlus?.zPosition = -99
+            bottomGoalPlus?.zPosition = -99
             northPlayerScoreText.zPosition = -100
             southPlayerScoreText.zPosition = -100
             southPlayer?.zPosition = -97
@@ -926,10 +926,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             topGoalGlow.isHidden = false
             bottomGoalGlow.isHidden = false
             
-            topGoal.zPosition = 0
-            bottomGoal.zPosition = 0
-            topGoalPlus.zPosition = 1
-            bottomGoalPlus.zPosition = 1
+            topGoal?.zPosition = 0
+            bottomGoal?.zPosition = 0
+            topGoalPlus?.zPosition = 1
+            bottomGoalPlus?.zPosition = 1
             northPlayerScoreText.zPosition = -100
             southPlayerScoreText.zPosition = -100
             southPlayer?.zPosition = -97
@@ -967,10 +967,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             tutorialDoneButton.isHidden = false
             doneButtonLabel.isHidden = false
             
-            topGoal.zPosition = -100
-            bottomGoal.zPosition = -100
-            topGoalPlus.zPosition = -99
-            bottomGoalPlus.zPosition = -99
+            topGoal?.zPosition = -100
+            bottomGoal?.zPosition = -100
+            topGoalPlus?.zPosition = -99
+            bottomGoalPlus?.zPosition = -99
             northPlayerScoreText.zPosition = 0
             southPlayerScoreText.zPosition = 0
             southPlayer?.zPosition = -97
@@ -1224,10 +1224,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
        
         southPlayer?.zPosition = 3
         northPlayer?.zPosition = 3
-        topGoal.zPosition = 1
-        bottomGoal.zPosition = 1
-        topGoalPlus.zPosition = 4
-        bottomGoalPlus.zPosition = 4
+        topGoal?.zPosition = 1
+        bottomGoal?.zPosition = 1
+        topGoalPlus?.zPosition = 4
+        bottomGoalPlus?.zPosition = 4
         northPlayerScoreText.zPosition = 5
         southPlayerScoreText.zPosition = 5
         leftMagnetHolder?.zPosition = 0
@@ -1400,80 +1400,15 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func createGoals()
     {
-        topGoal = SKSpriteNode(imageNamed: "goal.png")
-        bottomGoal = SKSpriteNode(imageNamed: "goal.png")
-        if frame.height > 800 && frame.width < 500
-        {
-            topGoal.position = CGPoint(x: frame.width/2, y: frame.height * 0.84)
-            bottomGoal.position = CGPoint(x: frame.width/2, y: frame.height * 0.16)
-        }
-        else if frame.width > 700
-        {
-            topGoal.position = CGPoint(x: frame.width/2, y: frame.height*(8.7/10))
-            bottomGoal.position = CGPoint(x: frame.width/2, y: frame.height * 1.30/10)
-        }
-        else
-        {
-            topGoal.position = CGPoint(x: frame.width/2, y: frame.height * 0.87)
-            bottomGoal.position = CGPoint(x: frame.width/2, y: frame.height * 0.13)
-        }
+        topGoal = GoalCircle(topGoal: true)
+        bottomGoal = GoalCircle(topGoal: false)
+        addChild(topGoal!)
+        addChild(bottomGoal!)
         
-        if frame.width > 700
-        {
-            topGoal.scale(to: CGSize(width: frame.width/7.5, height: frame.width/7.5))
-            bottomGoal.scale(to: CGSize(width: frame.width/7.5, height: frame.width/7.5))
-        }
-        else
-        {
-            topGoal.scale(to: CGSize(width: frame.width/6, height: frame.width/6))
-            bottomGoal.scale(to: CGSize(width: frame.width/6, height: frame.width/6))
-        }
-        
-        topGoal.zPosition = -1
-        bottomGoal.zPosition = -1
-        //Plus is for the goal sprites detecting collision in the goal
-        topGoalPlus = SKSpriteNode(imageNamed: "plus.png")
-        bottomGoalPlus = SKSpriteNode(imageNamed: "plus.png")
-        topGoalPlus.position = CGPoint(x: topGoal.position.x, y: topGoal.position.y)
-        bottomGoalPlus.position = CGPoint(x: bottomGoal.position.x, y: bottomGoal.position.y)
-        
-        if frame.width > 700
-        {
-            topGoalPlus.scale(to: CGSize(width: frame.width/50, height: frame.width/50))
-            bottomGoalPlus.scale(to: CGSize(width: frame.width/50, height: frame.width/50))
-        }
-        else
-        {
-            topGoalPlus.scale(to: CGSize(width: frame.width/40, height: frame.width/40))
-            bottomGoalPlus.scale(to: CGSize(width: frame.width/40, height: frame.width/40))
-        }
-        
-        // Set on same Z level as sprites
-        topGoalPlus.zPosition = 0
-        bottomGoalPlus.zPosition = 0
-        // Assign Collision category masks
-        topGoalPlus.physicsBody = SKPhysicsBody(circleOfRadius: max(topGoalPlus.size.width / 2, topGoalPlus.size.height / 2))
-        bottomGoalPlus.physicsBody = SKPhysicsBody(circleOfRadius: max(bottomGoalPlus.size.width / 2, bottomGoalPlus.size.height / 2))
-        topGoalPlus.physicsBody?.affectedByGravity = false
-        bottomGoalPlus.physicsBody?.affectedByGravity = false
-        topGoalPlus.physicsBody?.isDynamic = false
-        bottomGoalPlus.physicsBody?.isDynamic = false
-        topGoalPlus.physicsBody?.allowsRotation = false
-        bottomGoalPlus.physicsBody?.allowsRotation = false
-
-        topGoalPlus.physicsBody?.categoryBitMask = BodyType.topGoalZone.rawValue
-        bottomGoalPlus.physicsBody?.categoryBitMask = BodyType.bottomGoalZone.rawValue
-        topGoalPlus.physicsBody?.fieldBitMask = 4294967295
-        bottomGoalPlus.physicsBody?.fieldBitMask = 4294967295
-        bottomGoalPlus.physicsBody?.contactTestBitMask = BodyType.ball.rawValue
-        topGoalPlus.physicsBody?.contactTestBitMask = BodyType.ball.rawValue
-        bottomGoalPlus.physicsBody?.collisionBitMask = 4294967295
-        topGoalPlus.physicsBody?.collisionBitMask = 4294967295
-        
-        addChild(topGoal)
-        addChild(bottomGoal)
-        addChild(topGoalPlus)
-        addChild(bottomGoalPlus)
+        topGoalPlus = GoalCollisionPlus(goalPosition: topGoal!.position, topGoal: true)
+        bottomGoalPlus = GoalCollisionPlus(goalPosition: bottomGoal!.position, topGoal: false)
+        addChild(topGoalPlus!)
+        addChild(bottomGoalPlus!)
     }
     
     func createAndLoadInterstitial() -> GADInterstitial
@@ -2430,7 +2365,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             northPlayerPointOrder += "2"
             northPlayerScore += 1
             ball?.physicsBody?.isDynamic = false
-            ball?.position = CGPoint(x: bottomGoal.position.x, y: bottomGoal.position.y)
+            ball?.position = CGPoint(x: bottomGoal!.position.x, y: bottomGoal!.position.y)
             updatePlayerLoseWinBackgroundsTopPlayerWinsRound()
             updateNorthPlayerScore()
             clearMagnets()
@@ -2462,7 +2397,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             ballInNorthGoal = false
             southPlayerPointOrder += "2"
             ball?.physicsBody?.isDynamic = false
-            ball?.position = CGPoint(x: topGoal.position.x, y: topGoal.position.y)
+            ball?.position = CGPoint(x: topGoal!.position.x, y: topGoal!.position.y)
             updatePlayerLoseWinBackgroundsBottomPlayerWinsRound()
             southPlayerScore += 1
             clearMagnets()
@@ -2644,10 +2579,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             }
             else if tutorialGoalStage
             {
-                TutorialHelper.shared.glowFollow(glowName: topGoalGlow, SKSpriteToFollow: topGoal)
+                TutorialHelper.shared.glowFollow(glowName: topGoalGlow, SKSpriteToFollow: topGoal!)
                 downSwitchTopGoal = TutorialHelper.shared.glowFlash(glow: topGoalGlow, downSwitch: downSwitchTopGoal)
                 
-                TutorialHelper.shared.glowFollow(glowName: bottomGoalGlow, SKSpriteToFollow: bottomGoal)
+                TutorialHelper.shared.glowFollow(glowName: bottomGoalGlow, SKSpriteToFollow: bottomGoal!)
                 downSwitchBottomGoal = TutorialHelper.shared.glowFlash(glow: bottomGoalGlow, downSwitch: downSwitchBottomGoal)
             }
             else if tutorialScoreStage
