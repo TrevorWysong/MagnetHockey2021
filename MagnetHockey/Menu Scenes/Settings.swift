@@ -33,43 +33,15 @@ class Settings: SKScene
     
     func createEdges()
     {
-        let leftEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(533/10000 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
-        leftEdge.zPosition = 100
+        var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
+        (leftEdge, rightEdge, bottomEdge, topEdge) = UIHelper.shared.createEdges()
         addChild(leftEdge)
-        
-        //copy the left edge and position it as the right edge
-        let rightEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: CGFloat(20/75 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        rightEdge.position = CGPoint(x: size.width + (6.85/65 * (frame.width)), y: frame.height/2)
-        rightEdge.zPosition = 100
         addChild(rightEdge)
-        
-        let bottomEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
-        if frame.height > 800 && frame.width < 500
-        {
-            bottomEdge.position = CGPoint(x: 0, y: -1 * frame.height/10)
-        }
-        else
-        {
-            bottomEdge.position = CGPoint(x: 0, y: 0 - (frame.width * 6.50/20))
-        }
-        bottomEdge.zPosition = -5
         addChild(bottomEdge)
-        
-        let topEdge = SKSpriteNode(color: UIColor.systemBlue, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.00/100) * frame.width))
-        if frame.height > 800 && frame.width < 500
-        {
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2/30 * frame.height))
-        }
-        else
-        {
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.2/37.5) * frame.width))
-        }
-        topEdge.zPosition = -5
         addChild(topEdge)
     }
     
-    override func didMove(to view: SKView)
+    func handleAds()
     {
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
@@ -96,7 +68,11 @@ class Settings: SKScene
         
         UserDefaults.standard.set(false, forKey: "RestoredColorPack")
         UserDefaults.standard.synchronize()
-        
+    }
+    
+    override func didMove(to view: SKView)
+    {
+        handleAds()
         createEdges()
         
         let titleBackgroundSprite:SKSpriteNode!
@@ -130,8 +106,8 @@ class Settings: SKScene
         addChild(settingsSprite)
         
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
-        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
+        addChild(UIHelper.shared.createBackToMenuButton(menuButton: backToMenuButton))
+        addChild(UIHelper.shared.createBackToMenuLabel(menuLabel: backToMenuButtonLabel))
         
         roundsButton = SKSpriteNode(imageNamed: "IcyChillRoundedRectangle.png.png")
         roundsButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.60)
@@ -247,7 +223,7 @@ class Settings: SKScene
         }
         addChild(ballColorButtonLabel)
         
-        let background = MenuHelper.shared.createBackground(frame: frame)
+        let background = UIHelper.shared.createBackground()
         addChild(background)
         
         createBackgroundEmitters()
@@ -258,8 +234,8 @@ class Settings: SKScene
     {
         settingsEmitter1 = SKEmitterNode()
         settingsEmitter2 = SKEmitterNode()
-        addChild(MenuHelper.shared.createTopBackgroundEmitter(frame: frame, emitter: settingsEmitter1, scale: 0.15, image: SKTexture(imageNamed: "settings")))
-        addChild(MenuHelper.shared.createBottomBackgroundEmitter(frame: frame, emitter: settingsEmitter2, scale: 0.15, image: SKTexture(imageNamed: "settings")))
+        addChild(UIHelper.shared.createTopBackgroundEmitter(emitter: settingsEmitter1, scale: 0.15, image: SKTexture(imageNamed: "settings")))
+        addChild(UIHelper.shared.createBottomBackgroundEmitter(emitter: settingsEmitter2, scale: 0.15, image: SKTexture(imageNamed: "settings")))
     }
     
     func roundsButtonPressed()

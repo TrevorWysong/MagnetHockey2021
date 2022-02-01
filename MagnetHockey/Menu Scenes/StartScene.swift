@@ -65,7 +65,7 @@ class StartScene: SKScene
     func createEdges()
     {
         var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
-        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
+        (leftEdge, rightEdge, bottomEdge, topEdge) = UIHelper.shared.createEdges()
         addChild(leftEdge)
         addChild(rightEdge)
         addChild(bottomEdge)
@@ -357,7 +357,7 @@ class StartScene: SKScene
         addChild(twoPlayerActiveSprite)
         addChild(twoPlayerInactiveSprite)
         
-        let background = MenuHelper.shared.createBackground(frame: frame)
+        let background = UIHelper.shared.createBackground()
         addChild(background)
 
         // set size, color, position and text of the tapStartLabel

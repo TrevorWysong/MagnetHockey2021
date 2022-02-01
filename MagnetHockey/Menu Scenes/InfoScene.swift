@@ -36,7 +36,7 @@ class InfoScene: SKScene
     func createEdges()
     {
         var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
-        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
+        (leftEdge, rightEdge, bottomEdge, topEdge) = UIHelper.shared.createEdges()
         addChild(leftEdge)
         addChild(rightEdge)
         addChild(bottomEdge)
@@ -69,8 +69,8 @@ class InfoScene: SKScene
     override func didMove(to view: SKView)
     {
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
-        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
+        addChild(UIHelper.shared.createBackToMenuButton(menuButton: backToMenuButton))
+        addChild(UIHelper.shared.createBackToMenuLabel(menuLabel: backToMenuButtonLabel))
         
         let infoBackgroundSprite:SKSpriteNode!
         infoBackgroundSprite = SKSpriteNode(imageNamed: "RedCircle.png")
@@ -169,7 +169,7 @@ class InfoScene: SKScene
         addChild(forwardButtonSprite)
         
         handleAds()
-        let background = MenuHelper.shared.createBackground(frame: frame)
+        let background = UIHelper.shared.createBackground()
         addChild(background)
         createEdges()
         createPageDots()
@@ -214,8 +214,8 @@ class InfoScene: SKScene
     {
         infoEmitter1 = SKEmitterNode()
         infoEmitter2 = SKEmitterNode()
-        addChild(MenuHelper.shared.createTopBackgroundEmitter(frame: frame, emitter: infoEmitter1, scale: 0.10, image: SKTexture(imageNamed: "vector_info")))
-        addChild(MenuHelper.shared.createBottomBackgroundEmitter(frame: frame, emitter: infoEmitter2, scale: 0.10, image: SKTexture(imageNamed: "vector_info")))
+        addChild(UIHelper.shared.createTopBackgroundEmitter(emitter: infoEmitter1, scale: 0.10, image: SKTexture(imageNamed: "vector_info")))
+        addChild(UIHelper.shared.createBottomBackgroundEmitter(emitter: infoEmitter2, scale: 0.10, image: SKTexture(imageNamed: "vector_info")))
     }
     
     override func update(_ currentTime: TimeInterval)

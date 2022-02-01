@@ -103,7 +103,7 @@ class StatisticsScene: SKScene
     func createEdges()
     {
         var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
-        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
+        (leftEdge, rightEdge, bottomEdge, topEdge) = UIHelper.shared.createEdges()
         addChild(leftEdge)
         addChild(rightEdge)
         addChild(bottomEdge)
@@ -113,8 +113,8 @@ class StatisticsScene: SKScene
     func createBackToMenuButton()
     {
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
-        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
+        addChild(UIHelper.shared.createBackToMenuButton(menuButton: backToMenuButton))
+        addChild(UIHelper.shared.createBackToMenuLabel(menuLabel: backToMenuButtonLabel))
         backToMenuButton.position.y = frame.height * 0.15
         backToMenuButtonLabel.position.y = frame.height * 0.15
 
@@ -207,7 +207,7 @@ class StatisticsScene: SKScene
     
     func createBackground()
     {
-        let background = MenuHelper.shared.createBackground(frame: frame)
+        let background = UIHelper.shared.createBackground()
         addChild(background)
     }
     
@@ -316,8 +316,8 @@ class StatisticsScene: SKScene
     {
         statsEmitter1 = SKEmitterNode()
         statsEmitter2 = SKEmitterNode()
-        addChild(MenuHelper.shared.createTopBackgroundEmitter(frame: frame, emitter: statsEmitter1, scale: 0.15, image: SKTexture(imageNamed: "crown")))
-        addChild(MenuHelper.shared.createBottomBackgroundEmitter(frame: frame, emitter: statsEmitter2, scale: 0.15, image: SKTexture(imageNamed: "crown")))
+        addChild(UIHelper.shared.createTopBackgroundEmitter(emitter: statsEmitter1, scale: 0.15, image: SKTexture(imageNamed: "crown")))
+        addChild(UIHelper.shared.createBottomBackgroundEmitter(emitter: statsEmitter2, scale: 0.15, image: SKTexture(imageNamed: "crown")))
     }
     
     func createBlurryStatsBackground()

@@ -12,7 +12,17 @@ class MagnetHitMarker: SKSpriteNode
 {
     init(hitMarkerNum: Int)
     {
-        let hitMarkerSize = CGSize(width: 30, height: 30)
+        var hitMarkerSize: CGSize
+        if deviceType.contains("iPad")
+        {
+            hitMarkerSize = CGSize(width: 75, height: 75)
+
+        }
+        else
+        {
+            hitMarkerSize = CGSize(width: 30, height: 30)
+        }
+        
         var hitMarkerPosition: CGPoint
         
         super.init(texture: SKTexture(imageNamed: "magnetHitMarkerNew.png"), color: UIColor.clear, size: hitMarkerSize)

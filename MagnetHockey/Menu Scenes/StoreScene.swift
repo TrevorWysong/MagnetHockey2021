@@ -54,7 +54,7 @@ class StoreScene: SKScene
     func createEdges()
     {
         var leftEdge = SKSpriteNode(), rightEdge = SKSpriteNode(), bottomEdge = SKSpriteNode(), topEdge = SKSpriteNode()
-        (leftEdge, rightEdge, bottomEdge, topEdge) = MenuHelper.shared.createEdges(frame: frame)
+        (leftEdge, rightEdge, bottomEdge, topEdge) = UIHelper.shared.createEdges()
         addChild(leftEdge)
         addChild(rightEdge)
         addChild(bottomEdge)
@@ -85,7 +85,7 @@ class StoreScene: SKScene
         bannerViewSettingsScene?.isHidden = true
 
         
-        let background = MenuHelper.shared.createBackground(frame: frame)
+        let background = UIHelper.shared.createBackground()
         addChild(background)
         
         let titleBackgroundSprite:SKSpriteNode!
@@ -120,8 +120,8 @@ class StoreScene: SKScene
         addChild(settingsSprite)
 
         backToMenuButton = SKSpriteNode(imageNamed: "IcyChillRectangle.png")
-        addChild(MenuHelper.shared.createBackToMenuButton(frame: frame, menuButton: backToMenuButton))
-        addChild(MenuHelper.shared.createBackToMenuLabel(frame: frame, menuLabel: backToMenuButtonLabel))
+        addChild(UIHelper.shared.createBackToMenuButton(menuButton: backToMenuButton))
+        addChild(UIHelper.shared.createBackToMenuLabel(menuLabel: backToMenuButtonLabel))
         
         purchaseNoAdsBackgroundButton = SKSpriteNode(imageNamed: "AgedEmeraldSquare.png")
         purchaseNoAdsBackgroundButton.position = CGPoint(x: frame.width * 0.30, y: frame.height * 0.34)
@@ -220,8 +220,8 @@ class StoreScene: SKScene
     {
         cartEmitter1 = SKEmitterNode()
         cartEmitter2 = SKEmitterNode()
-        addChild(MenuHelper.shared.createTopBackgroundEmitter(frame: frame, emitter: cartEmitter1, scale: 0.10, image: SKTexture(imageNamed: "vector_cart")))
-        addChild(MenuHelper.shared.createBottomBackgroundEmitter(frame: frame, emitter: cartEmitter2, scale: 0.10, image: SKTexture(imageNamed: "vector_cart")))
+        addChild(UIHelper.shared.createTopBackgroundEmitter(emitter: cartEmitter1, scale: 0.10, image: SKTexture(imageNamed: "vector_cart")))
+        addChild(UIHelper.shared.createBottomBackgroundEmitter(emitter: cartEmitter2, scale: 0.10, image: SKTexture(imageNamed: "vector_cart")))
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?)

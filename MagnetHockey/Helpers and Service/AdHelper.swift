@@ -5,13 +5,13 @@
 //  Created by Wysong, Trevor on 1/24/22.
 //  Copyright © 2022 Wysong, Trevor. All rights reserved.
 //
-
-import GoogleMobileAds
-
-class AdHelper
-{
+//
+//import GoogleMobileAds
+//
+//class AdHelper
+//{
 //    var interstitialAd: GADInterstitial?
-
+//
 //    func createAndLoadInterstitial() -> GADInterstitial
 //    {
 //        let request = GADRequest()
@@ -20,8 +20,8 @@ class AdHelper
 //        interstitial.load(request)
 //        return interstitial
 //    }
-    
-    
+//    
+//    
 //    func adMobShowInterAd()
 //    {
 //        guard interstitialAd != nil && interstitialAd!.isReady else
@@ -51,7 +51,7 @@ class AdHelper
 //        }
 //        interstitialAd?.present(fromRootViewController: (self.view?.window?.rootViewController)!)
 //    }
-    
+//    
 //    func interstitialDidDismissScreen(_ ad: GADInterstitial)
 //    {
 //        if UserDefaults.standard.string(forKey: "Sound") != "Off"
@@ -76,4 +76,4 @@ class AdHelper
 //        skView.presentScene(scene, transition: transition)
 //    }
 
-}
+//}

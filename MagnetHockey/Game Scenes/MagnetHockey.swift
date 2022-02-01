@@ -26,6 +26,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var rightMagnetPosition = CGPoint()
     var maxBallSpeed = CGFloat(0.0)
     var maxMagnetSpeed = CGFloat(0.0)
+    var playerRadius = CGFloat(0.0)
     var leftMagnetHolder: MagnetHolder?
     var centerMagnetHolder: MagnetHolder?
     var rightMagnetHolder: MagnetHolder?
@@ -164,20 +165,14 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         let southPlayerArea = CGRect(x: 0, y: 0, width: frame.width, height: frame.height/2)
         let northPlayerArea = CGRect(x: 0, y: frame.height/2, width: frame.width, height: frame.height)
         
-        if frame.height >= 812 && frame.height <= 900 && frame.width < 500
-        {
-            let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.25)
-            let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.75)
-            southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
-        }
-        else if frame.height == 926 && frame.width < 500
+        if hasTopNotch && !deviceType.contains("iPad")
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2525)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.7475)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
+
         else
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.2325)
@@ -185,6 +180,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
             northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
+        playerRadius = southPlayer!.radius
     }
     
     func bottomPlayer(at position: CGPoint, boundary:CGRect) -> BottomPlayer
@@ -207,82 +203,36 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func createEdges()
     {
-        let leftEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: CGFloat(533/10000 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        leftEdge.position = CGPoint(x: 0, y: frame.height/2)
-        leftEdge.zPosition = 100
-        //setup physics for this edge
-        leftEdge.physicsBody = SKPhysicsBody(rectangleOf: leftEdge.size)
-        leftEdge.physicsBody!.isDynamic = false
-        leftEdge.physicsBody?.categoryBitMask = BodyType.sideWalls.rawValue
-        leftEdge.physicsBody?.contactTestBitMask = 512
-        leftEdge.physicsBody?.fieldBitMask = 30
-        leftEdge.physicsBody?.restitution = 1.0
-        leftEdge.physicsBody?.friction = 0.0
-        leftEdge.physicsBody?.linearDamping = 0.0
-        leftEdge.physicsBody?.angularDamping = 0.0
-        leftEdge.blendMode = .replace
+        let edgeWidth = frame.width * 0.03
+        let notchOffset = frame.height * 0.0625
+        
+        let leftEdge = Wall(wallSize: CGSize(width: edgeWidth + playerRadius * 2, height: frame.height), wallPosition: CGPoint(x: 0 + (edgeWidth/2) - playerRadius, y: frame.height/2), sideWall: true)
         addChild(leftEdge)
         
-        //copy the left edge and position it as the right edge
-        let rightEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: CGFloat(20/75 * frame.width), height: size.height + ((35000/400000) * frame.height)))
-        rightEdge.position = CGPoint(x: size.width + (6.85/65 * (frame.width)), y: frame.height/2)
-        rightEdge.zPosition = 100
-        rightEdge.physicsBody = SKPhysicsBody(rectangleOf: rightEdge.size)
-        rightEdge.physicsBody!.isDynamic = false
-        rightEdge.physicsBody?.categoryBitMask = BodyType.sideWalls.rawValue
-        rightEdge.physicsBody?.contactTestBitMask = 512
-        rightEdge.physicsBody?.restitution = 1.0
-        rightEdge.physicsBody?.friction = 0.0
-        rightEdge.physicsBody?.linearDamping = 0.0
-        rightEdge.physicsBody?.angularDamping = 0.0
-        rightEdge.blendMode = .replace
+        let rightEdge = Wall(wallSize: CGSize(width: edgeWidth + playerRadius * 2, height: frame.height), wallPosition: CGPoint(x: frame.width - (edgeWidth/2) + (playerRadius), y: frame.height/2), sideWall: true)
         addChild(rightEdge)
         
-        let bottomEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3, height: CGFloat(14/20 * frame.width)))
-        if frame.height > 800 && frame.width < 500
+        if hasTopNotch && !deviceType.contains("iPad")
         {
-            bottomEdge.position = CGPoint(x: 0, y: -1 * frame.height/10)
+            let bottomEdge = Wall(wallSize: CGSize(width: frame.width, height: notchOffset + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: 0 + notchOffset/2 - playerRadius), sideWall: false)
+            addChild(bottomEdge)
         }
         else
         {
-            bottomEdge.position = CGPoint(x: 0, y: 0 - (frame.width * 6.46/20))
+            let bottomEdge = Wall(wallSize: CGSize(width: frame.width, height: edgeWidth + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: 0 + edgeWidth/2 - playerRadius), sideWall: false)
+            addChild(bottomEdge)
         }
-        bottomEdge.zPosition = -5
-        //setup physics for this edge
-        bottomEdge.physicsBody = SKPhysicsBody(rectangleOf: bottomEdge.size)
-        bottomEdge.physicsBody!.isDynamic = false
-        bottomEdge.physicsBody?.mass = 10000000
-        bottomEdge.physicsBody?.categoryBitMask = BodyType.topBottomWalls.rawValue
-        bottomEdge.physicsBody?.contactTestBitMask = 512
-        bottomEdge.physicsBody?.restitution = 1.0
-        bottomEdge.physicsBody?.friction = 0.0
-        bottomEdge.physicsBody?.linearDamping = 0.0
-        bottomEdge.physicsBody?.angularDamping = 0.0
-        bottomEdge.blendMode = .replace
-        addChild(bottomEdge)
-        
-        let topEdge = SKSpriteNode(color: UIColor.darkGray, size: CGSize(width: frame.width*3 + ((20/100) * frame.width), height: CGFloat(55.00/100) * frame.width))
-        if frame.height > 800 && frame.width < 500
+    
+        if hasTopNotch && !deviceType.contains("iPad")
         {
-            topEdge.position = CGPoint(x: -1 * frame.width/10, y: frame.height + (2.02/30 * frame.height))
+            let topEdge = Wall(wallSize: CGSize(width: frame.width, height: notchOffset + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: frame.height - notchOffset/2 + playerRadius), sideWall: false)
+            addChild(topEdge)
         }
         else
         {
-            topEdge.position = CGPoint(x: 0, y: frame.height + ((9.24/37.5) * frame.width))
+            let topEdge = Wall(wallSize: CGSize(width: frame.width, height: edgeWidth + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: frame.height - edgeWidth/2 + playerRadius), sideWall: false)
+            addChild(topEdge)
         }
-        topEdge.zPosition = -5
-        //setup physics for this edge
-        topEdge.physicsBody = SKPhysicsBody(rectangleOf: topEdge.size)
-        bottomEdge.physicsBody?.usesPreciseCollisionDetection = false
-        topEdge.physicsBody!.isDynamic = false
-        topEdge.physicsBody?.categoryBitMask = BodyType.topBottomWalls.rawValue
-        topEdge.physicsBody?.contactTestBitMask = 512
-        topEdge.physicsBody?.restitution = 1.0
-        topEdge.physicsBody?.friction = 0.0
-        topEdge.physicsBody?.linearDamping = 0.0
-        topEdge.physicsBody?.angularDamping = 0.0
-        topEdge.blendMode = .replace
-        addChild(topEdge)
     }
     
     func createSpringFieldPlayer()
@@ -335,7 +285,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         electricFieldSouthPlayer.isEnabled = true
         electricFieldSouthPlayer.categoryBitMask = 5
 
-        if frame.width > 700
+        if deviceType.contains("iPad")
         {
             electricFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/4, height: frame.width/4))
         }
@@ -1356,9 +1306,9 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func createMagnetHolders()
     {
-        leftMagnetHolder = MagnetHolder(magnetHolderNum: 1)
-        centerMagnetHolder = MagnetHolder(magnetHolderNum: 2)
-        rightMagnetHolder = MagnetHolder(magnetHolderNum: 3)
+        leftMagnetHolder = MagnetHolder(xPos: leftMagnetPosition.x, magnetSize: leftMagnet!.frame.size)
+        centerMagnetHolder = MagnetHolder(xPos: centerMagnetPosition.x, magnetSize: centerMagnet!.frame.size)
+        rightMagnetHolder = MagnetHolder(xPos: rightMagnetPosition.x, magnetSize: rightMagnet!.frame.size)
         addChild(leftMagnetHolder!)
         addChild(centerMagnetHolder!)
         addChild(rightMagnetHolder!)
@@ -1420,9 +1370,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         return interstitial
     }
     
-    override func didMove(to view: SKView)
+    func hideBannerAds()
     {
-        GameIsPaused = false
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
         let bannerViewInfoScene = self.view?.viewWithTag(102) as! GADBannerView?
@@ -1431,7 +1380,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         bannerViewGameOverScene?.isHidden = true
         bannerViewInfoScene?.isHidden = true
         bannerViewSettingsScene?.isHidden = true
-        
+    }
+    
+    func countTotalNumberGamesForReviewRequest()
+    {
         if UserDefaults.standard.integer(forKey: "MagnetHockeyGames") > 0
         {
             numberGames = UserDefaults.standard.integer(forKey: "MagnetHockeyGames") + 1
@@ -1444,10 +1396,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             UserDefaults.standard.set(1, forKey: "MagnetHockeyGames")
             UserDefaults.standard.synchronize()
         }
-        
-        self.physicsWorld.contactDelegate = self
-        backgroundColor = SKColor.systemTeal
- 
+    }
+    
+    func getNumberRounds()
+    {
         if UserDefaults.standard.integer(forKey: "Rounds") > 0
         {
             numberRounds = UserDefaults.standard.integer(forKey: "Rounds")
@@ -1458,12 +1410,22 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             UserDefaults.standard.set(9, forKey: "Rounds")
             UserDefaults.standard.synchronize()
         }
-
+    }
+    
+    override func didMove(to view: SKView)
+    {
+        self.physicsWorld.contactDelegate = self
+        backgroundColor = SKColor.systemTeal
+        
         if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             interstitialAd = createAndLoadInterstitial()
         }
         
+        hideBannerAds()
+        GameIsPaused = false
+        countTotalNumberGamesForReviewRequest()
+        getNumberRounds()
         drawCenterLine()
         createMagnets()
         getMaxBallAndMagnetSpeed()

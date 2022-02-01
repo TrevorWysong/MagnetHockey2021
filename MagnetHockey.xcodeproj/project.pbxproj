@@ -19,7 +19,7 @@
 		C31682F2272B08D300D0C09D /* TutorialSong.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C31682F1272B08D300D0C09D /* TutorialSong.mp3 */; };
 		C31682F42738C71D00D0C09D /* StatisticsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31682F32738C71D00D0C09D /* StatisticsScene.swift */; };
 		C31682F7273C3FC600D0C09D /* DBHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31682F6273C3FC600D0C09D /* DBHelper.swift */; };
-		C31682F9273CB7F600D0C09D /* MenuHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31682F8273CB7F600D0C09D /* MenuHelper.swift */; };
+		C31682F9273CB7F600D0C09D /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31682F8273CB7F600D0C09D /* UIHelper.swift */; };
 		C31A0BB82740513F00BBF57C /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = C31A0BB72740513F00BBF57C /* SQLite */; };
 		C32017D3277977B0007ECAA0 /* GameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32017D2277977B0007ECAA0 /* GameService.swift */; };
 		C32017D6279DBD54007ECAA0 /* Magnet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32017D5279DBD53007ECAA0 /* Magnet.swift */; };
@@ -44,6 +44,8 @@
 		C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C365D44925B22B6C00FD37C4 /* StoreScene.swift */; };
 		C3683A5E26EA9ECE00852BAB /* KeychainItemAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3683A5C26EA9ECE00852BAB /* KeychainItemAccessibility.swift */; };
 		C3683A5F26EA9ECE00852BAB /* KeychainWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */; };
+		C397787A27A8CCDE0081EC82 /* GoalSemiCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C397787927A8CCDE0081EC82 /* GoalSemiCircle.swift */; };
+		C397787C27A8CD0A0081EC82 /* GoalSlot.swift in Sources */ = {isa = PBXBuildFile; fileRef = C397787B27A8CD0A0081EC82 /* GoalSlot.swift */; };
 		C3B9BE202710C57600A1673A /* AirHockey1P.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9BE1F2710C57500A1673A /* AirHockey1P.swift */; };
 		C3B9BE222710C66300A1673A /* BotPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9BE212710C66300A1673A /* BotPlayer.swift */; };
 		C3B9BE24271D1AD300A1673A /* AirHockey2PMultiPuck.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B9BE23271D1AD100A1673A /* AirHockey2PMultiPuck.swift */; };
@@ -52,7 +54,6 @@
 		C3FD7C97279E6829006657F0 /* GoalCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7C96279E6829006657F0 /* GoalCircle.swift */; };
 		C3FD7C99279F0946006657F0 /* TutorialHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7C98279F0946006657F0 /* TutorialHelper.swift */; };
 		C3FD7C9B279F0BEB006657F0 /* PauseHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7C9A279F0BEB006657F0 /* PauseHelper.swift */; };
-		C3FD7C9D279F1217006657F0 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7C9C279F1217006657F0 /* Player.swift */; };
 		C3FD7C9F279F13BB006657F0 /* AdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7C9E279F13BB006657F0 /* AdHelper.swift */; };
 		C3FD7CA2279F17EF006657F0 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7CA1279F17EF006657F0 /* Ball.swift */; };
 		C3FD7CA4279F2541006657F0 /* MagnetHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FD7CA3279F2541006657F0 /* MagnetHolder.swift */; };
@@ -117,7 +118,7 @@
 		C31682F1272B08D300D0C09D /* TutorialSong.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = TutorialSong.mp3; path = ../../../TutorialSong.mp3; sourceTree = "<group>"; };
 		C31682F32738C71D00D0C09D /* StatisticsScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticsScene.swift; sourceTree = "<group>"; };
 		C31682F6273C3FC600D0C09D /* DBHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBHelper.swift; sourceTree = "<group>"; };
-		C31682F8273CB7F600D0C09D /* MenuHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuHelper.swift; sourceTree = "<group>"; };
+		C31682F8273CB7F600D0C09D /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 		C32017D2277977B0007ECAA0 /* GameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameService.swift; sourceTree = "<group>"; };
 		C32017D5279DBD53007ECAA0 /* Magnet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Magnet.swift; sourceTree = "<group>"; };
 		C334C9CA26DC6EF50088D46B /* ballHitMagnet.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ballHitMagnet.mp3; sourceTree = "<group>"; };
@@ -142,6 +143,8 @@
 		C365D44925B22B6C00FD37C4 /* StoreScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoreScene.swift; sourceTree = "<group>"; };
 		C3683A5C26EA9ECE00852BAB /* KeychainItemAccessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainItemAccessibility.swift; path = "../../SwiftKeychainWrapper-develop/SwiftKeychainWrapper/KeychainItemAccessibility.swift"; sourceTree = "<group>"; };
 		C3683A5D26EA9ECE00852BAB /* KeychainWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeychainWrapper.swift; path = "../../SwiftKeychainWrapper-develop/SwiftKeychainWrapper/KeychainWrapper.swift"; sourceTree = "<group>"; };
+		C397787927A8CCDE0081EC82 /* GoalSemiCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSemiCircle.swift; sourceTree = "<group>"; };
+		C397787B27A8CD0A0081EC82 /* GoalSlot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalSlot.swift; sourceTree = "<group>"; };
 		C3B9BE1F2710C57500A1673A /* AirHockey1P.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHockey1P.swift; sourceTree = "<group>"; };
 		C3B9BE212710C66300A1673A /* BotPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BotPlayer.swift; sourceTree = "<group>"; };
 		C3B9BE23271D1AD100A1673A /* AirHockey2PMultiPuck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirHockey2PMultiPuck.swift; sourceTree = "<group>"; };
@@ -150,7 +153,6 @@
 		C3FD7C96279E6829006657F0 /* GoalCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoalCircle.swift; sourceTree = "<group>"; };
 		C3FD7C98279F0946006657F0 /* TutorialHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialHelper.swift; sourceTree = "<group>"; };
 		C3FD7C9A279F0BEB006657F0 /* PauseHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseHelper.swift; sourceTree = "<group>"; };
-		C3FD7C9C279F1217006657F0 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		C3FD7C9E279F13BB006657F0 /* AdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdHelper.swift; sourceTree = "<group>"; };
 		C3FD7CA1279F17EF006657F0 /* Ball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
 		C3FD7CA3279F2541006657F0 /* MagnetHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagnetHolder.swift; sourceTree = "<group>"; };
@@ -286,7 +288,6 @@
 		C32017D8279DBE85007ECAA0 /* Player Classes */ = {
 			isa = PBXGroup;
 			children = (
-				C3FD7C9C279F1217006657F0 /* Player.swift */,
 				C3B9BE212710C66300A1673A /* BotPlayer.swift */,
 				C311E8422458CDC400D0CEC6 /* BottomPlayer.swift */,
 				C358B5A22480401B002C6B2D /* NorthPlayer.swift */,
@@ -315,7 +316,7 @@
 				C365D3C525ABA81700FD37C4 /* BackgroundMusic.swift */,
 				C33AD558245B2A310015F392 /* IAPProducts.swift */,
 				C33AD55A245B2B850015F392 /* IAPService.swift */,
-				C31682F8273CB7F600D0C09D /* MenuHelper.swift */,
+				C31682F8273CB7F600D0C09D /* UIHelper.swift */,
 				C3FD7C9E279F13BB006657F0 /* AdHelper.swift */,
 				C31682F6273C3FC600D0C09D /* DBHelper.swift */,
 			);
@@ -340,6 +341,15 @@
 			path = "Sound Effects";
 			sourceTree = "<group>";
 		};
+		C397787D27A8CD1F0081EC82 /* Goal */ = {
+			isa = PBXGroup;
+			children = (
+				C397787B27A8CD0A0081EC82 /* GoalSlot.swift */,
+				C397787927A8CCDE0081EC82 /* GoalSemiCircle.swift */,
+			);
+			path = Goal;
+			sourceTree = "<group>";
+		};
 		C3FD7CA0279F17CE006657F0 /* Game Entities */ = {
 			isa = PBXGroup;
 			children = (
@@ -355,6 +365,7 @@
 		C3FD7CA727A0C15F006657F0 /* AH Game Entities */ = {
 			isa = PBXGroup;
 			children = (
+				C397787D27A8CD1F0081EC82 /* Goal */,
 			);
 			path = "AH Game Entities";
 			sourceTree = "<group>";
@@ -640,14 +651,13 @@
 				C33AD559245B2A310015F392 /* IAPProducts.swift in Sources */,
 				C3FD7C97279E6829006657F0 /* GoalCircle.swift in Sources */,
 				C311E8E52458CDF100D0CEC6 /* MagnetHockey.swift in Sources */,
-				C3FD7C9D279F1217006657F0 /* Player.swift in Sources */,
 				C365D44A25B22B6C00FD37C4 /* StoreScene.swift in Sources */,
 				C31682F42738C71D00D0C09D /* StatisticsScene.swift in Sources */,
 				C3FD7CB427A71CB3006657F0 /* ElectricField.swift in Sources */,
 				C3B9BE222710C66300A1673A /* BotPlayer.swift in Sources */,
 				C32017D3277977B0007ECAA0 /* GameService.swift in Sources */,
 				C32017D6279DBD54007ECAA0 /* Magnet.swift in Sources */,
-				C31682F9273CB7F600D0C09D /* MenuHelper.swift in Sources */,
+				C31682F9273CB7F600D0C09D /* UIHelper.swift in Sources */,
 				C3FD7CA2279F17EF006657F0 /* Ball.swift in Sources */,
 				C3FD7CAB27A64EB4006657F0 /* CenterCircle.swift in Sources */,
 				C3FD7C9F279F13BB006657F0 /* AdHelper.swift in Sources */,
@@ -657,11 +667,13 @@
 				C3FD7C99279F0946006657F0 /* TutorialHelper.swift in Sources */,
 				C33AD581245CCBEC0015F392 /* ReviewService.swift in Sources */,
 				C365D3C625ABA81700FD37C4 /* BackgroundMusic.swift in Sources */,
+				C397787C27A8CD0A0081EC82 /* GoalSlot.swift in Sources */,
 				C3FD7CA6279F2586006657F0 /* MagnetHitMarker.swift in Sources */,
 				C3683A5E26EA9ECE00852BAB /* KeychainItemAccessibility.swift in Sources */,
 				C311E9562458CDF100D0CEC6 /* GameOverScene.swift in Sources */,
 				C365D44225B22B4E00FD37C4 /* StartScene.swift in Sources */,
 				C31682F7273C3FC600D0C09D /* DBHelper.swift in Sources */,
+				C397787A27A8CCDE0081EC82 /* GoalSemiCircle.swift in Sources */,
 				C3FD7CAE27A6EE9C006657F0 /* GoalCollisionPlus.swift in Sources */,
 				C3E697E627028EA7000DE0AE /* AirHockey2P.swift in Sources */,
 				C3FD7CA927A0C1B0006657F0 /* Wall.swift in Sources */,

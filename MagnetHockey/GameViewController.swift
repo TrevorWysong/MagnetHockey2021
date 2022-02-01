@@ -53,15 +53,6 @@ class GameViewController: UIViewController
     {
         super.viewDidLoad()
         
-        if UIDevice.current.model == "iPad"
-        {
-            
-        }
-        else if UIDevice.current.model == "iPhone" || UIDevice.current.model == "iPad"
-        {
-            
-        }
-        
         if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             let ads = GADMobileAds.sharedInstance()
@@ -178,7 +169,7 @@ class GameViewController: UIViewController
 
     override var supportedInterfaceOrientations : UIInterfaceOrientationMask
     {
-            return UIInterfaceOrientationMask.portrait
+        return UIInterfaceOrientationMask.portrait
     }
 
     override func didReceiveMemoryWarning()
