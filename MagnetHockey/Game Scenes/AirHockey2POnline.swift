@@ -1,17 +1,14 @@
 //
-//  AirHockey2P.swift
-//  AirHockey2P
+//  AirHockey2POnline.swift
+//  MagnetHockey
 //
-//  Created by Wysong, Trevor on 9/27/21.
-//  Copyright © 2021 Wysong, Trevor. All rights reserved.
-//
+//  Created by Wysong, Trevor on 2/7/22.
+//  Copyright © 2022 Wysong, Trevor. All rights reserved.
+
 import SpriteKit
 import GoogleMobileAds
 
-var topGoalEdgeBottom = CGFloat(0.0)
-var bottomGoalEdgeTop = CGFloat(0.0)
-
-class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
+class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
 {
     var ball : Ball?
     var ballRadius = CGFloat(0.0)
@@ -257,7 +254,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         addChild(topLeftEdge)
         
         let bottomGoalEdge = SKSpriteNode(imageNamed: "goalGradientBottom.png")
-        
+        bottomGoalEdge.color = .black
         if frame.height > 800 && frame.width < 500
         {
             bottomGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: notchOffset))
@@ -269,6 +266,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
             bottomGoalEdge.position = CGPoint(x: frame.width * 0.5, y: 0 + edgeWidth/2)
         }
         bottomGoalEdge.zPosition = 100
+        bottomGoalEdge.blendMode = .replace
         //setup physics for this edge
         bottomGoalEdge.physicsBody = SKPhysicsBody(rectangleOf: bottomGoalEdge.size)
         bottomGoalEdge.physicsBody!.isDynamic = false
@@ -282,7 +280,8 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         addChild(bottomGoalEdge)
         
         let topGoalEdge = SKSpriteNode(imageNamed: "goalGradient.png")
-        if hasTopNotch
+        topGoalEdge.color = .black
+        if frame.height > 800 && frame.width < 500
         {
             topGoalEdge.scale(to: CGSize(width: frame.width * 0.60, height: notchOffset))
             topGoalEdge.position = CGPoint(x: frame.width * 0.5, y: frame.height - notchOffset/2)
@@ -296,6 +295,7 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         bottomGoalEdgeTop = bottomGoalEdge.position.y + (bottomGoalEdge.size.height * 0.5)
         
         topGoalEdge.zPosition = 100
+        topGoalEdge.blendMode = .replace
         //setup physics for this edge
         topGoalEdge.physicsBody = SKPhysicsBody(rectangleOf: topGoalEdge.size)
         topGoalEdge.physicsBody!.isDynamic = false
@@ -750,18 +750,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
         southPlayer?.isHidden = false
         northPlayer?.isHidden = false
-    }
-    
-    func pausePhysics()
-    {
-        tempBallVelocity = ball!.physicsBody!.velocity
-        ball?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-    }
-    
-    func resumePhysics()
-    {
-        ball?.physicsBody?.velocity = tempBallVelocity
-        tempBallVelocity = CGVector(dx: 0, dy: 0)
     }
     
     func isOffScreen(node: SKShapeNode) -> Bool
@@ -1314,7 +1302,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
                 updatePauseBackground()
                 pauseButtonSprite.isHidden = true
                 playButtonSprite.isHidden = false
-                pausePhysics()
                 showPauseMenuButton()
                 // Configure the view.
                 let skView = self.view!
@@ -1331,7 +1318,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
                 resetPauseBackground()
                 pauseButtonSprite.isHidden = false
                 playButtonSprite.isHidden = true
-                resumePhysics()
                 hidePauseMenuButtons()
                 SKTAudio.sharedInstance().pauseBackgroundMusic()
                 // Configure the view.
@@ -1415,5 +1401,6 @@ class AirHockey2P: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nort
         }
     }
 }
+
 
 

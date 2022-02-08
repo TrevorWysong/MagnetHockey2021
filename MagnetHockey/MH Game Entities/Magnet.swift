@@ -14,13 +14,13 @@ class Magnet: SKShapeNode
     
     init(categoryBitMask: UInt32)
     {
-        if screenWidth < 700
-        {
-            radius = screenWidth / 40
-        }
-        else if screenWidth >= 700
+        if deviceType.contains("iPad")
         {
             radius = screenWidth / 50
+        }
+        else
+        {
+            radius = screenWidth / 40
         }
         
         //ensure we pass the init call to the base class

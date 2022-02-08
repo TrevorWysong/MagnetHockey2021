@@ -1,5 +1,5 @@
-import SpriteKit
 import SQLite
+import SpriteKit
 
 class DBHelper
 {

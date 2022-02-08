@@ -12,7 +12,7 @@ class Ball: SKShapeNode
 {
     var radius = CGFloat()
     
-    override init()
+    init(multiBall: Bool)
     {
         if deviceType.contains("iPad")
         {
@@ -75,23 +75,20 @@ class Ball: SKShapeNode
         physicsBody!.mass = 0.015
         physicsBody?.friction = 0.10
         physicsBody!.affectedByGravity = false
-        
-        //how much momentum is maintained after it hits somthing
         physicsBody!.restitution = 1.00
-        
-        //how much friction affects it
         physicsBody!.linearDamping = 0.90
         physicsBody!.angularDamping = 0.90
-
-        physicsBody?.categoryBitMask = BodyType.ball.rawValue
-        physicsBody?.fieldBitMask = 640
-        physicsBody?.contactTestBitMask = BodyType.player.rawValue
         lineWidth = 2
         strokeColor = UIColor.black
-        
-        let ySpawnsArray = [screenHeight * 0.35, screenHeight * 0.65]
-        position = CGPoint(x: screenWidth/2, y: ySpawnsArray.randomElement()!)
-        physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+        if multiBall == false
+        {
+            let ySpawnsArray = [screenHeight * 0.35, screenHeight * 0.65]
+            position = CGPoint(x: screenWidth/2, y: ySpawnsArray.randomElement()!)
+            physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+            physicsBody?.categoryBitMask = BodyType.ball.rawValue
+            physicsBody?.fieldBitMask = 640
+            physicsBody?.contactTestBitMask = BodyType.player.rawValue
+        }
     }
     
     required init?(coder aDecoder: NSCoder)

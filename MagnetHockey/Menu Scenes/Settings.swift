@@ -5,7 +5,6 @@
 //  Created by Wysong, Trevor on 4/16/20.
 //  Copyright © 2020 Wysong, Trevor. All rights reserved.
 //
-
 import SpriteKit
 import GoogleMobileAds
 

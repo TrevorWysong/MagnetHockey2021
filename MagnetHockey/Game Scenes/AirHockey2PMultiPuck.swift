@@ -5,23 +5,17 @@
 //  Created by Wysong, Trevor on 10/17/21.
 //  Copyright © 2021 Wysong, Trevor. All rights reserved.
 //
-
 import SpriteKit
-import GameplayKit
 import GoogleMobileAds
 
 class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
 {
-    var frameCounter = 0
-    var ball : SKShapeNode?
-    var ball2 : SKShapeNode?
+    var ball : Ball?
+    var ball2 : Ball?
     var ballRadius = CGFloat(0.0)
     var playerRadius = CGFloat(0.0)
     var maxBallSpeed = CGFloat(0.0)
     var centerLineWidth = CGFloat(0.0)
-    var centerCircle = SKSpriteNode()
-    var semiCircleBottom = SKSpriteNode()
-    var semiCircleTop = SKSpriteNode()
     var playerLosesBackground = SKSpriteNode()
     var playerWinsBackground = SKSpriteNode()
     var playerWinsBackground2 = SKSpriteNode()
@@ -52,7 +46,6 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
     var southPlayer : BottomPlayer?
     var northPlayer : NorthPlayer?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
-    let listenerNode = SKNode()
     var southPlayerArea = CGRect()
     var northPlayerArea = CGRect()
     var southPlayerScore = 0
@@ -75,8 +68,6 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
     var tempBallVelocity2 = CGVector(dx: 0, dy: 0)
     var tempResetBallPosition = CGPoint(x: 0, y: 0)
     var tempResetBall2Position = CGPoint(x: 0, y: 0)
-    var topGoalEdgeBottom = CGFloat(0.0)
-    var bottomGoalEdgeTop = CGFloat(0.0)
     var ballColorGame = ""
     let playerHitBallSound = SKAction.playSoundFileNamed("ballHitsWall2.mp3", waitForCompletion: false)
     let ballHitWallSound = SKAction.playSoundFileNamed("ballHitsWall.mp3", waitForCompletion: false)
@@ -352,43 +343,11 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
         addChild(topGoalEdge)
     }
     
-    func createCenterCircle()
+    func createUICircles()
     {
-        semiCircleTop = SKSpriteNode(imageNamed: "semiCircleTop.png")
-        semiCircleBottom = SKSpriteNode(imageNamed: "semiCircleBottom.png")
-        semiCircleTop.zPosition = -15
-        semiCircleTop.colorBlendFactor = 0.90
-        semiCircleBottom.zPosition = -15
-        semiCircleBottom.colorBlendFactor = 0.90
-
-        if frame.width > 700
-        {
-            centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
-            centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
-            centerCircle.scale(to: CGSize(width: frame.width * 0.45, height: frame.width * 0.415))
-        }
-        else if frame.width < 700 && frame.height > 800
-        {
-            centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
-            centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
-            centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
-        }
-        else
-        {
-            centerCircle = SKSpriteNode(imageNamed: "centerCircleAir.png")
-            centerCircle.position = CGPoint(x: frame.width/2, y: frame.height/2)
-            centerCircle.scale(to: CGSize(width: frame.width * 0.415, height: frame.width * 0.415))
-        }
-        semiCircleTop.scale(to: CGSize(width: frame.width * 0.60, height: (frame.width * 0.60) * 0.48))
-        semiCircleBottom.scale(to: CGSize(width: frame.width * 0.60, height: (frame.width * 0.60) * 0.48))
-        semiCircleTop.position = CGPoint(x: frame.width/2, y: topGoalEdgeBottom - (semiCircleTop.size.height / 2))
-        semiCircleBottom.position = CGPoint(x: frame.width/2, y: bottomGoalEdgeTop + (semiCircleBottom.size.height/2))
-        
-        centerCircle.zPosition = -100
-        centerCircle.colorBlendFactor = 0.50
-        addChild(centerCircle)
-        addChild(semiCircleTop)
-        addChild(semiCircleBottom)
+        addChild(GoalSemiCircle(topGoal: true))
+        addChild(GoalSemiCircle(topGoal: false))
+        addChild(CenterCircle(AirHockey: true))
     }
    
     func createPauseAndPlayButton()
@@ -803,7 +762,7 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
         createPauseGameTitle()
         createBackToMenuButton()
         createSoundButton()
-        createCenterCircle()
+        createUICircles()
         createNorthPlayerScore()
         createSouthPlayerScore()
         createPlayerLoseWinBackgrounds()
@@ -815,218 +774,38 @@ class AirHockey2PMultiPuck: SKScene, SKPhysicsContactDelegate, BottomPlayerDeleg
     
     func drawCenterLine()
     {
-        var centerLine = SKSpriteNode()
-        if frame.width > 700
-        {
-            centerLine = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width, height: frame.width/102.5))
-            centerLineWidth = centerLine.size.height/2
-        }
-        else
-        {
-            centerLine = SKSpriteNode(color: UIColor.black, size: CGSize(width: size.width, height: frame.width/82))
-            centerLineWidth = centerLine.size.height/2
-        }
-        //setup physics for this edge
-        centerLine.physicsBody = SKPhysicsBody(rectangleOf: centerLine.size)
-        centerLine.physicsBody!.isDynamic = false
-        centerLine.physicsBody?.mass = 10000000
-        centerLine.physicsBody?.categoryBitMask = 4
-        centerLine.physicsBody?.collisionBitMask = 256
-        centerLine.physicsBody?.restitution = 0.0
-        centerLine.physicsBody?.friction = 0.0
-        centerLine.physicsBody?.linearDamping = 0.0
-        centerLine.physicsBody?.angularDamping = 0.0
-        centerLine.position = CGPoint(x: size.width/2, y: size.height/2)
-        centerLine.colorBlendFactor = 0.75;
-        centerLine.zPosition = -2
+        let centerLine = CenterLine()
         addChild(centerLine)
+        centerLineWidth = centerLine.size.height/2
     }
     
     func createBall()
     {
-        if  ball == nil
-        {
-            //create ball object
-            ball = SKShapeNode()
-            
-            //draw ball
-            let ballPath = CGMutablePath()
-            let π = CGFloat.pi
-            var ballRadius = CGFloat(0.0)
-            if frame.width < 700
-            {
-                ballRadius = frame.width / 20
-            }
-            else if frame.width >= 700
-            {
-                ballRadius = frame.width / 25
-            }
-            ballPath.addArc(center: CGPoint(x: 0, y:0), radius: ballRadius, startAngle: 0, endAngle: π*2, clockwise: true)
-            ball!.path = ballPath
-            ball!.lineWidth = 0
-            if ballColorGame == "Black Ball"
-            {
-                ball!.fillColor = UIColor.black
-            }
-            else if ballColorGame == "Blue Ball"
-            {
-                ball!.fillColor = UIColor.blue
-            }
-            else if ballColorGame == "Orange Ball"
-            {
-                ball!.fillColor = UIColor.orange
-            }
-            else if ballColorGame == "Pink Ball"
-            {
-                ball!.fillColor = UIColor.systemPink
-            }
-            else if ballColorGame == "Purple Ball"
-            {
-                ball!.fillColor = UIColor.purple
-            }
-            else if ballColorGame == "Green Ball"
-            {
-                ball!.fillColor = UIColor.green
-            }
-            else if ballColorGame == "Red Ball"
-            {
-                ball!.fillColor = UIColor.red
-            }
-            else
-            {
-                ball!.fillColor = UIColor.yellow
-            }
-            
-            //set ball physics properties
-            ball!.physicsBody = SKPhysicsBody(circleOfRadius: ballRadius)
-            
-            //how heavy it is
-            ball!.physicsBody!.mass = 0.015
-            ball?.physicsBody?.friction = 0.10
-            ball!.physicsBody!.affectedByGravity = false
-            
-            //how much momentum is maintained after it hits somthing
-            ball!.physicsBody!.restitution = 1.00
-            
-            //how much friction affects it
-            ball!.physicsBody!.linearDamping = 0.65
-            ball!.physicsBody!.angularDamping = 0.65
-
-            ball?.physicsBody?.categoryBitMask = BodyType.ball.rawValue
-            ball?.physicsBody?.fieldBitMask = 640
-            ball?.physicsBody?.contactTestBitMask = BodyType.player.rawValue | BodyType.ball2.rawValue
-            ball?.physicsBody?.collisionBitMask = 1 | 2 | 128 | 2048
-            ball?.lineWidth = 2
-            ball?.strokeColor = .black
-        }
-        
-        if  ball2 == nil
-        {
-            //create ball object
-            ball2 = SKShapeNode()
-            
-            //draw ball
-            let ballPath = CGMutablePath()
-            let π = CGFloat.pi
-            var ballRadius = CGFloat(0.0)
-            if frame.width < 700
-            {
-                ballRadius = frame.width / 20
-            }
-            else if frame.width >= 700
-            {
-                ballRadius = frame.width / 25
-            }
-            ballPath.addArc(center: CGPoint(x: 0, y:0), radius: ballRadius, startAngle: 0, endAngle: π*2, clockwise: true)
-            ball2!.path = ballPath
-            ball2!.lineWidth = 0
-            if ballColorGame == "Black Ball"
-            {
-                ball2!.fillColor = UIColor.black
-            }
-            else if ballColorGame == "Blue Ball"
-            {
-                ball2!.fillColor = UIColor.blue
-            }
-            else if ballColorGame == "Orange Ball"
-            {
-                ball2!.fillColor = UIColor.orange
-            }
-            else if ballColorGame == "Pink Ball"
-            {
-                ball2!.fillColor = UIColor.systemPink
-            }
-            else if ballColorGame == "Purple Ball"
-            {
-                ball2!.fillColor = UIColor.purple
-            }
-            else if ballColorGame == "Green Ball"
-            {
-                ball2!.fillColor = UIColor.green
-            }
-            else if ballColorGame == "Red Ball"
-            {
-                ball2!.fillColor = UIColor.red
-            }
-            else
-            {
-                ball2!.fillColor = UIColor.yellow
-            }
-            
-            //set ball physics properties
-            ball2!.physicsBody = SKPhysicsBody(circleOfRadius: ballRadius)
-            
-            //how heavy it is
-            ball2!.physicsBody!.mass = 0.015
-            ball2?.physicsBody?.friction = 0.10
-            ball2!.physicsBody!.affectedByGravity = false
-            
-            //how much momentum is maintained after it hits somthing
-            ball2!.physicsBody!.restitution = 1.00
-            
-            //how much friction affects it
-            ball2!.physicsBody!.linearDamping = 0.90
-            ball2!.physicsBody!.angularDamping = 0.90
-
-            ball2?.physicsBody?.categoryBitMask = BodyType.ball2.rawValue
-            ball2?.physicsBody?.fieldBitMask = 2064
-            ball2?.physicsBody?.contactTestBitMask = BodyType.player.rawValue | BodyType.ball.rawValue
-            ball2?.physicsBody?.collisionBitMask = 1 | 2 | 128 | 512
-            ball2?.lineWidth = 2
-            ball2?.strokeColor = .black
-        }
+        ball = Ball(multiBall: true)
+        ball2 = Ball(multiBall: true)
         
         let ySpawnsArray = [frame.height * 0.35, frame.height * 0.65]
         ball!.position = CGPoint(x: frame.width/2, y: ySpawnsArray[0])
-        ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
-        ball?.physicsBody?.affectedByGravity = false
-        ball?.strokeColor = UIColor.black
-        
         ball2!.position = CGPoint(x: frame.width/2, y: ySpawnsArray[1])
-        ball2!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
-        ball2?.physicsBody?.affectedByGravity = false
-        ball2?.strokeColor = UIColor.black
-
-        //if not alreay in scene, add to scene
-        if ball!.parent == nil
-        {
-            addChild(ball!)
-        }
         
-        //if not alreay in scene, add to scene
-        if ball2!.parent == nil
-        {
-            addChild(ball2!)
-        }
+        ball?.physicsBody?.categoryBitMask = BodyType.ball.rawValue
+        ball?.physicsBody?.fieldBitMask = 640
+        ball?.physicsBody?.contactTestBitMask = BodyType.player.rawValue | BodyType.ball2.rawValue
+        ball?.physicsBody?.collisionBitMask = 1 | 2 | 128 | 2048
+        
+        ball2?.physicsBody?.categoryBitMask = BodyType.ball2.rawValue
+        ball2?.physicsBody?.fieldBitMask = 2064
+        ball2?.physicsBody?.contactTestBitMask = BodyType.player.rawValue | BodyType.ball.rawValue
+        ball2?.physicsBody?.collisionBitMask = 1 | 2 | 128 | 512
+
+        addChild(ball!)
+        addChild(ball2!)
     }
     
     func clearBall()
     {
-        ball!.position = CGPoint(x: -200, y: -200)
-        ball!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
-        
-        ball2!.position = CGPoint(x: -300, y: -300)
-        ball2!.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
+        ball?.clearBall()
+        ball2?.clearBall()
     }
     
     func resetBallTopPlayerBallStart()

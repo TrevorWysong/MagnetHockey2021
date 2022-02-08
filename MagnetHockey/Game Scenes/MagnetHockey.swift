@@ -6,9 +6,7 @@
 //  Copyright © 2020 Wysong, Trevor. All rights reserved.
 //
 import SpriteKit
-import GameplayKit
 import GoogleMobileAds
-import SQLite
 
 class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
 {
@@ -88,11 +86,10 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     var centerMagnet : Magnet?
     var rightMagnet : Magnet?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
-    let springFieldSouthPlayer = SKFieldNode.springField()
-    let springFieldNorthPlayer = SKFieldNode.springField()
-    let electricFieldNorthPlayer = SKFieldNode.electricField()
-    let electricFieldSouthPlayer = SKFieldNode.electricField()
-    let listenerNode = SKNode()
+    var springFieldSouthPlayer = SKFieldNode.springField()
+    var springFieldNorthPlayer = SKFieldNode.springField()
+    var electricFieldNorthPlayer = SKFieldNode.electricField()
+    var electricFieldSouthPlayer = SKFieldNode.electricField()
     var tutorialArrowCounter = 0
     var southPlayerMagnetCount = 0
     var northPlayerMagnetCount = 0
@@ -216,20 +213,13 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         {
             let bottomEdge = Wall(wallSize: CGSize(width: frame.width, height: notchOffset + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: 0 + notchOffset/2 - playerRadius), sideWall: false)
             addChild(bottomEdge)
-        }
-        else
-        {
-            let bottomEdge = Wall(wallSize: CGSize(width: frame.width, height: edgeWidth + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: 0 + edgeWidth/2 - playerRadius), sideWall: false)
-            addChild(bottomEdge)
-        }
-    
-        if hasTopNotch && !deviceType.contains("iPad")
-        {
             let topEdge = Wall(wallSize: CGSize(width: frame.width, height: notchOffset + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: frame.height - notchOffset/2 + playerRadius), sideWall: false)
             addChild(topEdge)
         }
         else
         {
+            let bottomEdge = Wall(wallSize: CGSize(width: frame.width, height: edgeWidth + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: 0 + edgeWidth/2 - playerRadius), sideWall: false)
+            addChild(bottomEdge)
             let topEdge = Wall(wallSize: CGSize(width: frame.width, height: edgeWidth + playerRadius * 2), wallPosition: CGPoint(x: frame.width/2, y: frame.height - edgeWidth/2 + playerRadius), sideWall: false)
             addChild(topEdge)
         }
@@ -237,112 +227,34 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     func createSpringFieldPlayer()
     {
-        springFieldSouthPlayer.strength = 1.5
-        springFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer?.position.y)!)
-        springFieldSouthPlayer.falloff = 0.0
-        springFieldSouthPlayer.categoryBitMask = 5
+        springFieldSouthPlayer = ForceFields.shared.createPlayerSpringField(springField: springFieldSouthPlayer, playerPosition: southPlayer!.position, playerRadius: Float(southPlayer!.radius))
         addChild(springFieldSouthPlayer)
-        
-        springFieldNorthPlayer.strength = 1.5
-        springFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer?.position.y)!)
-        if frame.width > 700
-        {
-            springFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/4.5, height: frame.width/4.5))
-            springFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/4.5, height: frame.width/4.5))
-        }
-        else
-        {
-            springFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.6, height: frame.width/3.6))
-            springFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.6, height: frame.width/3.6))
-        }
-        springFieldNorthPlayer.falloff = 0.0
-        springFieldNorthPlayer.categoryBitMask = 5
+        springFieldNorthPlayer = ForceFields.shared.createPlayerSpringField(springField: springFieldNorthPlayer, playerPosition: northPlayer!.position, playerRadius: Float(northPlayer!.radius))
         addChild(springFieldNorthPlayer)
     }
     
     func createElectricFieldPlayer()
     {
-        electricFieldNorthPlayer.strength = 1.5
-        electricFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer!.position.y))
-        electricFieldNorthPlayer.falloff = 0.0
-        electricFieldNorthPlayer.isEnabled = true
-        electricFieldNorthPlayer.categoryBitMask = 5
-
-        if frame.width > 700
-        {
-            electricFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/4, height: frame.width/4))
-        }
-        else
-        {
-            electricFieldNorthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.2, height: frame.width/3.2))
-        }
-        addChild(electricFieldNorthPlayer)
-        
-        
-        electricFieldSouthPlayer.strength = 1.5
-        electricFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer!.position.y))
-        electricFieldSouthPlayer.falloff = 0.0
-        electricFieldSouthPlayer.isEnabled = true
-        electricFieldSouthPlayer.categoryBitMask = 5
-
-        if deviceType.contains("iPad")
-        {
-            electricFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/4, height: frame.width/4))
-        }
-        else
-        {
-            electricFieldSouthPlayer.region = SKRegion(size: CGSize(width: frame.width/3.2, height: frame.width/3.2))
-        }
+        electricFieldSouthPlayer = ForceFields.shared.createPlayerElectricField(electricField: electricFieldSouthPlayer, playerPosition: southPlayer!.position, playerRadius: Float(southPlayer!.radius))
         addChild(electricFieldSouthPlayer)
+        electricFieldNorthPlayer = ForceFields.shared.createPlayerElectricField(electricField: electricFieldNorthPlayer, playerPosition: northPlayer!.position, playerRadius: Float(northPlayer!.radius))
+        addChild(electricFieldNorthPlayer)
     }
     
-    func createSpringFieldTopGoal()
+    func createGoalSpringFields()
     {
-        let springFieldTopGoal = SKFieldNode.springField()
-        springFieldTopGoal.strength = 0.2
-        springFieldTopGoal.position = CGPoint(x: topGoal!.position.x, y: topGoal!.position.y)
-        if frame.width > 700
-        {
-            springFieldTopGoal.region = SKRegion(size: CGSize(width: frame.width/10, height: frame.width/9.1))
-        }
-        else
-        {
-            springFieldTopGoal.region = SKRegion(size: CGSize(width: frame.width/8, height: frame.width/7.75))
-        }
-        springFieldTopGoal.falloff = 0
-        springFieldTopGoal.physicsBody?.collisionBitMask = 3
-        springFieldTopGoal.physicsBody?.fieldBitMask = 3
-        springFieldTopGoal.physicsBody?.contactTestBitMask = 3
-        springFieldTopGoal.categoryBitMask = 64
-        addChild(springFieldTopGoal)
-    }
-    
-    func createSpringFieldBottomGoal()
-    {
-        let springFieldBottomGoal = SKFieldNode.springField()
-        springFieldBottomGoal.strength = 0.2
+        var springFieldTopGoal = SKFieldNode.springField()
+        var springFieldBottomGoal = SKFieldNode.springField()
         
-        springFieldBottomGoal.position = CGPoint(x: bottomGoal!.position.x, y: bottomGoal!.position.y)
-        if frame.width > 700
-        {
-            springFieldBottomGoal.region = SKRegion(size: CGSize(width: frame.width/10, height: frame.width/9.1))
-        }
-        else
-        {
-            springFieldBottomGoal.region = SKRegion(size: CGSize(width: frame.width/8, height: frame.width/7.75))
-        }
-        springFieldBottomGoal.falloff = 0
-        springFieldBottomGoal.physicsBody?.collisionBitMask = 3
-        springFieldBottomGoal.physicsBody?.fieldBitMask = 3
-        springFieldBottomGoal.physicsBody?.contactTestBitMask = 3
-        springFieldBottomGoal.categoryBitMask = 64
+        springFieldTopGoal = ForceFields.shared.createGoalSpringField(springField: springFieldTopGoal, goalPosition: topGoal!.position, goalRadius: Float(topGoal!.size.height)/2)
+        addChild(springFieldTopGoal)
+        springFieldBottomGoal = ForceFields.shared.createGoalSpringField(springField: springFieldBottomGoal, goalPosition: bottomGoal!.position, goalRadius: Float(bottomGoal!.size.height)/2)
         addChild(springFieldBottomGoal)
     }
     
     func createCenterCircle()
     {
-        let centerCircle = CenterCircle()
-        addChild(centerCircle)
+        addChild(CenterCircle(AirHockey: false))
     }
    
     func createPauseAndPlayButton()
@@ -1426,7 +1338,7 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         GameIsPaused = false
         countTotalNumberGamesForReviewRequest()
         getNumberRounds()
-        drawCenterLine()
+        addChild(CenterLine())
         createMagnets()
         getMaxBallAndMagnetSpeed()
         createCenterCircle()
@@ -1443,9 +1355,8 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         createNorthPlayerScore()
         createSouthPlayerScore()
         createEdges()
-        createSpringFieldTopGoal()
+        createGoalSpringFields()
         createMagnetXMarks()
-        createSpringFieldBottomGoal()
         createSpringFieldPlayer()
         createPlayerLoseWinBackgrounds()
         createTutorialInterface()
@@ -1456,15 +1367,9 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
         }
     }
     
-    func drawCenterLine()
-    {
-        let centerLine = CenterLine()
-        addChild(centerLine)
-    }
-    
     func createBall()
     {
-        ball = Ball()
+        ball = Ball(multiBall: false)
         addChild(ball!)
     }
     
@@ -2503,7 +2408,6 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
     
     override func update(_ currentTime: TimeInterval)
     {
-        print(northPlayerPointOrder)
         if isOffScreen(node: ball!) && (bottomPlayerWinsRound != true && topPlayerWinsRound != true)
         {
             ball?.position = tempResetBallPosition
@@ -2561,13 +2465,15 @@ class MagnetHockey: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, Nor
             rightMagnet?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         }
         
-        springFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer!.position.y))
-        springFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer!.position.y))
+        springFieldSouthPlayer.position = southPlayer!.position
+        springFieldNorthPlayer.position = northPlayer!.position
+        
         if repulsionMode == true
         {
-            electricFieldSouthPlayer.position = CGPoint(x: southPlayer!.position.x, y: (southPlayer!.position.y))
-            electricFieldNorthPlayer.position = CGPoint(x: northPlayer!.position.x, y: (northPlayer!.position.y))
+            electricFieldSouthPlayer.position = southPlayer!.position
+            electricFieldNorthPlayer.position = northPlayer!.position
         }
+        
         placeMagnetXMarks()
         scoring()
 

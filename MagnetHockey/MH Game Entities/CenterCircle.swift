@@ -10,17 +10,24 @@ import SpriteKit
 
 class CenterCircle: SKSpriteNode
 {
-    init()
+    init(AirHockey: Bool)
     {
         var textureImage: String
         
-        if deviceType.contains("iPad")
+        if AirHockey == true
         {
-            textureImage = "centerCircleFixediPadFinal.png"
+            textureImage = "centerCircleAir.png"
         }
         else
         {
-            textureImage = "centerCircleFixed.png"
+            if deviceType.contains("iPad")
+            {
+                textureImage = "centerCircleFixediPadFinal.png"
+            }
+            else
+            {
+                textureImage = "centerCircleFixed.png"
+            }
         }
         
         super.init(texture: SKTexture(imageNamed: textureImage), color: UIColor.clear, size: CGSize(width: screenWidth * 0.415, height: screenWidth * 0.415))
