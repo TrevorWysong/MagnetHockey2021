@@ -8,9 +8,12 @@
 
 import SpriteKit
 import GoogleMobileAds
+import MultipeerConnectivity
 
 class StartScene: SKScene
 {
+    var appDelegate:AppDelegate!
+
     // you can use another font for the label if you want...
     let titleLabel = SKLabelNode(fontNamed: "STHeitiTC-Medium")
     let titleLabel2 = SKLabelNode(fontNamed: "STHeitiTC-Medium")
@@ -29,8 +32,8 @@ class StartScene: SKScene
     var onePlayerInactiveSprite = SKSpriteNode()
     var twoPlayerActiveSprite = SKSpriteNode()
     var twoPlayerInactiveSprite = SKSpriteNode()
-
     var playButton:SKSpriteNode!
+    var playTriangleButton:SKSpriteNode!
     var storeButton:SKSpriteNode!
     var infoButton:SKSpriteNode!
     var magnetEmitter:SKEmitterNode!
@@ -48,9 +51,12 @@ class StartScene: SKScene
     var forwardButton = SKSpriteNode()
     var pageDotOne = SKSpriteNode()
     var pageDotTwo = SKSpriteNode()
+    var pageDotThree = SKSpriteNode()
     var touchedBackButton = false
     var touchedForwardButton = false
     var arrowPressCounter = 0
+    let joinOrHostAlert = UIAlertController(title: "Magnet Hockey", message: "How would you like to connect?", preferredStyle: UIAlertController.Style.actionSheet)
+
     
     func leftArrowPressed()
     {
@@ -71,6 +77,39 @@ class StartScene: SKScene
         addChild(bottomEdge)
         addChild(topEdge)
     }
+    
+    func multipeerSetup()
+    {
+        appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate.MPC.setupPeerWithDisplayName(displayName: UIDevice.current.name)
+        appDelegate.MPC.setupSession()
+    }
+    
+    func addNetworkingAlertButtons()
+    {
+        self.joinOrHostAlert.addAction(UIAlertAction(title: "Host Game", style: .default, handler: { (action: UIAlertAction!) in
+            self.appDelegate.MPC.startHosting()
+        }))
+        
+        self.joinOrHostAlert.addAction(UIAlertAction(title: "Join Game", style: .default, handler: { (action: UIAlertAction!) in
+            self.appDelegate.MPC.joinSession()
+        }))
+        
+        self.joinOrHostAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (action: UIAlertAction!) in
+
+        }))
+    }
+    
+    func triggerNetworkingAlert()
+    {
+        let keyWindow = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .compactMap({$0 as? UIWindowScene})
+                .first?.windows
+                .filter({$0.isKeyWindow}).first
+        keyWindow?.rootViewController?.present(self.joinOrHostAlert, animated: true, completion: nil)
+    }
+
     
     func handleIAPandAds()
     {
@@ -103,6 +142,8 @@ class StartScene: SKScene
     {
         handleIAPandAds()
         createEdges()
+        multipeerSetup()
+        addNetworkingAlertButtons()
         
         if UserDefaults.standard.string(forKey: "GameType") == "GameMode1" || UserDefaults.standard.string(forKey: "GameType") == "GameMode2" {}
         else
@@ -204,7 +245,6 @@ class StartScene: SKScene
         playButton.position = CGPoint(x: frame.width/2, y: frame.height * 0.415)
         addChild(playButton)
         
-        let playTriangleButton:SKSpriteNode!
         playTriangleButton = SKSpriteNode(imageNamed: "whitePlayButton.png")
         playTriangleButton.position = CGPoint(x: playButton.position.x, y: playButton.position.y)
         playTriangleButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
@@ -278,31 +318,31 @@ class StartScene: SKScene
         addChild(twoPlayerButton)
         
         onePlayerActiveSprite = SKSpriteNode(imageNamed: "onePersonSelected.png")
-        onePlayerActiveSprite.position = CGPoint(x: onePlayerButton.position.x, y: onePlayerButton.position.y)
+        onePlayerActiveSprite.position = onePlayerButton.position
         onePlayerActiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
         onePlayerActiveSprite.colorBlendFactor = 0
         onePlayerActiveSprite.zPosition = 1
         
         onePlayerInactiveSprite = SKSpriteNode(imageNamed: "onePerson.png")
-        onePlayerInactiveSprite.position = CGPoint(x: onePlayerButton.position.x, y: onePlayerButton.position.y)
+        onePlayerInactiveSprite.position = onePlayerButton.position
         onePlayerInactiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
         onePlayerInactiveSprite.colorBlendFactor = 0
         onePlayerInactiveSprite.zPosition = 1
         
         onePlayerLockedSprite = SKSpriteNode(imageNamed: "onePersonLocked.png")
-        onePlayerLockedSprite.position = CGPoint(x: onePlayerButton.position.x, y: onePlayerButton.position.y)
+        onePlayerLockedSprite.position = onePlayerButton.position
         onePlayerLockedSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
         onePlayerLockedSprite.colorBlendFactor = 0
         onePlayerLockedSprite.zPosition = 1
         
         twoPlayerActiveSprite = SKSpriteNode(imageNamed: "twoPersonSelected.png")
-        twoPlayerActiveSprite.position = CGPoint(x: twoPlayerButton.position.x, y: twoPlayerButton.position.y)
+        twoPlayerActiveSprite.position = twoPlayerButton.position
         twoPlayerActiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
         twoPlayerActiveSprite.colorBlendFactor = 0
         twoPlayerActiveSprite.zPosition = 1
         
         twoPlayerInactiveSprite = SKSpriteNode(imageNamed: "twoPerson.png")
-        twoPlayerInactiveSprite.position = CGPoint(x: twoPlayerButton.position.x, y: twoPlayerButton.position.y)
+        twoPlayerInactiveSprite.position = twoPlayerButton.position
         twoPlayerInactiveSprite.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
         twoPlayerInactiveSprite.colorBlendFactor = 0
         twoPlayerInactiveSprite.zPosition = 1
@@ -446,9 +486,14 @@ class StartScene: SKScene
         addChild(pageDotOne)
         
         pageDotTwo = SKSpriteNode(imageNamed: "whiteDot.png")
-        pageDotTwo.position = CGPoint(x: frame.width * 0.53, y: frame.height * 0.75)
+        pageDotTwo.position = CGPoint(x: frame.width * 0.50, y: frame.height * 0.75)
         pageDotTwo.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
         addChild(pageDotTwo)
+        
+        pageDotThree = SKSpriteNode(imageNamed: "whiteDot.png")
+        pageDotThree.position = CGPoint(x: frame.width * 0.53, y: frame.height * 0.75)
+        pageDotThree.scale(to: CGSize(width: frame.width * 0.025, height: frame.width * 0.025))
+        addChild(pageDotThree)
         
         if UserDefaults.standard.string(forKey: "Game") == "Magnet Hockey"
         {
@@ -456,13 +501,26 @@ class StartScene: SKScene
             backButton.colorBlendFactor = 0.5
             pageDotOne.colorBlendFactor = 0
             pageDotTwo.colorBlendFactor = 0.75
+            pageDotThree.colorBlendFactor = 0.75
+
         }
         else if UserDefaults.standard.string(forKey: "Game") == "Air Hockey"
+        {
+            forwardButton.colorBlendFactor = 0
+            backButton.colorBlendFactor = 0
+            pageDotOne.colorBlendFactor = 0.75
+            pageDotTwo.colorBlendFactor = 0
+            pageDotThree.colorBlendFactor = 0.75
+
+        }
+        else if UserDefaults.standard.string(forKey: "Game") == "Online"
         {
             forwardButton.colorBlendFactor = 0.5
             backButton.colorBlendFactor = 0
             pageDotOne.colorBlendFactor = 0.75
-            pageDotTwo.colorBlendFactor = 0
+            pageDotTwo.colorBlendFactor = 0.75
+            pageDotThree.colorBlendFactor = 0
+
         }
         else
         {
@@ -473,6 +531,8 @@ class StartScene: SKScene
             backButton.colorBlendFactor = 0.5
             pageDotOne.colorBlendFactor = 0
             pageDotTwo.colorBlendFactor = 0.75
+            pageDotThree.colorBlendFactor = 0
+
         }
     }
 
@@ -484,6 +544,23 @@ class StartScene: SKScene
         // Configure the view.
         let skView = self.view!
         skView.isMultipleTouchEnabled = true
+        
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = true
+
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .resizeFill
+        let transition = SKTransition.doorsOpenHorizontal(withDuration: 0.75)
+        skView.presentScene(scene, transition: transition)
+    }
+    
+    func playAirHockeyOnline()
+    {
+        let scene = AirHockey2POnline(size: (view?.bounds.size)!)
+            
+        // Configure the view.
+        let skView = self.view!
+        skView.isMultipleTouchEnabled = false
         
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = true
@@ -585,7 +662,7 @@ class StartScene: SKScene
                 touchedGameMode2 = true
             }
             
-            else if nodesArray.contains(onePlayerButton) && UserDefaults.standard.string(forKey: "Game") != "Magnet Hockey"
+            else if nodesArray.contains(onePlayerButton) && UserDefaults.standard.string(forKey: "Game") != "Magnet Hockey" && UserDefaults.standard.string(forKey: "Game") != "Online Hockey"
             {
                 if onePlayerButton.colorBlendFactor > 0
                 {
@@ -598,7 +675,7 @@ class StartScene: SKScene
                 touched1Player = true
             }
             
-            else if nodesArray.contains(twoPlayerButton)
+            else if nodesArray.contains(twoPlayerButton) && UserDefaults.standard.string(forKey: "Game") != "Online Hockey"
             {
                 if twoPlayerButton.colorBlendFactor > 0
                 {
@@ -636,7 +713,7 @@ class StartScene: SKScene
                 backButton.colorBlendFactor = 0.5
                 touchedBackButton = true
             }
-            else if nodesArray.contains(forwardButton) && arrowPressCounter < 1
+            else if nodesArray.contains(forwardButton) && arrowPressCounter < 2
             {
                 forwardButton.colorBlendFactor = 0.5
                 touchedForwardButton = true
@@ -702,6 +779,16 @@ class StartScene: SKScene
                     touchedPlay = false
                     playButton.colorBlendFactor = 0
                     playAirHockey2PMultiPuck()
+                }
+                
+                else if titleLabel.text == "ONLINE" && UserDefaults.standard.string(forKey: "GameType") == "GameMode1"
+                {
+                    if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                    else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                    else{run(buttonSound)}
+                    touchedPlay = false
+                    playButton.colorBlendFactor = 0
+                    triggerNetworkingAlert()
                 }
                 else
                 {
@@ -813,6 +900,7 @@ class StartScene: SKScene
                 
             else if nodesArray.contains(storeButton) && touchedStore == true
             {
+                appDelegate.MPC.killSession()
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -836,6 +924,7 @@ class StartScene: SKScene
                 
             else if nodesArray.contains(settingsButton) && touchedSettings == true
             {
+                appDelegate.MPC.killSession()
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -858,6 +947,7 @@ class StartScene: SKScene
             
             else if nodesArray.contains(instructionsButton) && touchedInstructions == true
             {
+                appDelegate.MPC.killSession()
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -880,6 +970,7 @@ class StartScene: SKScene
             
             else if nodesArray.contains(statisticsButton) && touchedStatistics == true
             {
+                appDelegate.MPC.killSession()
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -902,11 +993,14 @@ class StartScene: SKScene
             
             else if nodesArray.contains(backButton) && touchedBackButton == true && arrowPressCounter == 1
             {
+                appDelegate.MPC.killSession()
                 touchedBackButton = false
                 backButton.colorBlendFactor = 0.5
                 forwardButton.colorBlendFactor = 0
                 pageDotOne.colorBlendFactor = 0.0
                 pageDotTwo.colorBlendFactor = 0.5
+                pageDotThree.colorBlendFactor = 0.5
+
                 arrowPressCounter -= 1
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
@@ -929,13 +1023,50 @@ class StartScene: SKScene
                 twoPlayerButton.colorBlendFactor = 0.5
             }
             
+            else if nodesArray.contains(backButton) && touchedBackButton == true && arrowPressCounter == 2
+            {
+                appDelegate.MPC.killSession()
+                touchedBackButton = false
+                backButton.colorBlendFactor = 0
+                forwardButton.colorBlendFactor = 0
+                pageDotOne.colorBlendFactor = 0.5
+                pageDotTwo.colorBlendFactor = 0.0
+                pageDotThree.colorBlendFactor = 0.5
+
+                arrowPressCounter -= 1
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                titleLabel.text = "AIR"
+                gameModeLabel1.text = "1 Puck"
+                gameModeLabel2.text = "2 Pucks"
+                let saveGame = UserDefaults.standard
+                saveGame.set("Air Hockey", forKey: "Game")
+                saveGame.synchronize()
+                let savePlayerMode = UserDefaults.standard
+                savePlayerMode.set("2Player", forKey: "PlayerMode")
+                savePlayerMode.synchronize()
+                playTriangleButton.texture = SKTexture(imageNamed: "whitePlayButton")
+                playTriangleButton.scale(to: CGSize(width: frame.width * 0.20, height: frame.width * 0.20))
+                onePlayerActiveSprite.isHidden = true
+                onePlayerInactiveSprite.isHidden = false
+                onePlayerLockedSprite.isHidden = true
+                twoPlayerActiveSprite.isHidden = false
+                twoPlayerInactiveSprite.isHidden = true
+                onePlayerButton.colorBlendFactor = 0.0
+                twoPlayerButton.colorBlendFactor = 0.5
+            }
+            
             else if nodesArray.contains(forwardButton) && touchedForwardButton == true && arrowPressCounter == 0
             {
+                appDelegate.MPC.killSession()
                 touchedForwardButton = false
-                forwardButton.colorBlendFactor = 0.5
+                forwardButton.colorBlendFactor = 0.0
                 backButton.colorBlendFactor = 0.0
                 pageDotOne.colorBlendFactor = 0.5
                 pageDotTwo.colorBlendFactor = 0.0
+                pageDotThree.colorBlendFactor = 0.5
+
                 if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
                 else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
                 else{run(buttonSound)}
@@ -970,6 +1101,36 @@ class StartScene: SKScene
                 twoPlayerInactiveSprite.isHidden = true
                 onePlayerButton.colorBlendFactor = 0.0
                 twoPlayerButton.colorBlendFactor = 0.5
+            }
+            
+            else if nodesArray.contains(forwardButton) && touchedForwardButton == true && arrowPressCounter == 1
+            {
+                touchedForwardButton = false
+                forwardButton.colorBlendFactor = 0.5
+                backButton.colorBlendFactor = 0.0
+                pageDotOne.colorBlendFactor = 0.5
+                pageDotTwo.colorBlendFactor = 0.5
+                pageDotThree.colorBlendFactor = 0.0
+
+                if UserDefaults.standard.string(forKey: "Sound") == "On" {run(buttonSound)}
+                else if UserDefaults.standard.string(forKey: "Sound") == "Off" {}
+                else{run(buttonSound)}
+                titleLabel.text = "ONLINE"
+                gameModeLabel1.text = "Nearby Player"
+                gameModeLabel2.text = "Random Player"
+                arrowPressCounter += 1
+                let saveGame = UserDefaults.standard
+                saveGame.set("Online Hockey", forKey: "Game")
+                saveGame.synchronize()
+                playTriangleButton.texture = SKTexture(imageNamed: "searchIcon")
+                playTriangleButton.scale(to: CGSize(width: frame.width * 0.15, height: frame.width * 0.15))
+                onePlayerActiveSprite.isHidden = true
+                onePlayerInactiveSprite.isHidden = true
+                onePlayerLockedSprite.isHidden = true
+                twoPlayerActiveSprite.isHidden = true
+                twoPlayerInactiveSprite.isHidden = true
+                onePlayerButton.colorBlendFactor = 1
+                twoPlayerButton.colorBlendFactor = 1
             }
             
             else
@@ -1074,6 +1235,16 @@ class StartScene: SKScene
     
     override func update(_ currentTime: TimeInterval)
     {
+        if appDelegate.MPC.session.connectedPeers.count == 1
+        {
+            multipeerGameReady = true
+        }
+        if multipeerGameReady == true
+        {
+            multipeerGameReady = false
+            playAirHockeyOnline()
+        }
+        print(appDelegate.MPC.session.connectedPeers)
         if arrowPressCounter == 0
         {
             titleLabel.text = "MAGNET"
@@ -1081,6 +1252,10 @@ class StartScene: SKScene
         else if arrowPressCounter == 1
         {
             titleLabel.text = "AIR"
+        }
+        else if arrowPressCounter == 2
+        {
+            titleLabel.text = "ONLINE"
         }
         else
         {

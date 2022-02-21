@@ -8,6 +8,7 @@
 
 import SpriteKit
 import GoogleMobileAds
+import MultipeerConnectivity
 
 var adsAreDisabled = false
 var textureAtlas = [SKTextureAtlas]()
@@ -17,6 +18,7 @@ let screenRect = UIScreen.main.bounds
 let screenWidth = screenRect.size.width
 let screenHeight = screenRect.size.height
 let screenPixels = screenWidth * screenHeight
+var multipeerGameReady = false
 
 var hasTopNotch: Bool
 {
@@ -52,7 +54,7 @@ class GameViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        
+            
         if KeychainWrapper.standard.bool(forKey: "Purchase") != true
         {
             let ads = GADMobileAds.sharedInstance()

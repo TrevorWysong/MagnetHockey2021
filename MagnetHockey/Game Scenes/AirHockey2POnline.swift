@@ -8,8 +8,9 @@
 import SpriteKit
 import GoogleMobileAds
 
-class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerDelegate, GADInterstitialDelegate
+class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate, NorthPlayerOnlineDelegate, GADInterstitialDelegate
 {
+    var appDelegate:AppDelegate!
     var ball : Ball?
     var ballRadius = CGFloat(0.0)
     var playerRadius = CGFloat(0.0)
@@ -24,6 +25,7 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
     var ballInSouthGoal = false
     var ballInNorthGoal = false
     var ballSoundControl = true
+    var playersSpawned = false
     var pauseButton = SKSpriteNode()
     var pauseButtonSprite = SKSpriteNode()
     var backToMenuButton = SKSpriteNode()
@@ -40,7 +42,7 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
     var touchedBackToMenuButton = false
     var touchedSoundOff = false
     var southPlayer : BottomPlayer?
-    var northPlayer : NorthPlayer?
+    var northPlayer : NorthPlayerOnline?
     let gameType = UserDefaults.standard.string(forKey: "GameType")!
     var southPlayerArea = CGRect()
     var northPlayerArea = CGRect()
@@ -73,9 +75,9 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
         bottomTouchForCollision = bottomTouchIsActive
     }
     
-    func northTouchIsActive(_ northTouchIsActive: Bool, fromNorthPlayer northPlayer: NorthPlayer)
+    func northOnlineTouchIsActive(_ northOnlineTouchIsActive: Bool, fromNorthPlayerOnline northPlayerOnline: NorthPlayerOnline)
     {
-        northTouchForCollision = northTouchIsActive
+
     }
     
     func createPlayers()
@@ -99,21 +101,21 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.22)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.78)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
+            northPlayer = northPlayerOnline(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
         else if frame.height == 926 && frame.width < 500
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.225)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.775)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
+            northPlayer = northPlayerOnline(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
         else
         {
             let southPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.185)
             let northPlayerStartPoint = CGPoint(x: frame.midX, y: frame.height * 0.815)
             southPlayer = bottomPlayer(at: southPlayerStartPoint, boundary: southPlayerArea)
-            northPlayer = northPlayer(at: northPlayerStartPoint, boundary: northPlayerArea)
+            northPlayer = northPlayerOnline(at: northPlayerStartPoint, boundary: northPlayerArea)
         }
 
         southPlayer?.physicsBody?.categoryBitMask = BodyType.player.rawValue
@@ -124,6 +126,7 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
         southPlayer?.physicsBody?.usesPreciseCollisionDetection = true
         northPlayer?.physicsBody?.usesPreciseCollisionDetection = true
         playerRadius = southPlayer!.radius
+        playersSpawned = true
     }
     
     func bottomPlayer(at position: CGPoint, boundary:CGRect) -> BottomPlayer
@@ -135,13 +138,13 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
         return bottomPlayer;
     }
     
-    func northPlayer(at position: CGPoint, boundary:CGRect) -> NorthPlayer
+    func northPlayerOnline(at position: CGPoint, boundary:CGRect) -> NorthPlayerOnline
     {
-        let northPlayer = NorthPlayer(activeArea: boundary)
-        northPlayer.position = position
-        northPlayer.delegate = self
-        addChild(northPlayer)
-        return northPlayer;
+        let northPlayerOnline = NorthPlayerOnline(activeArea: boundary)
+        northPlayerOnline.position = position
+        northPlayerOnline.delegate = self
+        addChild(northPlayerOnline)
+        return northPlayerOnline;
     }
     
     func createEdges()
@@ -362,6 +365,7 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
             playButtonSprite.isHidden = true
         }
     }
+    
     
     func createBackToMenuButton()
     {
@@ -632,8 +636,16 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
         return interstitial
     }
     
+    func multipeerSetup()
+    {
+        appDelegate = UIApplication.shared.delegate as? AppDelegate
+//        appDelegate.MPC.setupPeerWithDisplayName(displayName: UIDevice.current.name)
+//        appDelegate.MPC.setupSession()
+    }
+    
     override func didMove(to view: SKView)
     {
+        multipeerSetup()
         GameIsPaused = false
         let bannerViewStartScene = self.view?.viewWithTag(100) as! GADBannerView?
         let bannerViewGameOverScene = self.view?.viewWithTag(101) as! GADBannerView?
@@ -1188,6 +1200,10 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
     
     override func update(_ currentTime: TimeInterval)
     {
+        let desiredOtherPlayerPosition = Float(topGoalEdgeBottom - (southPlayer!.position.y - bottomGoalEdgeTop))
+        appDelegate.MPC.sendData(variable: String(desiredOtherPlayerPosition))
+        northPlayer?.position.y = CGFloat(appDelegate.MPC.playerPosition)
+        
         if (ball!.position.x <= frame.width * 0.2 || ball!.position.x >= frame.width * 0.8) && isOffScreen(node: ball!) && (bottomPlayerWinsRound != true && topPlayerWinsRound != true)
         {
             ball?.position = tempResetBallPosition
@@ -1322,7 +1338,7 @@ class AirHockey2POnline: SKScene, SKPhysicsContactDelegate, BottomPlayerDelegate
                 SKTAudio.sharedInstance().pauseBackgroundMusic()
                 // Configure the view.
                 let skView = self.view!
-                skView.isMultipleTouchEnabled = true
+                skView.isMultipleTouchEnabled = false
                 GameIsPaused = false
             }
             else if nodesArray.contains(backToMenuButton) && touchedBackToMenuButton == true

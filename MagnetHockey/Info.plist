@@ -2,6 +2,15 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>This identifier will be used to deliver personalized ads to you.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_air-hockey._tcp</string>
+		<string>_air-hockey._udp</string>
+	</array>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Connect devices to play multiplayer game.</string>
 	<key>UIApplicationExitsOnSuspend</key>
 	<false/>
 	<key>CFBundleDevelopmentRegion</key>
